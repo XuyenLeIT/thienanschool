@@ -1,0 +1,8 @@
+/* public/css/activities.css */
+.card-text-activity{
+    overflow: hidden !important;
+   display: -webkit-box;
+   -webkit-line-clamp: 2; /* number of lines to show */
+           line-clamp: 2; 
+   -webkit-box-orient: vertical;
+}

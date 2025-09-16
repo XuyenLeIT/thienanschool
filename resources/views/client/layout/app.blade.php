@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Trường Mầm Non Thiên Ân')</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Flickity CSS -->
+    <link rel="stylesheet" href="{{ asset('css/flickity.min.css') }}">
+
+    <style>
+        body {
+            font-family: "Quicksand", sans-serif;
+            background-color: #fffafc;
+            color: #333;
+                overflow-x: hidden; /* ngăn tràn ngang */
+        }
+
+        .navbar {
+            background-color: #ffb6c1;
+        }
+
+        .navbar .nav-link {
+            font-weight: 600;
+            color: #333 !important;
+        }
+
+        .navbar .nav-link.active {
+            color: #d63384 !important;
+        }
+
+        .hero-carousel .carousel-item {
+            height: 80vh;
+            min-height: 400px;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+
+        .hero-carousel .carousel-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            padding: 10px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .carousel-inner img {
+            filter: brightness(85%);
+        }
+
+        .footer {
+            background-color: #ffcad4;
+            color: #5a2d2d;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    {{-- Header --}}
+    @include('client.partials.header')
+
+    {{-- Nội dung riêng từng trang --}}
+    <main>
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    @include('client.partials.footer')
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <!-- Flickity JS -->
+    <script src="{{ asset('js/flickity.pkgd.min.js') }}"></script>
+    {{-- Scripts riêng từng trang --}}
+    @yield('scripts')
+</body>
+
+</html>

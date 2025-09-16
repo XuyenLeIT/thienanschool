@@ -1,0 +1,272 @@
+/* ----------------- GLOBAL ----------------- */ 
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #ffecd2; /* nền trang chủ đạo */
+}
+
+.container,
+.row {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden; /* bỏ scroll dọc */
+}
+
+/* ----------------- IMG STACK ----------------- */
+.img-stack {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 100%;
+    padding: 20px 0;
+    overflow: hidden;
+}
+
+.img-stack img {
+    border-radius: 1rem;
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s, box-shadow 0.4s;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.img-stack img:hover {
+    transform: scale(1.05) rotate(0deg);
+    z-index: 10;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+}
+
+.img-stack img:nth-child(1) { transform: rotate(-2deg); }
+.img-stack img:nth-child(2) { transform: rotate(1deg); }
+.img-stack img:nth-child(3) { transform: rotate(-1deg); }
+.img-stack img:nth-child(4) { transform: rotate(2deg); }
+
+@media (max-width: 767px) {
+    .img-stack {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .img-stack img {
+        width: 80%;
+        height: auto;
+        transform: none !important;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        margin: 0 auto;
+    }
+}
+
+/* ----------------- HERO CAROUSEL & ACTIVITIES SLIDER ----------------- */
+.hero-carousel,
+.activities-slider {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Card slider */
+.activities-slider .slider-cell {
+    width: 25%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.slider-cell .card {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.slider-cell .card img.card-img-top {
+    height: 180px;
+    object-fit: cover;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.slider-cell .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.slider-cell .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.slider-cell .card-text-activity {
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (max-width: 991.98px) {
+    .activities-slider .slider-cell { width: 50%; }
+}
+@media (max-width: 767.98px) {
+    .activities-slider .slider-cell { width: 100%; }
+}
+
+/* ----------------- GALLERIES SOLO IMAGE CHỒNG ----------------- */
+.art-hero .row {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Cột text */
+.art-hero .col-lg-6:first-child {
+    flex: 1 1 45%;
+    z-index: 5;
+}
+
+/* Cột image */
+.art-hero .col-lg-6:last-child {
+    flex: 1 1 50%;
+    position: relative;
+}
+
+/* Main image lớn */
+.art-image-main {
+    width: 100%;
+    height: 300px;
+    margin: auto;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Các ảnh nhỏ luôn nằm trên ảnh lớn và lệch ra ngoài */
+.art-image-top,
+.art-image-bottom,
+.art-image-small {
+    width: 40%;
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    z-index: 10;
+}
+
+/* Vị trí các ảnh nhỏ lệch ra ngoài ảnh lớn */
+.art-image-top { top: -20px; left: -20px; transform: rotate(-10deg); }
+.art-image-bottom { bottom: -20px; right: -20px; transform: rotate(8deg); }
+.art-image-small:nth-child(3) { top: 50px; right: -40px; transform: rotate(-5deg); }
+
+/* Hover animation */
+.art-image-main:hover,
+.art-image-top:hover,
+.art-image-bottom:hover,
+.art-image-small:hover {
+    transform: scale(1.05) rotate(0deg);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* Responsive galleries */
+@media (max-width: 991px) {
+    .art-image-main { max-width: 300px; height: 400px; }
+    .art-image-top,
+    .art-image-bottom,
+    .art-image-small { width: 80px; height: 80px; }
+}
+
+@media (max-width: 767px) {
+    .art-hero .row { flex-direction: column; text-align: center; }
+    .art-hero .col-lg-6:first-child,
+    .art-hero .col-lg-6:last-child { flex: 1 1 100%; margin-bottom: 20px; }
+
+    .art-image-main { width: 100%; height: auto; max-height: 400px; margin: 0 auto; }
+    .art-image-top,
+    .art-image-bottom,
+    .art-image-small {
+        position: relative;
+        width: 50%;
+        height: auto;
+        margin: 10px auto;
+        transform: rotate(0deg);
+        z-index: 10;
+    }
+}
+
+/* ----------------- CARD NEWS ----------------- */
+#news .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+#news .card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+#news .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#news .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ----------------- TRIAL CARD ----------------- */
+#trial-class .trial-card {
+    background: linear-gradient(270deg, #ffecd2, #fcb69f, #ffecd2, #fcb69f);
+    background-size: 600% 600%;
+    border-radius: 2rem;
+    padding: 2rem;
+    transition: transform 0.5s, box-shadow 0.5s;
+    position: relative;
+    overflow: hidden;
+    animation: gradientShift 10s ease infinite;
+}
+
+#trial-class .trial-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#trial-class .trial-card-bg { z-index: 0; }
+
+@media (max-width: 767px) {
+    #trial-class .trial-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    #trial-class .trial-image { margin-top: 20px; }
+}
