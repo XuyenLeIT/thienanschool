@@ -2,8 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
-use Auth;
+use App\Models\Account;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,23 +11,35 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
+        // Lấy user id từ session
         $userId = session('user_id');
+
         if (!$userId) {
             return redirect()->route('login');
         }
 
-        $user = User::find($userId);
+        // Lấy user thực tế
+        $user = Account::find($userId);
+
         if (!$user) {
-            $request->session()->forget('user_id');
+            session()->forget('user_id');
             return redirect()->route('login');
         }
 
-        // Nếu có truyền role thì check
+        // Ghi log để debug role hiện tại
+        \Log::info('RoleMiddleware - Auth User:', [
+            'id' => $user->id,
+            'role' => $user->role,
+            'roles_required' => $roles
+        ]);
+
+        // Kiểm tra role nếu truyền vào
         if (!empty($roles) && !in_array($user->role, $roles)) {
+            dd($roles);
             abort(403, 'Bạn không có quyền truy cập');
         }
 
-        // gán user vào request
+        // Gán user vào request để controller/view sử dụng
         $request->merge(['auth_user' => $user]);
 
         return $next($request);

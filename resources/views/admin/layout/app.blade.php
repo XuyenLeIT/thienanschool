@@ -7,6 +7,9 @@
     <title>@yield('title', 'Admin Dashboard - Thiên Ân')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
     <style>
         body {
             font-family: "Quicksand", sans-serif;
@@ -58,6 +61,7 @@
             color: #343a40;
         }
     </style>
+
 </head>
 
 <body>
@@ -97,7 +101,7 @@
         <nav id="sidebar" class="p-3">
             <h5 class="text-white mb-4">📋 Menu</h5>
             <ul class="nav flex-column">
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i
+                <li class="nav-item mb-2"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
                             class="fas fa-home me-2"></i>Dashboard</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.carausel.index') }}" class="nav-link"><i
                             class="fas fa-users me-2"></i>Carausel</a></li>
@@ -123,8 +127,10 @@
                             class="fas fa-users me-2"></i>Học phí</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.registrations.index') }}" class="nav-link"><i
                             class="fas fa-users me-2"></i>Danh Sách Liên hê</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i class="fas fa-child me-2"></i>Học
+                <li class="nav-item mb-2"><a href="" class="nav-link"><i class="fas fa-child me-2"></i>Học
                         sinh</a></li>
+                <li class="nav-item mb-2"><a href="{{ route('admin.accounts.index') }}" class="nav-link"><i
+                            class="fas fa-child me-2"></i>Nhân Sự</a></li>
                 <li class="nav-item mb-2"><a href="#" class="nav-link"><i
                             class="fas fa-book-open me-2"></i>Chương
                         trình</a></li>

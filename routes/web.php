@@ -48,7 +48,7 @@ Route::post('/verify-reset', [AdminController::class, 'verifyAndReset'])->name('
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['customAuth:admin'])
+    ->middleware(['customAuth:admin,manager'])
     ->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('carausel', [CarauselController::class, 'index'])->name('carausel.index');
@@ -177,6 +177,16 @@ Route::prefix('admin')
         // Cập nhật kết quả liên hệ (AJAX)
         Route::put('/registrations/{id}/update-result', [RegistrationController::class, 'updateResult'])
             ->name('registrations.updateResult');
+
+        //account 
+        // Route::get('/api/accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
+        Route::get('accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
+        Route::get('/accounts/create', [AdminController::class, 'create'])->name('accounts.create');
+        Route::post('/accounts', [AdminController::class, 'store'])->name('accounts.store');
+        Route::get('/accounts/{id}/edit', [AdminController::class, 'edit'])->name('accounts.edit');
+        Route::put('/accounts/{id}', [AdminController::class, 'update'])->name('accounts.update');
+        Route::get('/accounts/ban/{id}', [AdminController::class, 'ban'])->name('accounts.ban');
+
     });
 
 

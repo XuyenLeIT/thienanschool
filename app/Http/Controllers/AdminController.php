@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendOtpMail;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -28,7 +29,7 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = Account::where('email', $request->email)->first();
 
         if (!$user || !$user->checkPassword($request->password)) {
             return back()->withErrors(['email' => 'Sai email hoặc mật khẩu.']);
@@ -45,7 +46,7 @@ class AdminController extends Controller
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isManager()) {
-            return redirect()->route('manager.dashboard');
+            return redirect()->route('admin.dashboard');
         } else {
             return redirect()->route('employee.dashboard');
         }
@@ -115,7 +116,7 @@ class AdminController extends Controller
             Carbon::now()->lt(session('password_reset_expires'))
         ) {
             $email = session('password_reset_email');
-            $user = User::where('email', $email)->first();
+            $user = Account::where('email', $email)->first();
 
             if (!$user) {
                 return redirect()->route('password.forgot-form')
@@ -138,4 +139,167 @@ class AdminController extends Controller
 
         return back()->withErrors(['otp' => 'Mã OTP không hợp lệ hoặc đã hết hạn.']);
     }
+
+
+    public function listAccount(Request $request)
+    {
+        $authUser = $request->get('auth_user');
+        $accounts = Account::where('id', '!=', $authUser->id)->get();
+        return view('admin.accounts.index', compact('accounts', 'authUser'));
+    }
+
+    public function create(Request $request)
+    {
+        $authUser = $request->get('auth_user');
+
+        // Danh sách role có thể chọn
+        $roles = ['manager', 'teacher', 'kitchen', 'nanny', 'admin'];
+
+        // Nếu user là manager, loại bỏ role manager và admin khỏi select
+        if ($authUser->role === 'manager') {
+            $roles = array_diff($roles, ['manager', 'admin']);
+        }
+        return view('admin.accounts.create', compact('roles', 'authUser'));
+    }
+
+    /**
+     * Lưu account mới
+     */
+    public function store(Request $request)
+    {
+        $roles = ['manager', 'teacher', 'kitchen', 'nanny', 'admin'];
+
+        try {
+            $validated = $request->validate([
+                'fullname' => 'required|string|max:255',
+                'email' => 'required|email|unique:accounts,email',
+                'phone' => 'nullable|string|max:20',
+                'address' => 'nullable|string|max:255',
+                'role' => ['required', Rule::in($roles)],
+                'startdate' => 'nullable|date',
+                'manage_class' => 'nullable|string|max:50',
+                'note' => 'nullable|string|max:255',
+                'status' => 'nullable|boolean',
+                'admin_approve' => 'nullable|boolean',
+            ]);
+
+            $account = new Account();
+            $account->fullname = $validated['fullname'];
+            $account->email = $validated['email'];
+            $account->phone = $validated['phone'] ?? null;
+            $account->address = $validated['address'] ?? null;
+            $account->role = $validated['role'];
+            $account->password = Hash::make('123456');
+            $account->startdate = $validated['startdate'] ?? null;
+            $account->manage_class = $validated['role'] === 'teacher' ? ($validated['manage_class'] ?? null) : null;
+            $account->note = $validated['note'] ?? null;
+            $account->status = $validated['status'] ?? 0;
+            $account->admin_approve = $validated['admin_approve'] ?? 0;
+            $account->save();
+
+            return redirect()->route('admin.accounts.index')
+                ->with('success', 'Account tạo thành công.');
+
+        } catch (\Throwable $e) {
+            // Lưu log nếu muốn
+            \Log::error('Lỗi tạo account: ' . $e->getMessage());
+
+            // Quay lại form và hiển thị lỗi
+            return back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Form edit account
+     */
+
+    public function edit($id, Request $request)
+    {
+        $account = Account::findOrFail($id);
+
+        // Lấy user hiện tại
+        $authUser = $request->get('auth_user');
+        // Danh sách role có thể chọn
+        $roles = ['manager', 'teacher', 'kitchen', 'nanny', 'admin'];
+
+        // Nếu user là manager, loại bỏ role manager và admin khỏi select
+        if ($authUser->role === 'manager') {
+            $roles = array_diff($roles, ['manager', 'admin']);
+        }
+
+        return view('admin.accounts.edit', compact('account', 'roles', 'authUser'));
+    }
+
+
+
+    /**
+     * Update account
+     */
+    public function update(Request $request, $id)
+    {
+        $account = Account::findOrFail($id);
+
+        $roles = ['manager', 'teacher', 'kitchen', 'nanny', 'admin'];
+
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => ['required', 'email', Rule::unique('accounts')->ignore($account->id)],
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'role' => ['required', Rule::in($roles)],
+            'password' => 'nullable|string|min:6|confirmed',
+            'startdate' => 'nullable|date',
+            'manage_class' => 'nullable|string|max:50',
+            'note' => 'nullable|string|max:255',
+            'status' => 'nullable|boolean',
+            'admin_approve' => 'nullable|boolean',
+        ]);
+
+        $account->fullname = $validated['fullname'];
+        $account->email = $validated['email'];
+        $account->phone = $validated['phone'];
+        $account->address = $validated['address'];
+        $account->role = $validated['role'];
+        if (!empty($validated['password'])) {
+            $account->password = Hash::make($validated['password']);
+        }
+        $account->startdate = $validated['startdate'] ?? null;
+        $account->manage_class = $validated['manage_class'] ?? null;
+        $account->note = $validated['note'] ?? null;
+        $account->status = $validated['status'] ?? 0;
+        $account->admin_approve = $validated['admin_approve'] ?? 0;
+        $account->save();
+
+        return redirect()->route('admin.accounts.index')
+            ->with('success', 'Account cập nhật thành công.');
+    }
+
+    /**
+     * ban account
+     */
+    public function ban(Request $request, $id)
+    {
+        try {
+            $account = Account::findOrFail($id);
+
+            // Kiểm tra quyền
+            $authUser = $request->get('auth_user');
+            if ($authUser->role === 'manager' && in_array($account->role, ['admin', 'manager'])) {
+                return back()->with('error', 'Bạn không có quyền vô hiệu hóa account này.');
+            }
+
+            // Toggle status
+            $account->status = $account->status ? 0 : 1;
+            $account->save();
+
+            $message = $account->status ? 'Account đã được kích hoạt.' : 'Account đã bị vô hiệu hóa.';
+            return redirect()->route('admin.accounts.index')->with('success', $message);
+        } catch (\Throwable $e) {
+            \Log::error('Lỗi khi thay đổi trạng thái account: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+
 }

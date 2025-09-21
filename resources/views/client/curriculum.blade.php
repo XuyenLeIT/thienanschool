@@ -269,6 +269,7 @@
             border-color: rgba(252, 182, 159, 0.4);
         }
     </style>
+    {{-- @dd($carausel) --}}
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
             style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
