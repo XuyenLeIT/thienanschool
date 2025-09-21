@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('reason_ban')->nullable();
             $table->string('address')->nullable();
             $table->enum('role', ['admin','manager', 'nanny', 'teacher', 'kitchen']);
             $table->boolean('admin_approve')->default(false);

@@ -12,17 +12,17 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         // Lấy user id từ session
-        $userId = session('user_id');
+        $userLogin = session('auth_user');
 
-        if (!$userId) {
+        if (!$userLogin) {
             return redirect()->route('login');
         }
 
         // Lấy user thực tế
-        $user = Account::find($userId);
+        $user = Account::find($userLogin->id);
 
         if (!$user) {
-            session()->forget('user_id');
+            session()->forget('userLogin');
             return redirect()->route('login');
         }
 

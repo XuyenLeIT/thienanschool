@@ -11,6 +11,7 @@ class Account extends Model
         'email',
         'password',
         'role',
+        'avatar',
         'address',
         'admin_approve',
         'startdate',
@@ -20,6 +21,7 @@ class Account extends Model
         'note',
         'startdate',
         'manage_class',
+        'reason_ban'
     ];
     /**
      * Casts tự động

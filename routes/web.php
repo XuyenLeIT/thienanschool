@@ -181,12 +181,16 @@ Route::prefix('admin')
         //account 
         // Route::get('/api/accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
         Route::get('accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
-        Route::get('/accounts/create', [AdminController::class, 'create'])->name('accounts.create');
-        Route::post('/accounts', [AdminController::class, 'store'])->name('accounts.store');
-        Route::get('/accounts/{id}/edit', [AdminController::class, 'edit'])->name('accounts.edit');
-        Route::put('/accounts/{id}', [AdminController::class, 'update'])->name('accounts.update');
-        Route::get('/accounts/ban/{id}', [AdminController::class, 'ban'])->name('accounts.ban');
-
+        Route::get('accounts/create', [AdminController::class, 'create'])->name('accounts.create');
+        Route::post('accounts', [AdminController::class, 'store'])->name('accounts.store');
+        Route::get('accounts/{id}/edit', [AdminController::class, 'edit'])->name('accounts.edit');
+        Route::put('accounts/{id}', [AdminController::class, 'update'])->name('accounts.update');
+        Route::post('accounts/ban/{id}', [AdminController::class, 'ban'])->name('accounts.ban');
+        Route::get('accounts/detail/{id}', [AdminController::class, 'show'])->name('accounts.show');
+        Route::get('accounts/profile/{id}', [AdminController::class, 'profile'])->name('accounts.profile');
+        Route::post('accounts/change-password', [AdminController::class, 'changePassword'])
+            ->name('accounts.change-password');
+          Route::put('profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
     });
 
 

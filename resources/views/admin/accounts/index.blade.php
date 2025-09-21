@@ -26,6 +26,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>#</th>
+                                <th>Avatar</th>
                                 <th>Fullname</th>
                                 <th>Phone</th>
                                 <th>Role</th>
@@ -38,17 +39,25 @@
                         </thead>
                         <tbody>
                             @forelse($accounts as $index => $acc)
-                                {{-- Ẩn account đang login --}}
                                 @if ($acc->id === $authUser->id)
                                     @continue
                                 @endif
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
+
+                                    {{-- Avatar --}}
+                                    <td>
+                                        @if ($acc->avatar)
+                                            <img src="{{ asset($acc->avatar) }}" alt="Avatar" class="rounded-circle"
+                                                width="40" height="40">
+                                        @else
+                                            <i class="fa-solid fa-user fa-2x text-secondary"></i>
+                                        @endif
+                                    </td>
+
                                     <td>{{ $acc->fullname }}</td>
                                     <td>{{ $acc->phone ?? '-' }}</td>
-                                    <td>
-                                        <span class="badge bg-primary text-uppercase">{{ $acc->role }}</span>
-                                    </td>
+                                    <td><span class="badge bg-primary text-uppercase">{{ $acc->role }}</span></td>
                                     <td>
                                         @if ($acc->admin_approve)
                                             <span class="badge bg-success">Yes</span>
@@ -67,16 +76,34 @@
                                     <td>{{ $acc->manage_class ?? '-' }}</td>
                                     <td>
                                         @if ($authUser->role === 'admin' || ($authUser->role === 'manager' && !in_array($acc->role, ['admin', 'manager'])))
+                                            {{-- Edit --}}
                                             <a href="{{ route('admin.accounts.edit', $acc->id) }}"
                                                 class="btn btn-sm btn-warning me-1" title="Edit">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
-
-                                            <a href="{{ route('admin.accounts.ban', $acc->id) }}"
-                                                class="btn btn-sm {{ $acc->status ? 'btn-warning' : 'btn-success' }} me-1"
-                                                title="{{ $acc->status ? 'Ban User' : 'Unban User' }}">
-                                                <i class="fa-solid fa-user-slash"></i>
+                                            <a href="{{ route('admin.accounts.show', $acc->id) }}"
+                                                class="btn btn-sm btn-info me-1" title="Detail">
+                                                <i class="fa-solid fa-eye"></i>
                                             </a>
+                                            {{-- Ban / Unban --}}
+                                            @if ($acc->status)
+                                                {{-- User active: show modal để ban --}}
+                                                <button class="btn btn-sm btn-warning me-1" data-bs-toggle="modal"
+                                                    data-bs-target="#banModal" data-userid="{{ $acc->id }}"
+                                                    title="Ban User">
+                                                    <i class="fa-solid fa-user-slash"></i>
+                                                </button>
+                                            @else
+                                                {{-- User inactive: click unban trực tiếp --}}
+                                                <form action="{{ route('admin.accounts.ban', $acc->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-success me-1"
+                                                        title="Unban User">
+                                                        <i class="fa-solid fa-user-slash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -84,7 +111,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="12" class="text-center text-muted">Không có account nào</td>
+                                    <td colspan="10" class="text-center text-muted">Không có account nào</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -93,4 +120,68 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Ban User --}}
+    <div class="modal fade" id="banModal" tabindex="-1" aria-labelledby="banModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="banForm" method="POST" action="">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="banModalLabel">Ban User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Chọn lý do ban:</p>
+                        @php
+                            $reasons = [
+                                'Vi phạm nội quy',
+                                'Lạm quyền',
+                                'Không hoàn thành công việc',
+                                'Hành vi không phù hợp',
+                                'Khác',
+                            ];
+                        @endphp
+                        @foreach ($reasons as $reason)
+                            <div class="form-check">
+                                <input class="form-check-input reason-radio" type="radio" name="reason"
+                                    id="reason{{ $loop->index }}" value="{{ $reason }}">
+                                <label class="form-check-label"
+                                    for="reason{{ $loop->index }}">{{ $reason }}</label>
+                            </div>
+                        @endforeach
+                        <div class="mt-2" id="otherReasonDiv" style="display:none;">
+                            <input type="text" class="form-control" name="other_reason" placeholder="Nhập lý do khác">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger">Xác nhận</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        // Truyền user id vào form action khi show modal
+        var banModal = document.getElementById('banModal');
+        banModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-userid');
+            var form = document.getElementById('banForm');
+            form.action = '/admin/accounts/ban/' + userId;
+        });
+
+        // Hiển thị input nếu chọn "Khác"
+        var radios = document.querySelectorAll('.reason-radio');
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                var otherDiv = document.getElementById('otherReasonDiv');
+                otherDiv.style.display = this.value === 'Khác' ? 'block' : 'none';
+            });
+        });
+    </script>
 @endsection

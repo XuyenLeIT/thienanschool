@@ -7,8 +7,6 @@
     <title>@yield('title', 'Admin Dashboard - Thiên Ân')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
     <style>
         body {
@@ -61,10 +59,12 @@
             color: #343a40;
         }
     </style>
-
 </head>
 
 <body>
+    @php
+        $authUser = session('auth_user');
+    @endphp
 
     <!-- Header -->
     <header class="admin-header d-flex justify-content-between align-items-center">
@@ -77,20 +77,42 @@
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
                 id="profileDropdown" data-bs-toggle="dropdown">
-                <img src="https://i.pravatar.cc/40" alt="profile" class="rounded-circle me-2" width="40"
-                    height="40">
-                <span>Admin</span>
+
+                {{-- Avatar --}}
+                @if ($authUser && $authUser->avatar)
+                    <img src="{{ asset($authUser->avatar) }}" alt="profile" class="rounded-circle me-2" width="40"
+                        height="40">
+                @else
+                    <i class="fa-solid fa-user-circle fa-2x text-secondary me-2"></i>
+                @endif
+
+                {{-- Fullname + Role --}}
+                <span>
+                    {{ $authUser->fullname ?? $authUser->email }}
+                    @if($authUser && $authUser->role)
+                        <small class="text-muted">({{ strtoupper($authUser->role) }})</small>
+                    @endif
+                </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Cài đặt</a></li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('admin.accounts.profile', $authUser->id ?? 0) }}">
+                        <i class="fas fa-user me-2"></i>Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-cog me-2"></i>Cài đặt
+                    </a>
+                </li>
                 <li>
                     <hr class="dropdown-divider">
                 </li>
                 <li>
-                    <a href="{{ route('logout') }}" class="nav-link"><i class="fas fa-users me-2"></i>Logout</a>
+                    <a href="{{ route('logout') }}" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
                 </li>
-
             </ul>
         </div>
     </header>
@@ -99,47 +121,36 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <nav id="sidebar" class="p-3">
-            <h5 class="text-white mb-4">📋 Menu</h5>
+            <h5 class="text-white mb-4">Thiên Ân Admin</h5>
             <ul class="nav flex-column">
                 <li class="nav-item mb-2"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
                             class="fas fa-home me-2"></i>Dashboard</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.carausel.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Carausel</a></li>
+                            class="fas fa-images me-2"></i>Carausel</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.special_features.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Specials</a></li>
+                            class="fas fa-star me-2"></i>Specials</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.galleries.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Galleries</a></li>
+                            class="fas fa-photo-video me-2"></i>Galleries</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.activities.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Activities</a></li>
+                            class="fas fa-running me-2"></i>Activities</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.programs.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Program</a></li>
+                            class="fas fa-book me-2"></i>Program</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.education.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Education</a></li>
+                            class="fas fa-graduation-cap me-2"></i>Education</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.daily_schedules.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Daily Schedules</a></li>
+                            class="fas fa-calendar-day me-2"></i>Daily Schedules</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.promotions.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Promotions</a></li>
+                            class="fas fa-bullhorn me-2"></i>Promotions</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.menus.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Menus</a></li>
+                            class="fas fa-utensils me-2"></i>Menus</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.parent_notices.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Parent</a></li>
+                            class="fas fa-bell me-2"></i>Parent Notices</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.tuition.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Học phí</a></li>
+                            class="fas fa-money-bill me-2"></i>Học phí</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.registrations.index') }}" class="nav-link"><i
-                            class="fas fa-users me-2"></i>Danh Sách Liên hê</a></li>
-                <li class="nav-item mb-2"><a href="" class="nav-link"><i class="fas fa-child me-2"></i>Học
-                        sinh</a></li>
+                            class="fas fa-address-book me-2"></i>Danh Sách Liên hệ</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.accounts.index') }}" class="nav-link"><i
-                            class="fas fa-child me-2"></i>Nhân Sự</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i
-                            class="fas fa-book-open me-2"></i>Chương
-                        trình</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i
-                            class="fas fa-utensils me-2"></i>Thực
-                        đơn</a></li>
-                <li class="nav-item mb-2"><a href="#" class="nav-link"><i
-                            class="fas fa-bullhorn me-2"></i>Thông
-                        báo</a></li>
+                            class="fas fa-users me-2"></i>Nhân Sự</a></li>
             </ul>
         </nav>
 
@@ -156,8 +167,8 @@
             document.getElementById("main").classList.toggle("full");
         });
     </script>
+
     {{-- Scripts riêng từng trang --}}
     @yield('scripts')
 </body>
-
 </html>

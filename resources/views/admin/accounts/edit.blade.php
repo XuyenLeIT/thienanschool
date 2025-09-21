@@ -1,5 +1,4 @@
 @extends('admin.layout.app')
-
 @section('title','Edit Nhân viên')
 
 @section('content')
@@ -26,11 +25,25 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.accounts.update', $account->id) }}" method="POST">
+    <form action="{{ route('admin.accounts.update', $account->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="row g-3">
+            {{-- Avatar --}}
+            <div class="col-md-6">
+                <label>Avatar</label>
+                <div class="mb-2">
+                    @if($account->avatar)
+                        <img src="{{ asset('storage/avatars/'.$account->avatar) }}" alt="Avatar" class="rounded-circle" width="80" height="80">
+                    @else
+                        <i class="fa-solid fa-user fa-3x text-secondary"></i>
+                    @endif
+                </div>
+                <input type="file" name="avatar" class="form-control">
+                @error('avatar')<small class="text-danger">{{ $message }}</small>@enderror
+            </div>
+
             {{-- Fullname --}}
             <div class="col-md-6">
                 <label>Fullname</label>
@@ -79,8 +92,7 @@
             {{-- Start Date --}}
             <div class="col-md-6">
                 <label>Start Date</label>
-                <input type="date" name="startdate" class="form-control"
-                    value="{{ old('startdate', $account->startdate ? $account->startdate->format('Y-m-d') : '') }}">
+                <input type="date" name="startdate" class="form-control" value="{{ old('startdate', $account->startdate ? $account->startdate->format('Y-m-d') : '') }}">
                 @error('startdate')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
