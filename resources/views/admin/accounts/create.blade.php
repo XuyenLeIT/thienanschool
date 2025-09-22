@@ -179,7 +179,7 @@
 
         // JS enable/disable Manage Class
         const roleSelect = document.getElementById('roleSelect');
-        const manageClass = document.getElementById('manageClass');
+        const manageClass = document.getElementById('classname');
 
         function toggleManageClass() {
             if (roleSelect.value === 'teacher') {

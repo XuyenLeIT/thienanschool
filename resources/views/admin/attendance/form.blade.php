@@ -3,9 +3,9 @@
 
 @section('content')
     <div class="container">
-              <a href="{{ route('teacher.dashboard') }}" class="btn btn-info">
-                            <i class="fas fa-home me-2"></i> Back
-                        </a>
+        <a href="{{ route('teacher.dashboard') }}" class="btn btn-info">
+            <i class="fas fa-home me-2"></i> Back
+        </a>
         {{-- <h3 class="mb-3">Điểm danh lớp {{ $classname }} ({{ $date }})</h3> --}}
         <h3 class="mb-3">Điểm danh lớp {{ $gradeLabel }} ({{ $date }})</h3>
         {{-- Button chọn các ngày đã điểm danh --}}

@@ -5,60 +5,28 @@
 @section('content')
     <div class="container-fluid">
         @if (in_array($authUser->role, ['admin', 'manager']))
-            {{-- Row thống kê tổng số nhân sự --}}
+            {{-- Thống kê tổng số giáo viên, học sinh, nhân sự --}}
             <div class="row g-4 mb-4">
-                {{-- Tổng số giáo viên --}}
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center"
-                                style="width:50px;height:50px;">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                            </div>
-                            <div class="ms-3">
-                                <h5 class="mb-0">{{ $teacherCount ?? 0 }}</h5>
-                                <small class="text-muted">Giáo viên</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Tổng số học sinh --}}
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="bg-success text-white rounded-circle d-flex justify-content-center align-items-center"
-                                style="width:50px;height:50px;">
-                                <i class="fas fa-child"></i>
-                            </div>
-                            <div class="ms-3">
-                                <h5 class="mb-0">{{ $studentCount ?? 0 }}</h5>
-                                <small class="text-muted">Học sinh</small>
+                @foreach ([['count' => $teacherCount ?? 0, 'label' => 'Giáo viên', 'icon' => 'fa-chalkboard-teacher', 'bg' => 'bg-primary'], ['count' => $studentCount ?? 0, 'label' => 'Học sinh', 'icon' => 'fa-child', 'bg' => 'bg-success'], ['count' => $staffCount ?? 0, 'label' => 'Nhân sự khác', 'icon' => 'fa-user-tie', 'bg' => 'bg-danger']] as $stat)
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 rounded-3">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="{{ $stat['bg'] }} text-white rounded-circle d-flex justify-content-center align-items-center"
+                                    style="width:50px;height:50px;">
+                                    <i class="fas {{ $stat['icon'] }}"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mb-0">{{ $stat['count'] }}</h5>
+                                    <small class="text-muted">{{ $stat['label'] }}</small>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                {{-- Tổng số nhân viên khác --}}
-                <div class="col-md-4">
-                    <div class="card shadow-sm border-0 rounded-3">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="bg-danger text-white rounded-circle d-flex justify-content-center align-items-center"
-                                style="width:50px;height:50px;">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                            <div class="ms-3">
-                                <h5 class="mb-0">{{ $staffCount ?? 0 }}</h5>
-                                <small class="text-muted">Nhân sự khác</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
-            {{-- Row thống kê tổng hợp học sinh từng lớp --}}
+            {{-- Thống kê học sinh theo lớp --}}
             <div class="row g-4 mt-4">
-
                 @foreach ($classList as $code => $label)
                     <div class="col-md-3 col-sm-6">
                         <div class="card shadow-sm border-0 rounded-3 h-100">
@@ -76,70 +44,64 @@
                     </div>
                 @endforeach
             </div>
-
         @endif
 
+        {{-- Tiêu đề điểm danh --}}
         <h2 class="mb-4 mt-2">Danh Sách điểm danh - Lớp {{ $classname }}</h2>
         @if ($authUser->role == 'teacher')
             <a href="{{ route('teacher.attendances.form', $authUser->classname) }}" class="btn btn-primary mt-2 mb-2">
                 <i class="fa-solid fa-clipboard-user me-2"></i>Điểm danh hôm nay
             </a>
         @endif
-        {{-- Calendar + Filter --}}
+
+        {{-- Filter form --}}
         <div class="mb-3 d-flex flex-wrap align-items-center gap-3">
-            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}"
-                class="d-flex align-items-center gap-2 mb-0">
+            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}" class="d-flex gap-2 mb-0">
                 <input type="hidden" name="classname" value="{{ $classname }}">
                 <input type="date" name="date" value="{{ $selectedDate ?? now()->toDateString() }}"
                     class="form-control" max="{{ now()->toDateString() }}">
-                <button type="submit" class="btn btn-primary d-flex align-items-center">
-                    <i class="fas fa-calendar-day me-1"></i> Chọn ngày
-                </button>
+                <button type="submit" class="btn btn-primary d-flex align-items-center"><i
+                        class="fas fa-calendar-day me-1"></i> Chọn ngày</button>
             </form>
 
-            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}"
-                class="d-flex align-items-center gap-2 mb-0">
+            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}" class="d-flex gap-2 mb-0">
                 <input type="hidden" name="date" value="{{ $selectedDate ?? now()->toDateString() }}">
-                <select name="status_filter" class="form-select" style="width: 180px;">
+                <select name="status_filter" class="form-select" style="width:180px;">
                     <option value="all" {{ ($statusFilter ?? 'all') == 'all' ? 'selected' : '' }}>Tất cả</option>
                     <option value="present" {{ ($statusFilter ?? '') == 'present' ? 'selected' : '' }}>Chỉ có mặt</option>
                     <option value="absent" {{ ($statusFilter ?? '') == 'absent' ? 'selected' : '' }}>Chỉ vắng</option>
                 </select>
-                <button type="submit" class="btn btn-secondary d-flex align-items-center">
-                    <i class="fas fa-filter me-1"></i> Lọc
-                </button>
+                <button type="submit" class="btn btn-secondary d-flex align-items-center"><i
+                        class="fas fa-filter me-1"></i> Lọc</button>
             </form>
 
             @if (in_array($authUser->role, ['admin', 'manager']))
-                <form method="GET" action="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-2 mb-0">
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="d-flex gap-2 mb-0">
                     <input type="hidden" name="date" value="{{ $selectedDate ?? now()->toDateString() }}">
                     <input type="hidden" name="status_filter" value="{{ $statusFilter ?? 'all' }}">
-                    <select name="classname" class="form-select" style="width: 200px;">
+                    <select name="classname" class="form-select" style="width:200px;">
                         @foreach ($classList as $code => $label)
                             <option value="{{ $code }}" {{ ($classname ?? '') == $code ? 'selected' : '' }}>
                                 {{ $code . '-' . $label }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-info d-flex align-items-center">
-                        <i class="fas fa-school me-1"></i> Chọn lớp
-                    </button>
+                    <button type="submit" class="btn btn-info d-flex align-items-center"><i class="fas fa-school me-1"></i>
+                        Chọn lớp</button>
                 </form>
             @endif
         </div>
 
-        {{-- Thống kê tổng số --}}
+        {{-- Thống kê tổng số có mặt/vắng --}}
         @if (isset($students))
             @php
                 $presentCount = $attendances->where('status', 'present')->count();
                 $absentCount = $attendances->where('status', 'absent')->count();
             @endphp
             <div class="mt-3 mb-3 d-flex flex-wrap gap-2">
-                <span class="badge attendance-badge bg-success">
-                    <i class="fas fa-user-check me-1"></i> Có mặt: {{ $presentCount }}
-                </span>
-                <span class="badge attendance-badge bg-danger">
-                    <i class="fas fa-user-times me-1"></i> Vắng: {{ $absentCount }}
-                </span>
+                <span class="badge attendance-badge bg-success"><i class="fas fa-user-check me-1"></i> Có mặt:
+                    {{ $presentCount }}</span>
+                <span class="badge attendance-badge bg-danger"><i class="fas fa-user-times me-1"></i> Vắng:
+                    {{ $absentCount }}</span>
             </div>
         @endif
 
@@ -180,32 +142,19 @@
                                     @endif
                                 </td>
                                 <td>{{ $note }}</td>
-                                <td class="text-center">
-                                    {{-- Nút xem chi tiết --}}
-                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                        data-bs-target="#detailModal{{ $student->id }}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-
-                                    {{-- Nút thống kê khoảng thời gian --}}
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#statsModal{{ $student->id }}">
-                                        <i class="fas fa-chart-bar"></i>
-                                    </button>
-
-                                    {{-- Modal chi tiết học sinh --}}
+                                <td class="text-center"> {{-- Nút xem chi tiết --}} <button type="button"
+                                        class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#detailModal{{ $student->id }}"> <i class="fas fa-eye"></i>
+                                    </button> {{-- Nút thống kê khoảng thời gian --}} <button type="button" class="btn btn-sm btn-warning"
+                                        data-bs-toggle="modal" data-bs-target="#statsModal{{ $student->id }}"> <i
+                                            class="fas fa-chart-bar"></i> </button> {{-- Modal chi tiết học sinh --}}
                                     @include('admin.partials.student_detail_modal', [
                                         'student' => $student,
                                         'selectedDate' => $selectedDate,
-                                    ])
-
-                                    {{-- Modal thống kê khoảng thời gian --}}
-                                    @include('admin.partials.student_stats_modal', [
+                                    ]) {{-- Modal thống kê khoảng thời gian --}} @include('admin.partials.student_stats_modal', [
                                         'student' => $student,
                                         'classname' => $classname,
-                                    ])
-                                </td>
-
+                                    ]) </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -222,7 +171,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        @media (max-width: 576px) {
+        @media (max-width:576px) {
             .d-flex.flex-wrap.align-items-center.gap-3 {
                 flex-direction: column;
                 align-items: stretch;
@@ -232,22 +181,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.stats-modal').forEach(modalEl => {
                 const studentId = modalEl.dataset.studentId;
-
                 const fromInput = modalEl.querySelector('input[name="from_date"]');
                 const toInput = modalEl.querySelector('input[name="to_date"]');
                 const presentBadge = modalEl.querySelector('#presentBadge' + studentId);
                 const absentBadge = modalEl.querySelector('#absentBadge' + studentId);
                 const canvas = modalEl.querySelector('#chartStats' + studentId);
-
                 let chartInstance;
 
                 const updateStats = () => {
-                    axios.get(`/thienan/student/${studentId}/stats`, {
+                    axios.get(`/student/${studentId}/stats`, {
                         params: {
                             from: fromInput.value,
                             to: toInput.value,
@@ -255,16 +201,10 @@
                         }
                     }).then(res => {
                         const data = res.data;
-                        console.log("data: ", data);
-
                         presentBadge.textContent = `Có mặt: ${data.presentDays}`;
                         absentBadge.textContent = `Vắng: ${data.absentDays}`;
-                        presentBadge.dataset.count = data.presentDays;
-                        absentBadge.dataset.count = data.absentDays;
-
                         if (chartInstance) chartInstance.destroy();
-                        const ctx = canvas.getContext('2d');
-                        chartInstance = new Chart(ctx, {
+                        chartInstance = new Chart(canvas.getContext('2d'), {
                             type: 'doughnut',
                             data: {
                                 labels: ['Có mặt', 'Vắng'],
@@ -285,10 +225,7 @@
                     });
                 }
 
-                // Update khi nhấn button
                 modalEl.querySelector('.btn-stats-update').addEventListener('click', updateStats);
-
-                // Update khi mở modal lần đầu
                 modalEl.addEventListener('shown.bs.modal', updateStats);
             });
         });
