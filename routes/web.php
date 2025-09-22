@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdmissionController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CarauselController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CurriculumController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SpecialFeatureController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TuitionController;
 use Illuminate\Support\Facades\Route;
 
@@ -190,7 +192,32 @@ Route::prefix('admin')
         Route::get('accounts/profile/{id}', [AdminController::class, 'profile'])->name('accounts.profile');
         Route::post('accounts/change-password', [AdminController::class, 'changePassword'])
             ->name('accounts.change-password');
-          Route::put('profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
+        Route::put('profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
+
+        // Danh sách
+        Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+
+        // Form thêm mới
+        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+
+        // Lưu mới
+        Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+
+        // Xem chi tiết
+        Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+
+        // Form sửa
+        Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+
+        // Cập nhật
+        Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+
+        // Xóa
+        Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+        Route::get('/attendances/{classname}', [AttendanceController::class, 'create'])->name('attendances.create');
+        Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+
+
     });
 
 

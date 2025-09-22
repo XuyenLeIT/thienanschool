@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->boolean('status')->default(true);
             $table->text('note')->nullable();
             $table->date('startdate');
-            $table->string('manage_class')->nullable(); 
+            $table->string('classname')->nullable(); 
             $table->timestamps();
         });
     }

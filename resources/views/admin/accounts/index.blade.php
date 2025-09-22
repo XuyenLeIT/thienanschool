@@ -73,7 +73,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $acc->startdate ? $acc->startdate->format('d/m/Y') : '-' }}</td>
-                                    <td>{{ $acc->manage_class ?? '-' }}</td>
+                                    <td>{{ $acc->classname ?? '-' }}</td>
                                     <td>
                                         @if ($authUser->role === 'admin' || ($authUser->role === 'manager' && !in_array($acc->role, ['admin', 'manager'])))
                                             {{-- Edit --}}

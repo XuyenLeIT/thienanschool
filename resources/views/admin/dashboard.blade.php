@@ -68,7 +68,8 @@
                 </div>
             </div>
         </div>
-
+        <a href="{{ route('admin.attendances.create') }}" class="nav-link"><i class="fas fa-bell me-2"></i>Điểm danh hôm
+            nay</a>
         <!-- Bảng thông tin gần đây -->
         <div class="card shadow-sm border-0 rounded-3 mt-5">
             <div class="card-header bg-light">
@@ -236,24 +237,24 @@
         fetchStaff();
     });
 
- function fetchStaff() {
-    fetch('/admin/api/accounts') 
-        .then(res => res.json())
-        .then(data => {
-            const tbody = document.getElementById('staff-tbody');
-            tbody.innerHTML = '';
+    function fetchStaff() {
+        fetch('/admin/api/accounts')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('staff-tbody');
+                tbody.innerHTML = '';
 
-            const currentUserId = data.auth_user_id;
-            const staffRoles = data.staff_roles; // lấy từ controller
+                const currentUserId = data.auth_user_id;
+                const staffRoles = data.staff_roles; // lấy từ controller
 
-            const staff = data.accounts.filter(acc => 
-                staffRoles.includes(acc.role) &&
-                acc.id !== currentUserId
-            );
+                const staff = data.accounts.filter(acc =>
+                    staffRoles.includes(acc.role) &&
+                    acc.id !== currentUserId
+                );
 
-            staff.forEach((acc, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+                staff.forEach((acc, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
                     <td>${index + 1}</td>
                     <td>${acc.fullname}</td>
                     <td>${roleToTitle(acc.role)}</td>
@@ -264,11 +265,11 @@
                         <a href="/admin/accounts/${acc.id}" class="btn btn-sm btn-primary">Detail / Edit</a>
                     </td>
                 `;
-                tbody.appendChild(tr);
-            });
-        })
-        .catch(err => console.error(err));
-}
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(err => console.error(err));
+    }
 
     // Chuyển role sang tên hiển thị
     function roleToTitle(role) {

@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.accounts.update', $account->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.accounts.update', $account->id) }}" method="POST" enctype="multipart/form-data" id="accountForm">
         @csrf
         @method('PUT')
 
@@ -35,7 +35,7 @@
                 <label>Avatar</label>
                 <div class="mb-2">
                     @if($account->avatar)
-                        <img src="{{ asset('storage/avatars/'.$account->avatar) }}" alt="Avatar" class="rounded-circle" width="80" height="80">
+                        <img src="{{ asset($account->avatar) }}" alt="Avatar" class="rounded-circle" width="80" height="80">
                     @else
                         <i class="fa-solid fa-user fa-3x text-secondary"></i>
                     @endif
@@ -46,8 +46,8 @@
 
             {{-- Fullname --}}
             <div class="col-md-6">
-                <label>Fullname</label>
-                <input type="text" name="fullname" class="form-control" value="{{ old('fullname', $account->fullname) }}">
+                <label>Họ tên</label>
+                <input type="text" name="fullname" class="form-control" value="{{ old('fullname', $account->fullname) }}" required>
                 @error('fullname')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
@@ -60,21 +60,21 @@
 
             {{-- Phone --}}
             <div class="col-md-6">
-                <label>Phone</label>
+                <label>Số điện thoại</label>
                 <input type="text" name="phone" class="form-control" value="{{ old('phone', $account->phone) }}">
                 @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
             {{-- Address --}}
             <div class="col-md-6">
-                <label>Address</label>
+                <label>Địa chỉ</label>
                 <input type="text" name="address" class="form-control" value="{{ old('address', $account->address) }}">
                 @error('address')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
             {{-- Role --}}
             <div class="col-md-6">
-                <label>Role</label>
+                <label>Chức vụ</label>
                 <select name="role" id="roleSelect" class="form-control">
                     @foreach($roles as $role)
                         @php
@@ -91,7 +91,7 @@
 
             {{-- Start Date --}}
             <div class="col-md-6">
-                <label>Start Date</label>
+                <label>Ngày bắt đầu</label>
                 <input type="date" name="startdate" class="form-control" value="{{ old('startdate', $account->startdate ? $account->startdate->format('Y-m-d') : '') }}">
                 @error('startdate')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
@@ -103,7 +103,7 @@
                     value="1" {{ old('admin_approve', $account->admin_approve) ? 'checked' : '' }}
                     {{ $authUser->role !== 'admin' ? 'disabled' : '' }}>
                 <label class="form-check-label" for="adminApproveCheck">
-                    Admin Approve
+                    Admin duyệt
                     @if ($account->admin_approve)
                         <span class="text-success">(Đã duyệt)</span>
                     @endif
@@ -116,55 +116,71 @@
                 <input type="hidden" name="status" value="0">
                 <input type="checkbox" name="status" class="form-check-input me-2" id="statusCheck"
                     value="1" {{ old('status', $account->status) ? 'checked' : '' }}>
-                <label class="form-check-label" for="statusCheck">Active</label>
+                <label class="form-check-label" for="statusCheck">Hoạt động</label>
                 @error('status')<small class="text-danger ms-2">{{ $message }}</small>@enderror
             </div>
 
             {{-- Manage Class --}}
             <div class="col-md-6">
-                <label>Manage Class</label>
-                <select name="manage_class" id="manageClass" class="form-control">
-                    <option value="" {{ old('manage_class', $account->manage_class) == '' ? 'selected' : '' }}>-- Chọn lớp --</option>
-                    <option value="Mầm" {{ old('manage_class', $account->manage_class) == 'Mầm' ? 'selected' : '' }}>Mầm</option>
-                    <option value="Chồi" {{ old('manage_class', $account->manage_class) == 'Chồi' ? 'selected' : '' }}>Chồi</option>
-                    <option value="Lá" {{ old('manage_class', $account->manage_class) == 'Lá' ? 'selected' : '' }}>Lá</option>
+                <label>Quản lý lớp</label>
+                <select name="classname" id="manageClass" class="form-control">
+                    <option value="">-- Chọn lớp --</option>
+                    @foreach($classGrades as $code => $label)
+                        <option value="{{ $code }}" {{ old('classname', $account->manage_class) == $code ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
                 </select>
-                @error('manage_class')<small class="text-danger">{{ $message }}</small>@enderror
+                @error('classname')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
 
             {{-- Note --}}
             <div class="col-12">
-                <label>Note</label>
+                <label>Ghi chú</label>
                 <textarea name="note" class="form-control" rows="3">{{ old('note', $account->note) }}</textarea>
                 @error('note')<small class="text-danger">{{ $message }}</small>@enderror
             </div>
         </div>
 
-        {{-- Submit --}}
+        {{-- Submit with Loading --}}
         <div class="mt-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="fa-solid fa-floppy-disk"></i> Save
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span id="btnText"><i class="fa-solid fa-floppy-disk"></i> Lưu</span>
+                <span id="btnLoading" class="d-none">
+                    <i class="fas fa-spinner fa-spin"></i> Đang xử lý...
+                </span>
             </button>
         </div>
     </form>
 </div>
 
-{{-- JS enable/disable Manage Class --}}
 <script>
+    // Loading button
+    const form = document.getElementById('accountForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoading = document.getElementById('btnLoading');
+
+    form.addEventListener('submit', function() {
+        submitBtn.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
+    });
+
+    // Enable/disable Manage Class
     const roleSelect = document.getElementById('roleSelect');
     const manageClass = document.getElementById('manageClass');
 
-    // Set initial state khi load
-    manageClass.disabled = roleSelect.value !== 'teacher';
-
-    // Enable/disable khi thay đổi role
-    roleSelect.addEventListener('change', function() {
-        if(this.value === 'teacher'){
+    function toggleManageClass() {
+        if(roleSelect.value === 'teacher'){
             manageClass.disabled = false;
         } else {
             manageClass.disabled = true;
             manageClass.value = '';
         }
-    });
+    }
+
+    roleSelect.addEventListener('change', toggleManageClass);
+    toggleManageClass();
 </script>
 @endsection

@@ -156,8 +156,8 @@ class AdminController extends Controller
         if ($authUser->role === 'manager') {
             $roles = array_diff($roles, ['manager', 'admin']);
         }
-
-        return view('admin.accounts.create', compact('roles', 'authUser'));
+        $classGrades = Account::$classGrades; // lấy danh sách mapping
+        return view('admin.accounts.create', compact('roles', 'authUser', 'classGrades'));
     }
 
     private function generateRandomPassword($length = 8)
@@ -184,7 +184,7 @@ class AdminController extends Controller
             'address' => 'nullable|string|max:255',
             'role' => ['required', Rule::in($roles)],
             'startdate' => 'nullable|date',
-            'manage_class' => 'nullable|string|max:50',
+            'classname' => 'nullable|string|max:50',
             'note' => 'nullable|string|max:255',
             'status' => 'nullable|boolean',
             'admin_approve' => 'nullable|boolean',
@@ -212,8 +212,8 @@ class AdminController extends Controller
             $account->address = $validated['address'] ?? null;
             $account->role = $validated['role'];
             $account->startdate = $validated['startdate'] ?? null;
-            $account->manage_class = $validated['role'] === 'teacher'
-                ? ($validated['manage_class'] ?? null)
+            $account->classname = $validated['role'] === 'teacher'
+                ? ($validated['classname'] ?? null)
                 : null;
             $account->note = $validated['note'] ?? null;
             $account->status = $validated['status'] ?? 0;
@@ -249,8 +249,8 @@ class AdminController extends Controller
         if ($authUser->role === 'manager') {
             $roles = array_diff($roles, ['manager', 'admin']);
         }
-
-        return view('admin.accounts.edit', compact('account', 'roles', 'authUser'));
+    $classGrades = Account::$classGrades; // lấy danh sách mapping
+        return view('admin.accounts.edit', compact('account', 'roles', 'authUser','classGrades'));
     }
 
     public function update(Request $request, $id)
@@ -267,7 +267,7 @@ class AdminController extends Controller
                 'role' => ['required', Rule::in($roles)],
                 'password' => 'nullable|string|min:6|confirmed',
                 'startdate' => 'nullable|date',
-                'manage_class' => 'nullable|string|max:50',
+                'classname' => 'nullable|string|max:50',
                 'note' => 'nullable|string|max:255',
                 'status' => 'nullable|boolean',
                 'admin_approve' => 'nullable|boolean',
@@ -285,7 +285,7 @@ class AdminController extends Controller
             }
 
             $account->startdate = $validated['startdate'] ?? null;
-            $account->manage_class = $validated['manage_class'] ?? null;
+            $account->classname = $validated['classname'] ?? null;
             $account->note = $validated['note'] ?? null;
             $account->status = $validated['status'] ?? 0;
             $account->admin_approve = $validated['admin_approve'] ?? 0;
@@ -317,60 +317,60 @@ class AdminController extends Controller
             return back()->withInput()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
-    // Update profile (ngoại trừ email, manage_class, note)
- public function updateProfile(Request $request)
-{
-    try {
-        $user = session('auth_user');
-        if (!$user) {
-            return back()->with('error', 'Không tìm thấy thông tin người dùng trong session.');
-        }
-
-        $validated = $request->validate([
-            'address' => 'nullable|string|max:255',
-            'avatar'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        $account = Account::findOrFail($user->id);
-
-        // Update address
-        $account->address = $validated['address'] ?? $account->address;
-
-        // Upload avatar nếu có
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-            // Tạo thư mục nếu chưa có
-            if (!file_exists(public_path('avatars'))) {
-                mkdir(public_path('avatars'), 0755, true);
+    // Update profile (ngoại trừ email, classname, note)
+    public function updateProfile(Request $request)
+    {
+        try {
+            $user = session('auth_user');
+            if (!$user) {
+                return back()->with('error', 'Không tìm thấy thông tin người dùng trong session.');
             }
 
-            $file->move(public_path('avatars'), $filename);
+            $validated = $request->validate([
+                'address' => 'nullable|string|max:255',
+                'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ]);
 
-            // Xóa avatar cũ
-            if ($account->avatar && file_exists(public_path($account->avatar))) {
-                unlink(public_path($account->avatar));
+            $account = Account::findOrFail($user->id);
+
+            // Update address
+            $account->address = $validated['address'] ?? $account->address;
+
+            // Upload avatar nếu có
+            if ($request->hasFile('avatar')) {
+                $file = $request->file('avatar');
+                $filename = time() . '_' . $file->getClientOriginalName();
+
+                // Tạo thư mục nếu chưa có
+                if (!file_exists(public_path('avatars'))) {
+                    mkdir(public_path('avatars'), 0755, true);
+                }
+
+                $file->move(public_path('avatars'), $filename);
+
+                // Xóa avatar cũ
+                if ($account->avatar && file_exists(public_path($account->avatar))) {
+                    unlink(public_path($account->avatar));
+                }
+
+                $account->avatar = 'avatars/' . $filename;
             }
 
-            $account->avatar = 'avatars/' . $filename;
+            // Lưu lại
+            $account->save();
+
+            // Cập nhật session
+            session(['auth_user' => $account]);
+
+            return back()->with('success', 'Cập nhật thông tin thành công!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Nếu validate lỗi thì trả về cùng lỗi
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            // Bắt mọi lỗi khác
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())->withInput();
         }
-
-        // Lưu lại
-        $account->save();
-
-        // Cập nhật session
-        session(['auth_user' => $account]);
-
-        return back()->with('success', 'Cập nhật thông tin thành công!');
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        // Nếu validate lỗi thì trả về cùng lỗi
-        return back()->withErrors($e->errors())->withInput();
-    } catch (\Exception $e) {
-        // Bắt mọi lỗi khác
-        return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage())->withInput();
     }
-}
 
     public function changePassword(Request $request)
     {

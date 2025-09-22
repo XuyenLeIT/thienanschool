@@ -20,7 +20,7 @@ class Account extends Model
         'status',
         'note',
         'startdate',
-        'manage_class',
+        'classname',
         'reason_ban'
     ];
     /**
@@ -31,6 +31,17 @@ class Account extends Model
         'status' => 'boolean',    // true/false
         'admin_approve' => 'boolean',    // true/false
     ];
+
+    public static $classGrades = [
+        'TA001' => 'TA001 - MẦM',
+        'TA002' => 'TA002 - CHỒI,LÁ',
+        'TA003' => 'TA003 - MẦM',
+    ];
+
+    public function getGradeLabel()
+    {
+        return self::$classGrades[$this->classname] ?? '';
+    }
 
     /**
      * Ẩn password khi serialize

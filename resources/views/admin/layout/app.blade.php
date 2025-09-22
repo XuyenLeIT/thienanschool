@@ -89,7 +89,7 @@
                 {{-- Fullname + Role --}}
                 <span>
                     {{ $authUser->fullname ?? $authUser->email }}
-                    @if($authUser && $authUser->role)
+                    @if ($authUser && $authUser->role)
                         <small class="text-muted">({{ strtoupper($authUser->role) }})</small>
                     @endif
                 </span>
@@ -151,6 +151,8 @@
                             class="fas fa-address-book me-2"></i>Danh Sách Liên hệ</a></li>
                 <li class="nav-item mb-2"><a href="{{ route('admin.accounts.index') }}" class="nav-link"><i
                             class="fas fa-users me-2"></i>Nhân Sự</a></li>
+                <li class="nav-item mb-2"><a href="{{ route('admin.students.index') }}" class="nav-link"><i
+                            class="fas fa-users me-2"></i>Student</a></li>
             </ul>
         </nav>
 
@@ -171,4 +173,5 @@
     {{-- Scripts riêng từng trang --}}
     @yield('scripts')
 </body>
+
 </html>
