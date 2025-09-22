@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\RegisterMail;
 use App\Mail\SendOtpMail;
 use App\Models\Account;
+use App\Models\Attendance;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +16,100 @@ use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
-    public function index()
+    // public function index(Request $request)
+    // {
+    //     $authUser = $request->session()->get('auth_user');
+    //     return view('admin.dashboard', compact('authUser'));
+    // }
+    public function index(Request $request)
     {
-        return view('admin.dashboard');
+        $authUser = session('auth_user');
+        $classname = $request->classname ?? ($authUser->classname ?? null);
+
+        // Tổng số nhân sự
+        $teacherCount = Account::where('role', 'teacher')->count();
+        $staffCount = Account::where('role', '!=', 'teacher')->count();
+
+        // Tổng số học sinh
+        $studentCount = Student::where('status', 1)->count();
+
+        // Danh sách các lớp (code => tên hiển thị)
+        $classList = Student::$classGrades;
+
+        // Số học sinh từng lớp
+        $classStudentCounts = [];
+        foreach ($classList as $code => $label) {
+            $classStudentCounts[$code] = Student::where('classname', $code)
+                ->where('status', 1)
+                ->count();
+        }
+
+        // Ngày chọn để xem điểm danh
+        $selectedDate = $request->date ?? now()->toDateString();
+        $statusFilter = $request->status_filter ?? 'all';
+        $from = $request->from ?? now()->subMonth()->toDateString();
+        $to = $request->to ?? now()->toDateString();
+
+        // Lấy học sinh theo lớp
+        $students = $classname ? Student::where('classname', $classname)->where('status', 1)->get() : null;
+
+        // Lấy điểm danh theo ngày
+        $attendances = $classname ? Attendance::where('classname', $classname)
+            ->where('date', $selectedDate)
+            ->get() : null;
+
+        // Tính thống kê số ngày đi học / vắng mặt từng học sinh
+        $studentStats = [];
+        if ($students) {
+            foreach ($students as $student) {
+                $attRecords = Attendance::where('student_id', $student->id)
+                    ->whereBetween('date', [$from, $to])
+                    ->get();
+                $studentStats[$student->id] = [
+                    'presentDays' => $attRecords->where('status', 'present')->count(),
+                    'absentDays' => $attRecords->where('status', 'absent')->count(),
+                ];
+            }
+        }
+
+        return view('admin.dashboard', compact(
+            'authUser',
+            'classname',
+            'teacherCount',
+            'staffCount',
+            'studentCount',
+            'classList',
+            'classStudentCounts',
+            'selectedDate',
+            'students',
+            'attendances',
+            'statusFilter',
+            'from',
+            'to',
+            'studentStats'
+        ));
     }
 
+    // API trả JSON thống kê theo student_id
+    public function stats(Request $request, $studentId)
+    {
+        $from = $request->from ?? now()->startOfMonth()->toDateString();
+        $to = $request->to ?? now()->toDateString();
+        $classname = $request->classname;
+
+        $query = Attendance::where('student_id', $studentId)
+            ->whereBetween('date', [$from, $to]);
+
+        if ($classname)
+            $query->where('classname', $classname);
+
+        $records = $query->get();
+
+        return response()->json([
+            'presentDays' => $records->where('status', 'present')->count(),
+            'absentDays' => $records->where('status', 'absent')->count()
+        ]);
+    }
     public function login()
     {
         return view('admin.login');
@@ -42,14 +133,19 @@ class AdminController extends Controller
             return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa hoặc chưa kích hoạt']);
         }
 
-        // ✅ Lưu nguyên user vào session
+        // Lưu nguyên user vào session
         session(['auth_user' => $user]);
 
         // Điều hướng theo role
-        if ($user->isAdmin() || $user->isManager()) {
+        if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
-        return redirect()->route('admin.dashboard');
+        if ($user->isManager()) {
+            return redirect()->route('manager.dashboard');
+        }
+        if ($user->isTeacher()) {
+            return redirect()->route('teacher.dashboard');
+        }
     }
 
     public function logout(Request $request)
@@ -249,8 +345,8 @@ class AdminController extends Controller
         if ($authUser->role === 'manager') {
             $roles = array_diff($roles, ['manager', 'admin']);
         }
-    $classGrades = Account::$classGrades; // lấy danh sách mapping
-        return view('admin.accounts.edit', compact('account', 'roles', 'authUser','classGrades'));
+        $classGrades = Account::$classGrades; // lấy danh sách mapping
+        return view('admin.accounts.edit', compact('account', 'roles', 'authUser', 'classGrades'));
     }
 
     public function update(Request $request, $id)

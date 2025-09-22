@@ -4,292 +4,293 @@
 
 @section('content')
     <div class="container-fluid">
-        <h2 class="mb-4">📊 Dashboard</h2>
-
-        <!-- Row thống kê -->
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center"
-                            style="width:50px;height:50px;">
-                            <i class="fas fa-users"></i>
+        @if (in_array($authUser->role, ['admin', 'manager']))
+            {{-- Row thống kê tổng số nhân sự --}}
+            <div class="row g-4 mb-4">
+                {{-- Tổng số giáo viên --}}
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center"
+                                style="width:50px;height:50px;">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">{{ $teacherCount ?? 0 }}</h5>
+                                <small class="text-muted">Giáo viên</small>
+                            </div>
                         </div>
-                        <div class="ms-3">
-                            <h5 class="mb-0">120</h5>
-                            <small class="text-muted">Phụ huynh</small>
+                    </div>
+                </div>
+
+                {{-- Tổng số học sinh --}}
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-success text-white rounded-circle d-flex justify-content-center align-items-center"
+                                style="width:50px;height:50px;">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">{{ $studentCount ?? 0 }}</h5>
+                                <small class="text-muted">Học sinh</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Tổng số nhân viên khác --}}
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body d-flex align-items-center">
+                            <div class="bg-danger text-white rounded-circle d-flex justify-content-center align-items-center"
+                                style="width:50px;height:50px;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="ms-3">
+                                <h5 class="mb-0">{{ $staffCount ?? 0 }}</h5>
+                                <small class="text-muted">Nhân sự khác</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="bg-success text-white rounded-circle d-flex justify-content-center align-items-center"
-                            style="width:50px;height:50px;">
-                            <i class="fas fa-child"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="mb-0">85</h5>
-                            <small class="text-muted">Học sinh</small>
+            {{-- Row thống kê tổng hợp học sinh từng lớp --}}
+            <div class="row g-4 mt-4">
+
+                @foreach ($classList as $code => $label)
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card shadow-sm border-0 rounded-3 h-100">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <div class="bg-info text-white rounded-circle d-flex justify-content-center align-items-center"
+                                    style="width:50px;height:50px;font-size:1.2rem;">
+                                    <i class="fas fa-school"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1 fw-bold">{{ $classStudentCounts[$code] ?? 0 }}</h5>
+                                    <small class="text-muted">{{ $code . '-' . $label }}</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
             </div>
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="bg-warning text-white rounded-circle d-flex justify-content-center align-items-center"
-                            style="width:50px;height:50px;">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="mb-0">15</h5>
-                            <small class="text-muted">Giáo viên</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        @endif
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="bg-danger text-white rounded-circle d-flex justify-content-center align-items-center"
-                            style="width:50px;height:50px;">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="ms-3">
-                            <h5 class="mb-0">8</h5>
-                            <small class="text-muted">Thông báo</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h2 class="mb-4 mt-2">Danh Sách điểm danh - Lớp {{ $classname }}</h2>
+        @if ($authUser->role == 'teacher')
+            <a href="{{ route('teacher.attendances.form', $authUser->classname) }}" class="btn btn-primary mt-2 mb-2">
+                <i class="fa-solid fa-clipboard-user me-2"></i>Điểm danh hôm nay
+            </a>
+        @endif
+        {{-- Calendar + Filter --}}
+        <div class="mb-3 d-flex flex-wrap align-items-center gap-3">
+            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}"
+                class="d-flex align-items-center gap-2 mb-0">
+                <input type="hidden" name="classname" value="{{ $classname }}">
+                <input type="date" name="date" value="{{ $selectedDate ?? now()->toDateString() }}"
+                    class="form-control" max="{{ now()->toDateString() }}">
+                <button type="submit" class="btn btn-primary d-flex align-items-center">
+                    <i class="fas fa-calendar-day me-1"></i> Chọn ngày
+                </button>
+            </form>
+
+            <form method="GET" action="{{ route($authUser->role . '.dashboard') }}"
+                class="d-flex align-items-center gap-2 mb-0">
+                <input type="hidden" name="date" value="{{ $selectedDate ?? now()->toDateString() }}">
+                <select name="status_filter" class="form-select" style="width: 180px;">
+                    <option value="all" {{ ($statusFilter ?? 'all') == 'all' ? 'selected' : '' }}>Tất cả</option>
+                    <option value="present" {{ ($statusFilter ?? '') == 'present' ? 'selected' : '' }}>Chỉ có mặt</option>
+                    <option value="absent" {{ ($statusFilter ?? '') == 'absent' ? 'selected' : '' }}>Chỉ vắng</option>
+                </select>
+                <button type="submit" class="btn btn-secondary d-flex align-items-center">
+                    <i class="fas fa-filter me-1"></i> Lọc
+                </button>
+            </form>
+
+            @if (in_array($authUser->role, ['admin', 'manager']))
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="d-flex align-items-center gap-2 mb-0">
+                    <input type="hidden" name="date" value="{{ $selectedDate ?? now()->toDateString() }}">
+                    <input type="hidden" name="status_filter" value="{{ $statusFilter ?? 'all' }}">
+                    <select name="classname" class="form-select" style="width: 200px;">
+                        @foreach ($classList as $code => $label)
+                            <option value="{{ $code }}" {{ ($classname ?? '') == $code ? 'selected' : '' }}>
+                                {{ $code . '-' . $label }}</option>
+                        @endforeach
+                    </select>
+                    <button type="submit" class="btn btn-info d-flex align-items-center">
+                        <i class="fas fa-school me-1"></i> Chọn lớp
+                    </button>
+                </form>
+            @endif
         </div>
-        <a href="{{ route('admin.attendances.create') }}" class="nav-link"><i class="fas fa-bell me-2"></i>Điểm danh hôm
-            nay</a>
-        <!-- Bảng thông tin gần đây -->
-        <div class="card shadow-sm border-0 rounded-3 mt-5">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">📌 Hoạt động gần đây</h5>
+
+        {{-- Thống kê tổng số --}}
+        @if (isset($students))
+            @php
+                $presentCount = $attendances->where('status', 'present')->count();
+                $absentCount = $attendances->where('status', 'absent')->count();
+            @endphp
+            <div class="mt-3 mb-3 d-flex flex-wrap gap-2">
+                <span class="badge attendance-badge bg-success">
+                    <i class="fas fa-user-check me-1"></i> Có mặt: {{ $presentCount }}
+                </span>
+                <span class="badge attendance-badge bg-danger">
+                    <i class="fas fa-user-times me-1"></i> Vắng: {{ $absentCount }}
+                </span>
             </div>
-            <div class="card-body">
-                <table class="table table-hover align-middle">
-                    <thead>
+        @endif
+
+        {{-- Danh sách học sinh --}}
+        @if (isset($students))
+            <h5 class="mt-4">📅 Điểm danh ngày: {{ $selectedDate }}</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
                         <tr>
                             <th>#</th>
-                            <th>Hoạt động</th>
-                            <th>Người thực hiện</th>
-                            <th>Thời gian</th>
+                            <th>Học sinh</th>
+                            <th>Trạng thái</th>
+                            <th>Ghi chú</th>
+                            <th>Chi tiết</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Thêm học sinh mới</td>
-                            <td>Cô Mai</td>
-                            <td>06/09/2025 09:00</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Cập nhật thực đơn</td>
-                            <td>Admin</td>
-                            <td>05/09/2025 15:20</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Gửi thông báo cho phụ huynh</td>
-                            <td>Thầy Nam</td>
-                            <td>05/09/2025 10:45</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Thêm chương trình học mới</td>
-                            <td>Admin</td>
-                            <td>04/09/2025 14:15</td>
-                        </tr>
+                        @foreach ($students as $i => $student)
+                            @php
+                                $att = $attendances->firstWhere('student_id', $student->id);
+                                $status = $att->status ?? '-';
+                                $note = $att->note ?? '';
+                                if (isset($statusFilter) && $statusFilter != 'all' && $status != $statusFilter) {
+                                    continue;
+                                }
+                            @endphp
+                            <tr @if ($status == 'absent') class="table-danger" @endif>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $student->fullname }}</td>
+                                <td>
+                                    @if ($status == 'present')
+                                        <span class="badge bg-success"><i class="fas fa-user-check me-1"></i> Có mặt</span>
+                                    @elseif($status == 'absent')
+                                        <span class="badge bg-danger"><i class="fas fa-user-times me-1"></i> Vắng</span>
+                                    @else
+                                        <span class="badge bg-secondary">Chưa điểm danh</span>
+                                    @endif
+                                </td>
+                                <td>{{ $note }}</td>
+                                <td class="text-center">
+                                    {{-- Nút xem chi tiết --}}
+                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#detailModal{{ $student->id }}">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+
+                                    {{-- Nút thống kê khoảng thời gian --}}
+                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#statsModal{{ $student->id }}">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </button>
+
+                                    {{-- Modal chi tiết học sinh --}}
+                                    @include('admin.partials.student_detail_modal', [
+                                        'student' => $student,
+                                        'selectedDate' => $selectedDate,
+                                    ])
+
+                                    {{-- Modal thống kê khoảng thời gian --}}
+                                    @include('admin.partials.student_stats_modal', [
+                                        'student' => $student,
+                                        'classname' => $classname,
+                                    ])
+                                </td>
+
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
-        <!-- Tabs -->
-        <div class="card shadow-sm border-0 rounded-3 mt-5">
-            <div class="card-header bg-light">
-                <ul class="nav nav-tabs card-header-tabs" id="dashboardTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="staff-tab" data-bs-toggle="tab" data-bs-target="#staff"
-                            type="button" role="tab">Nhân viên</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="new-students-tab" data-bs-toggle="tab" data-bs-target="#new-students"
-                            type="button" role="tab">Học sinh mới tháng này</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="tuition-schedule-tab" data-bs-toggle="tab"
-                            data-bs-target="#tuition-schedule" type="button" role="tab">Lịch học phí</button>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <div class="tab-content" id="dashboardTabsContent">
-                    <!-- Nhân viên -->
-                    {{-- <div class="tab-pane fade show active" id="staff" role="tabpanel">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tên nhân viên</th>
-                                    <th>Chức vụ</th>
-                                    <th>Ngày vào làm</th>
-                                    <th>Trạng thái duyệt</th>
-                                    <th>Trạng thái hoạt động</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="staff-tbody">
-                                <!-- JS sẽ render data ở đây -->
-                            </tbody>
-                        </table>
-                    </div> --}}
-
-
-                    <!-- Học sinh mới tháng này -->
-                    <div class="tab-pane fade" id="new-students" role="tabpanel">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tên học sinh</th>
-                                    <th>Lớp</th>
-                                    <th>Ngày nhập học</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Nguyễn Thảo D</td>
-                                    <td>Lớp A1</td>
-                                    <td>05/09/2025</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Trần Minh E</td>
-                                    <td>Lớp B2</td>
-                                    <td>08/09/2025</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Phạm Ngọc F</td>
-                                    <td>Lớp C1</td>
-                                    <td>10/09/2025</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Lịch học phí -->
-                    <div class="tab-pane fade" id="tuition-schedule" role="tabpanel">
-                        <table class="table table-hover align-middle">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Tên học sinh</th>
-                                    <th>Lớp</th>
-                                    <th>Ngày đóng</th>
-                                    <th>Số tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Nguyễn Thảo D</td>
-                                    <td>Lớp A1</td>
-                                    <td>07/09/2025</td>
-                                    <td>1,500,000 đ</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Trần Minh E</td>
-                                    <td>Lớp B2</td>
-                                    <td>09/09/2025</td>
-                                    <td>1,500,000 đ</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Phạm Ngọc F</td>
-                                    <td>Lớp C1</td>
-                                    <td>11/09/2025</td>
-                                    <td>1,500,000 đ</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        @endif
     </div>
-@endsection
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        fetchStaff();
-    });
 
-    function fetchStaff() {
-        fetch('/admin/api/accounts')
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.getElementById('staff-tbody');
-                tbody.innerHTML = '';
-
-                const currentUserId = data.auth_user_id;
-                const staffRoles = data.staff_roles; // lấy từ controller
-
-                const staff = data.accounts.filter(acc =>
-                    staffRoles.includes(acc.role) &&
-                    acc.id !== currentUserId
-                );
-
-                staff.forEach((acc, index) => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${acc.fullname}</td>
-                    <td>${roleToTitle(acc.role)}</td>
-                    <td>${formatDate(acc.startdate)}</td>
-                    <td>${acc.admin_approve ? '<span class="text-success">Đã duyệt</span>' : '<span class="text-danger">Chưa duyệt</span>'}</td>
-                    <td>${acc.status ? '<span class="text-success">Hoạt động</span>' : '<span class="text-danger">Đã chặn</span>'}</td>
-                    <td>
-                        <a href="/admin/accounts/${acc.id}" class="btn btn-sm btn-primary">Detail / Edit</a>
-                    </td>
-                `;
-                    tbody.appendChild(tr);
-                });
-            })
-            .catch(err => console.error(err));
-    }
-
-    // Chuyển role sang tên hiển thị
-    function roleToTitle(role) {
-        switch (role) {
-            case 'manager':
-                return 'Quản lý';
-            case 'teacher':
-                return 'Giáo viên';
-            case 'kitchen':
-                return 'Nhân viên bếp';
-            case 'nanny':
-                return 'Hỗ trợ/Trông trẻ';
-            default:
-                return role;
+    <style>
+        .attendance-badge {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 0.8rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-    }
 
-    // Format ngày dd/mm/yyyy
-    function formatDate(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('vi-VN');
-    }
-</script>
+        @media (max-width: 576px) {
+            .d-flex.flex-wrap.align-items-center.gap-3 {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.stats-modal').forEach(modalEl => {
+                const studentId = modalEl.dataset.studentId;
+
+                const fromInput = modalEl.querySelector('input[name="from_date"]');
+                const toInput = modalEl.querySelector('input[name="to_date"]');
+                const presentBadge = modalEl.querySelector('#presentBadge' + studentId);
+                const absentBadge = modalEl.querySelector('#absentBadge' + studentId);
+                const canvas = modalEl.querySelector('#chartStats' + studentId);
+
+                let chartInstance;
+
+                const updateStats = () => {
+                    axios.get(`/thienan/student/${studentId}/stats`, {
+                        params: {
+                            from: fromInput.value,
+                            to: toInput.value,
+                            classname: modalEl.dataset.classname
+                        }
+                    }).then(res => {
+                        const data = res.data;
+                        console.log("data: ", data);
+
+                        presentBadge.textContent = `Có mặt: ${data.presentDays}`;
+                        absentBadge.textContent = `Vắng: ${data.absentDays}`;
+                        presentBadge.dataset.count = data.presentDays;
+                        absentBadge.dataset.count = data.absentDays;
+
+                        if (chartInstance) chartInstance.destroy();
+                        const ctx = canvas.getContext('2d');
+                        chartInstance = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Có mặt', 'Vắng'],
+                                datasets: [{
+                                    data: [data.presentDays, data.absentDays],
+                                    backgroundColor: ['#198754', '#dc3545']
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+
+                // Update khi nhấn button
+                modalEl.querySelector('.btn-stats-update').addEventListener('click', updateStats);
+
+                // Update khi mở modal lần đầu
+                modalEl.addEventListener('shown.bs.modal', updateStats);
+            });
+        });
+    </script>
+@endsection

@@ -35,7 +35,7 @@ class RoleMiddleware
 
         // Kiểm tra role nếu truyền vào
         if (!empty($roles) && !in_array($user->role, $roles)) {
-            dd($roles);
+            // dd($user->role);
             abort(403, 'Bạn không có quyền truy cập');
         }
 

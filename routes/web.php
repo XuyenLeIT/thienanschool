@@ -50,7 +50,7 @@ Route::post('/verify-reset', [AdminController::class, 'verifyAndReset'])->name('
 
 Route::prefix('admin')
     ->name('admin.')
-    ->middleware(['customAuth:admin,manager'])
+    ->middleware(['customAuth:admin'])
     ->group(function () {
         Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
         Route::get('carausel', [CarauselController::class, 'index'])->name('carausel.index');
@@ -211,13 +211,117 @@ Route::prefix('admin')
 
         // Cập nhật
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
+        Route::get('attendances/{classname}/{date?}', [AttendanceController::class, 'form'])->name('attendances.form');
+        Route::post('attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('student/{studentId}/stats', [AdminController::class, 'stats'])->name('attendances.stats');
+    });
+Route::prefix('manager')
+    ->name('manager.')
+    ->middleware('customAuth:manager')
+    ->group(function () {
+        Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('daily_schedules', [DailyScheduleController::class, 'index'])
+            ->name('daily_schedules.index');
+        Route::get('daily_schedules/create', [DailyScheduleController::class, 'create'])
+            ->name('daily_schedules.create');
+        Route::post('daily_schedules', [DailyScheduleController::class, 'store'])
+            ->name('daily_schedules.store');
+        Route::get('daily_schedules/{daily_schedule}/edit', [DailyScheduleController::class, 'edit'])
+            ->name('daily_schedules.edit');
+        Route::put('daily_schedules/{daily_schedule}', [DailyScheduleController::class, 'update'])
+            ->name('daily_schedules.update');
+        Route::delete('daily_schedules/{daily_schedule}', [DailyScheduleController::class, 'destroy'])
+            ->name('daily_schedules.destroy');
+        Route::post('daily_schedules/reorder', [DailyScheduleController::class, 'reorder'])
+            ->name('daily_schedules.reorder');
+
+        // Hiển thị danh sách
+        Route::get('menus', [MenuController::class, 'index'])
+            ->name('menus.index');
+        Route::get('menus/create', [MenuController::class, 'create'])
+            ->name('menus.create');
+        Route::post('menus', [MenuController::class, 'store'])
+            ->name('menus.store');
+        // Form chỉnh sửa
+        Route::get('menus/{menu}/edit', [MenuController::class, 'edit'])
+            ->name('menus.edit');
+        Route::put('menus/{menu}', [MenuController::class, 'update'])
+            ->name('menus.update');
+        Route::delete('menus/{menu}', [MenuController::class, 'destroy'])
+            ->name('menus.destroy');
+        Route::post('menus/sort', [MenuController::class, 'sort'])->name('menus.sort');
+
+        Route::get('tuitions', [TuitionController::class, 'index'])->name('tuition.index');
+        Route::get('tuitions/create', [TuitionController::class, 'create'])->name('tuition.create');
+        Route::post('tuitions', [TuitionController::class, 'store'])->name('tuition.store');
+        Route::get('tuitions/{tuition}/edit', [TuitionController::class, 'edit'])->name('tuition.edit');
+        Route::put('tuitions/{tuition}', [TuitionController::class, 'update'])->name('tuition.update');
+        Route::delete('tuitions/{tuition}', [TuitionController::class, 'destroy'])->name('tuition.destroy');
+
+        Route::get('registrations', [RegistrationController::class, 'index'])->name('registrations.index');
+        Route::get('registrations/{id}', [RegistrationController::class, 'show'])->name('registrations.show');
+        Route::post('registrations/{id}/toggle-status', [RegistrationController::class, 'toggleStatus'])->name('registrations.toggleStatus');
+        // Cập nhật kết quả liên hệ (AJAX)
+        Route::put('/registrations/{id}/update-result', [RegistrationController::class, 'updateResult'])
+            ->name('registrations.updateResult');
+
+        //account 
+        // Route::get('/api/accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
+        Route::get('accounts', [AdminController::class, 'listAccount'])->name('accounts.index');
+        Route::get('accounts/create', [AdminController::class, 'create'])->name('accounts.create');
+        Route::post('accounts', [AdminController::class, 'store'])->name('accounts.store');
+        Route::get('accounts/{id}/edit', [AdminController::class, 'edit'])->name('accounts.edit');
+        Route::put('accounts/{id}', [AdminController::class, 'update'])->name('accounts.update');
+        Route::post('accounts/ban/{id}', [AdminController::class, 'ban'])->name('accounts.ban');
+        Route::get('accounts/detail/{id}', [AdminController::class, 'show'])->name('accounts.show');
+        Route::get('accounts/profile/{id}', [AdminController::class, 'profile'])->name('accounts.profile');
+        Route::post('accounts/change-password', [AdminController::class, 'changePassword'])
+            ->name('accounts.change-password');
+        Route::put('profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
+
+        // Danh sách
+        Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+
+        // Form thêm mới
+        Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+
+        // Lưu mới
+        Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+
+        // Xem chi tiết
+        Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+
+        // Form sửa
+        Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+
+        // Cập nhật
+        Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
 
         // Xóa
         Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
-        Route::get('/attendances/{classname}', [AttendanceController::class, 'create'])->name('attendances.create');
-        Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
-
+        Route::get('attendances/{classname}/{date?}', [AttendanceController::class, 'form'])->name('attendances.form');
+        Route::post('attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('student/{studentId}/stats', [AdminController::class, 'stats'])->name('attendances.stats');
+    });
+Route::prefix('teacher')
+    ->name('teacher.')
+    ->middleware('customAuth:teacher')
+    ->group(function () {
+        Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('attendances/{classname}/{date?}', [AttendanceController::class, 'form'])->name('attendances.form');
+        Route::post('attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
 
     });
-
+Route::prefix('thienan')
+    ->name('thienan.')
+    ->middleware('customAuth:manager,admin,teacher')
+    ->group(function () {
+        Route::get('accounts/profile/{id}', [AdminController::class, 'profile'])->name('accounts.profile');
+        Route::post('accounts/change-password', [AdminController::class, 'changePassword'])
+            ->name('accounts.change-password');
+        Route::put('profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
+        Route::get('attendances/{classname}/{date?}', [AttendanceController::class, 'form'])->name('attendances.form');
+        Route::post('attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('student/{studentId}/stats', [AdminController::class, 'stats'])->name('attendances.stats');
+    });
 
