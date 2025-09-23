@@ -4,6 +4,48 @@
 
 @section('content')
     <style>
+        .hero-text-wrapper {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            /* nền mờ giúp chữ nổi bật */
+            border-radius: 0.5rem;
+            /* bo tròn nhẹ */
+            color: #fff;
+            /* chữ trắng */
+        }
+
+        .hero-text-wrapper h1 {
+            margin-bottom: 10px;
+        }
+
+        .hero-text-wrapper p {
+            margin: 0;
+        }
+
+        @media (max-width: 767px) {
+            .hero-text-wrapper {
+                max-width: 90%;
+                padding: 10px 15px;
+                background: rgba(0, 0, 0, 0.35);
+                /* nền mờ nhẹ hơn trên mobile */
+            }
+
+            .hero-text-wrapper p {
+                display: none;
+                /* ẩn description trên mobile */
+            }
+
+            .hero-text-wrapper h1 {
+                font-size: 1.8rem;
+                /* co nhỏ title */
+            }
+        }
+
         .section-title {
             text-align: center;
             margin: 50px 0 30px;
@@ -79,12 +121,14 @@
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
             style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
-            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.4);"></div>
+
+            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
+
             <div style="position: relative; z-index: 2;">
-                <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
-                <p class="lead" data-aos="fade-up" data-aos-delay="200">
-                    {{ $carausel->description }}
-                </p>
+                <div class="hero-text-wrapper" style="max-width: 700px; margin: 0 auto;">
+                    <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
+                </div>
             </div>
         </section>
     @endif

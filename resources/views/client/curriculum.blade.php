@@ -4,69 +4,96 @@
 
 @section('content')
     <style>
+        /* ------------------- Hero ------------------- */
+    .hero-text-wrapper {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.45); /* nền mờ giúp chữ nổi bật */
+    border-radius: 0.5rem; /* bo tròn nhẹ */
+    color: #fff; /* chữ trắng */
+}
+
+.hero-text-wrapper h1 {
+    margin-bottom: 10px;
+}
+
+.hero-text-wrapper p {
+    margin: 0;
+}
+
+@media (max-width: 767px) {
+    .hero-text-wrapper {
+        max-width: 90%;
+        padding: 10px 15px;
+        background: rgba(0, 0, 0, 0.35); /* nền mờ nhẹ hơn trên mobile */
+    }
+
+    .hero-text-wrapper p {
+        display: none; /* ẩn description trên mobile */
+    }
+
+    .hero-text-wrapper h1 {
+        font-size: 1.8rem; /* co nhỏ title */
+    }
+}
+
+
+        /* ------------------- General ------------------- */
         .section-title {
             text-align: center;
             font-weight: 700;
             color: #444;
+            margin-bottom: 1.5rem;
         }
 
-        .activity-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            transition: transform 0.3s;
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .activity-img:hover {
-            transform: scale(1.05);
+        .card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
 
-        .hover-scale {
-            transition: transform 0.3s ease;
+        /* ------------------- Age Groups ------------------- */
+        .age-group-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1rem;
         }
 
-        .hover-scale:hover {
-            transform: scale(1.05);
+        .age-group-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
         }
 
-        /* Bounce animation */
-        @keyframes bounce {
+        .age-group-card i {
+            display: block;
+            margin-bottom: 12px;
+        }
 
-            0%,
-            100% {
-                transform: translateY(0);
+        @media(max-width:767px) {
+            .col-12.col-md-6.col-lg-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
             }
-
-            50% {
-                transform: translateY(-8px);
-            }
         }
 
-        /* Thêm animation cho button */
-        .animated-btn {
-            animation: bounce 1.5s infinite;
-        }
-
-        /* Banner card hover effect */
-        .banner-card:hover {
-            transform: scale(1.02);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* ---- Art Gallery styling ---- */
+        /* ------------------- Education Gallery ------------------- */
         .art-gallery-section {
             --frame-bg: #fff;
             --frame-border: rgba(0, 0, 0, 0.06);
-            --accent: #ff6b00;
-            /* cam chủ đạo nếu muốn */
             --soft-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-            --glass: rgba(255, 255, 255, 0.6);
         }
 
-        /* Figure frame for main art */
         .art-frame {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 1));
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), #fafafa);
             padding: 22px;
             border-radius: 18px;
             border: 1px solid var(--frame-border);
@@ -75,41 +102,33 @@
             overflow: hidden;
         }
 
-        .art-img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-            transition: transform .6s cubic-bezier(.2, .8, .2, 1), filter .4s;
-            backface-visibility: hidden;
-        }
-
-        /* main image fixed aspect */
         .art-img-main {
-            aspect-ratio: 9 / 7;
-            /* giữ tỉ lệ nghệ thuật */
             width: 100%;
             height: auto;
-            max-height: 70vh;
+            aspect-ratio: 9/7;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform .6s ease;
         }
 
-        /* caption under frame */
+        .art-frame:hover .art-img-main {
+            transform: scale(1.02) rotate(-0.5deg);
+            filter: saturate(1.02);
+        }
+
         .art-caption {
             margin-top: 12px;
-            font-size: 0.95rem;
+            font-size: .95rem;
             color: #444;
             opacity: .9;
         }
 
-        /* Grid of art cards on the right */
         .art-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 18px;
         }
 
-        /* single art card */
         .art-card {
             position: relative;
             border-radius: 12px;
@@ -117,24 +136,20 @@
             border: 1px solid var(--frame-border);
             background: var(--frame-bg);
             box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-            transition: transform .45s ease, box-shadow .45s ease;
         }
 
-        /* hover effect for cards */
         .art-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
         }
 
-        /* image inside card */
         .art-card .art-img {
             width: 100%;
             height: 190px;
             object-fit: cover;
-            transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+            transition: transform .6s ease;
         }
 
-        /* overlay shown on hover */
         .art-overlay {
             position: absolute;
             inset: 0;
@@ -158,50 +173,24 @@
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
         }
 
-        /* subtle animated effect on main image hover */
-        .art-frame:hover .art-img-main {
-            transform: scale(1.02) rotate(-0.5deg);
-            filter: saturate(1.02);
-        }
-
-        /* responsive */
-        @media (max-width: 991.98px) {
-            .art-grid {
-                grid-template-columns: 1fr 1fr;
+        @media(max-width:991px) {
+            .art-img-main {
+                aspect-ratio: 4/3;
             }
 
             .art-card .art-img {
                 height: 160px;
             }
-
-            .art-img-main {
-                aspect-ratio: 4 / 3;
-                max-height: none;
-            }
         }
 
-        @media (max-width: 767.98px) {
-            .row.align-items-center {
-                align-items: stretch;
-            }
-
-            .col-lg-6 {
-                max-width: 100%;
-                flex: 0 0 100%;
-            }
-
+        @media(max-width:767px) {
             .art-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
-                margin-top: 14px;
             }
 
             .art-card .art-img {
                 height: 140px;
-            }
-
-            .art-caption {
-                font-size: .9rem;
             }
 
             .art-frame {
@@ -210,54 +199,15 @@
             }
         }
 
-        /* optional: focus outline for accessibility */
-        .art-card:focus-within,
-        .art-frame:focus-within {
-            outline: 3px solid rgba(255, 107, 0, 0.15);
-            outline-offset: 6px;
-        }
-
-        .card-title {
-            overflow: hidden !important;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-
+        /* ------------------- Daily Schedule ------------------- */
         .daily-schedule-section {
             background: #ffecd2;
-            /* nền pastel */
             border-radius: 2rem;
-            /* bo tròn section */
             position: relative;
             overflow: hidden;
+            padding: 1rem 0.5rem;
         }
 
-        /* Tạo ren cưa bằng pseudo-element */
-        .daily-schedule-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            /* full section */
-            border-radius: 2rem;
-            padding: 6px;
-            /* độ dày viền */
-            background: repeating-linear-gradient(45deg,
-                    #fcb69f,
-                    #fcb69f 4px,
-                    transparent 4px,
-                    transparent 8px);
-            -webkit-mask:
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-
-        /* Table trong section vẫn đồng bộ pastel */
         .daily-schedule-section .table-primary {
             background: linear-gradient(90deg, #ffecd2, #fcb69f);
             color: #fff;
@@ -268,60 +218,163 @@
         .daily-schedule-section .table-bordered td {
             border-color: rgba(252, 182, 159, 0.4);
         }
+
+        .daily-schedule-section table {
+            width: 100% !important;
+        }
+
+        @media(max-width:767px) {
+
+            .daily-schedule-section table th,
+            .daily-schedule-section table td {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.25rem;
+                text-align: center;
+            }
+        }
+
+        /* ------------------- News ------------------- */
+        #news .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        #news .card-title {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        @media(max-width:991px) {
+            #news .card-img-top {
+                height: 180px;
+            }
+        }
+
+        @media(max-width:767px) {
+            #news .col-12.col-md-6.col-lg-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            #news .card-img-top {
+                height: 160px;
+            }
+        }
+
+        /* ------------------- Promotion Banner ------------------- */
+
+        /* Banner promotion - desktop */
+        .banner-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .banner-img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+        }
+
+        /* Mobile */
+        @media (max-width: 767px) {
+            .banner-card {
+                flex-direction: column;
+                /* ảnh trên, text dưới */
+            }
+
+            .banner-card .col-md-5,
+            .banner-card .col-md-7 {
+                width: 100%;
+                padding: 0;
+                /* loại bỏ padding để ảnh chiếm full */
+            }
+
+            .banner-card .col-md-5 {
+                max-height: 200px;
+                /* giới hạn chiều cao ảnh */
+                overflow: hidden;
+            }
+
+            .banner-card .banner-img {
+                width: 100%;
+                height: 200px;
+                /* giữ tỉ lệ hợp lý */
+                object-fit: cover;
+            }
+
+            .banner-card .col-md-7 {
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        .animated-btn {
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
     </style>
-    {{-- @dd($carausel) --}}
+
+    {{-- ------------------- Hero ------------------- --}}
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
             style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
-            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.4);"></div>
+
+            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
+
             <div style="position: relative; z-index: 2;">
-                <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
-                <p class="lead" data-aos="fade-up" data-aos-delay="200">
-                    {{ $carausel->description }}
-                </p>
+                <div class="hero-text-wrapper" style="max-width: 700px; margin: 0 auto;">
+                    <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
+                </div>
             </div>
         </section>
     @endif
 
-    <!-- Age Groups -->
-    <h2 class="section-title">Các độ tuổi</h2>
-    <div class="row g-4">
-        @foreach ([['icon' => 'fa-solid fa-star', 'color' => 'text-primary', 'title' => 'Nhà trẻ (0–3 tuổi)', 'desc' => 'Phát triển kỹ năng vận động cơ bản, cảm xúc, giao tiếp đầu đời.'], ['icon' => 'fa-solid fa-paintbrush', 'color' => 'text-success', 'title' => 'Mẫu giáo bé (3–4 tuổi)', 'desc' => 'Tập trung kỹ năng ngôn ngữ, tự lập, hoạt động nhóm đơn giản.'], ['icon' => 'fa-solid fa-book', 'color' => 'text-warning', 'title' => 'Mẫu giáo nhỡ (4–5 tuổi)', 'desc' => 'Khám phá khoa học, toán học cơ bản, phát triển tư duy sáng tạo.'], ['icon' => 'fa-solid fa-futbol', 'color' => 'text-danger', 'title' => 'Mẫu giáo lớn (5–6 tuổi)', 'desc' => 'Chuẩn bị kiến thức, kỹ năng xã hội và tâm lý trước khi vào lớp 1.']] as $group)
-            <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100 border-0 rounded-4">
-                    <div class="card-body text-center">
-                        <i class="{{ $group['icon'] }} {{ $group['color'] }} fa-3x mb-3"></i>
-                        <h5 class="fw-bold">{{ $group['title'] }}</h5>
+    {{-- ------------------- Age Groups ------------------- --}}
+    <section class="container py-2">
+        <h2 class="section-title">Các độ tuổi</h2>
+        <div class="row g-4">
+            @foreach ([['icon' => 'fa-solid fa-star', 'color' => 'text-primary', 'title' => 'Nhà trẻ (0–3 tuổi)', 'desc' => 'Phát triển kỹ năng vận động cơ bản, cảm xúc, giao tiếp đầu đời.'], ['icon' => 'fa-solid fa-paintbrush', 'color' => 'text-success', 'title' => 'Mẫu giáo bé (3–4 tuổi)', 'desc' => 'Tập trung kỹ năng ngôn ngữ, tự lập, hoạt động nhóm đơn giản.'], ['icon' => 'fa-solid fa-book', 'color' => 'text-warning', 'title' => 'Mẫu giáo nhỡ (4–5 tuổi)', 'desc' => 'Khám phá khoa học, toán học cơ bản, phát triển tư duy sáng tạo.'], ['icon' => 'fa-solid fa-futbol', 'color' => 'text-danger', 'title' => 'Mẫu giáo lớn (5–6 tuổi)', 'desc' => 'Chuẩn bị kiến thức, kỹ năng xã hội và tâm lý trước khi vào lớp 1.']] as $group)
+                <div class="col-md-6 col-lg-3 col-12">
+                    <div class="card age-group-card h-100 text-center">
+                        <i class="{{ $group['icon'] }} {{ $group['color'] }} fa-3x"></i>
+                        <h5 class="fw-bold mt-2">{{ $group['title'] }}</h5>
                         <p class="text-muted">{{ $group['desc'] }}</p>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
     </section>
 
-
-    <!-- Education Methods -->
+    {{-- ------------------- Education Gallery ------------------- --}}
     <section class="bg-light py-2 art-gallery-section" data-aos="fade-up">
         <div class="container">
             <h2 class="section-title mb-4">Nội dung giáo dục</h2>
-
             @if ($educationContent)
                 <div class="row g-4 align-items-center">
-                    <!-- Left: Main image -->
                     <div class="col-lg-6" data-aos="fade-right">
                         <figure class="art-frame">
                             <img src="{{ asset($educationContent->main_image) }}"
                                 alt="{{ $educationContent->title ?? 'Education Content' }}" class="art-img art-img-main">
                             @if (!empty($educationContent->caption))
-                                <figcaption class="art-caption">
-                                    {{ $educationContent->caption }}
-                                </figcaption>
+                                <figcaption class="art-caption">{{ $educationContent->caption }}</figcaption>
                             @endif
                         </figure>
                     </div>
-
-                    <!-- Right: Grid of item images -->
                     <div class="col-lg-6" data-aos="fade-left">
                         @if ($educationContent->items && $educationContent->items->count())
                             <div class="art-grid">
@@ -348,8 +401,8 @@
         </div>
     </section>
 
-    <!-- Daily Schedule -->
-    <section class="daily-schedule-section py-2 m-4" data-aos="fade-up">
+    {{-- ------------------- Daily Schedule ------------------- --}}
+    <section class="daily-schedule-section py-1 m-4" data-aos="fade-up">
         <div class="container">
             <h2 class="section-title">Lịch học mẫu một ngày</h2>
             <div class="table-responsive">
@@ -377,56 +430,49 @@
         </div>
     </section>
 
-    {{-- News --}}
-    <section id="news" class="container py-2">
-        <h2 class="section-title" data-aos="fade-up">Tin tức & Sự kiện</h2>
+    {{-- ------------------- News ------------------- --}}
+    <section id="news" class="container py-1">
+        <h2 class="section-title m-2" data-aos="fade-up">Tin tức & Sự kiện</h2>
         <div class="row g-4">
             @forelse($news as $key => $item)
-                <div class="col-md-3" data-aos="fade-up" data-aos-delay="{{ $key * 200 }}">
+                <div class="col-md-3 col-12" data-aos="fade-up" data-aos-delay="{{ $key * 200 }}">
                     <div class="card shadow-sm h-100">
                         <img src="{{ $item->image ? asset($item->image) : 'https://via.placeholder.com/400x250' }}"
                             class="card-img-top" alt="{{ $item->title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $item->title }}</h5>
-                            <p class="card-text">
-                                {{ Str::limit($item->shortdes ?? strip_tags($item->description), 100) }}
+                            <p class="card-text">{{ Str::limit($item->shortdes ?? strip_tags($item->description), 100) }}
                             </p>
-                            <a href="{{ route('activities.detail', $item->slug) }}" class="btn btn-sm btn-primary">
-                                Xem thêm
-                            </a>
+                            <a href="{{ route('activities.detail', $item->slug) }}" class="btn btn-sm btn-primary">Xem
+                                thêm</a>
                         </div>
                     </div>
                 </div>
             @empty
                 <p class="text-muted">Chưa có tin tức nào.</p>
             @endforelse
-            {{-- Pagination --}}
-            <div class="d-flex justify-content-center mt-4">
-                {{ $news->links('pagination::bootstrap-5') }}
-            </div>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            {{ $news->links('pagination::bootstrap-5') }}
         </div>
     </section>
-    <!-- Banner Row -->
+
+    {{-- ------------------- Promotion Banner ------------------- --}}
     <section class="container py-2" data-aos="fade-up">
         <h2 class="section-title text-center">Khuyến mãi nhập học sớm</h2>
-
         @if ($promotion)
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <div class="card shadow-lg rounded overflow-hidden d-flex flex-row align-items-center banner-card">
-                        <!-- Image Col -->
                         <div class="col-md-5 p-0">
-                            <img src="{{ asset($promotion->image) }}" class="img-fluid h-100"
+                            <img src="{{ asset($promotion->image) }}" class="img-fluid banner-img"
                                 alt="{{ $promotion->title }}">
                         </div>
-                        <!-- Text Col -->
                         <div class="col-md-7 p-4 d-flex flex-column justify-content-center bg-light">
                             <h3 class="fw-bold mb-3">{{ $promotion->title }}</h3>
                             <p class="mb-3">{{ $promotion->description }}</p>
-                          <a href="#" class="btn btn-danger btn-lg w-auto animated-btn" data-bs-toggle="modal"
-                                data-bs-target="#registrationModal">
-                                Đăng Ký Ngay
-                            </a>
+                            <a href="#" class="btn btn-danger btn-lg w-auto animated-btn" data-bs-toggle="modal"
+                                data-bs-target="#registrationModal">Đăng Ký Ngay</a>
                         </div>
                     </div>
                 </div>
@@ -435,18 +481,25 @@
             <p class="text-center">Hiện chưa có khuyến mãi nhập học sớm.</p>
         @endif
     </section>
-      {{-- Include modal --}}
-        @include('client.partials.registration_modal')
-@endsection
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        if (window.location.href.includes("page=")) {
-            const newsSection = document.getElementById("news");
-            if (newsSection) {
-                newsSection.scrollIntoView({
+
+    @include('client.partials.registration_modal')
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.location.href.includes("page=")) {
+                const newsSection = document.getElementById("news");
+                if (newsSection) newsSection.scrollIntoView({
                     behavior: "smooth"
                 });
             }
-        }
-    });
-</script>
+            if (window.innerWidth <= 767) {
+                document.querySelectorAll('.banner-img-container').forEach(function(div) {
+                    const img = div.querySelector('img');
+                    if (img) {
+                        div.style.backgroundImage = 'url(' + img.src + ')';
+                    }
+                });
+            }
+        });
+    </script>
+@endsection
