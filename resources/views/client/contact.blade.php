@@ -2,7 +2,47 @@
 
 @section('title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
 
+
 @section('content')
+    <style>
+        /* Căn chỉnh input/card */
+        #contactForm input,
+        #contactForm select,
+        #contactForm textarea {
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ced4da;
+            width: 100%;
+        }
+
+        /* Hover & focus effect */
+        #contactForm input:focus,
+        #contactForm select:focus,
+        #contactForm textarea:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+            outline: none;
+        }
+
+        /* Responsive trên mobile */
+        @media (max-width: 767px) {
+
+            #contactForm input,
+            #contactForm select,
+            #contactForm textarea {
+                font-size: 1rem;
+            }
+
+            #contactForm button {
+                width: 100% !important;
+            }
+
+            #contactForm .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
     <!-- Hero -->
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
@@ -53,27 +93,27 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card shadow-sm border-0" data-aos="zoom-in">
-                        <div class="card-body p-5">
-                            <form id="registrationForm" class="row g-4">
-                                <div class="col-md-6">
+                        <div class="card-body p-3">
+                            <form id="contactForm" class="row g-4">
+                                <div class="col-md-6 col-12">
                                     <label for="parentName" class="form-label fw-semibold">Họ tên phụ huynh</label>
                                     <input type="text" name="parent_name" class="form-control form-control-lg"
                                         id="parentName" placeholder="Nhập họ tên..." required>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <label for="phone" class="form-label fw-semibold">Số điện thoại</label>
                                     <input type="tel" name="phone" class="form-control form-control-lg" id="phone"
                                         placeholder="Nhập số điện thoại..." required>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <label for="childName" class="form-label fw-semibold">Họ tên bé</label>
                                     <input type="text" name="child_name" class="form-control form-control-lg"
                                         id="childName" placeholder="Nhập tên bé..." required>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-6 col-12">
                                     <label for="ageGroup" class="form-label fw-semibold">Độ tuổi</label>
                                     <select name="age_group" class="form-select form-select-lg" id="ageGroup" required>
                                         <option selected disabled value="">Chọn độ tuổi...</option>
@@ -91,7 +131,8 @@
                                 </div>
 
                                 <div class="col-12 text-center">
-                                    <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm" id="submitBtn">
+                                    <button type="submit" class="btn btn-success btn-lg shadow-sm w-100 w-md-auto"
+                                        id="submitBtn">
                                         <span id="btnText">Gửi đăng ký</span>
                                         <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"
                                             aria-hidden="true"></span>
@@ -104,6 +145,11 @@
             </div>
         </div>
     </section>
+
+
+
+
+
 @endsection
 
 {{-- SweetAlert2 CDN --}}

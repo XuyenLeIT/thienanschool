@@ -25,7 +25,8 @@
             font-family: "Quicksand", sans-serif;
             background-color: #fffafc;
             color: #333;
-                overflow-x: hidden; /* ngăn tràn ngang */
+            overflow-x: hidden;
+            /* ngăn tràn ngang */
         }
 
         .navbar {
