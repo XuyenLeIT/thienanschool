@@ -1,4 +1,4 @@
-<div class="hero-carousel">
+<div class="hero-carousel p-3">
     <div class="carousel"
         data-flickity='{
       "cellAlign": "center",

@@ -3,6 +3,49 @@
 @section('title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
 
 <style>
+    /* =================== Herro =================== */
+    .hero-text-wrapper {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 15px 20px;
+        background: rgba(0, 0, 0, 0.45);
+        /* nền mờ giúp chữ nổi bật */
+        border-radius: 0.5rem;
+        /* bo tròn nhẹ */
+        color: #fff;
+        /* chữ trắng */
+    }
+
+    .hero-text-wrapper h1 {
+        margin-bottom: 10px;
+    }
+
+    .hero-text-wrapper p {
+        margin: 0;
+    }
+
+    @media (max-width: 767px) {
+        .hero-text-wrapper {
+            max-width: 90%;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.35);
+            /* nền mờ nhẹ hơn trên mobile */
+        }
+
+        .hero-text-wrapper p {
+            display: none;
+            /* ẩn description trên mobile */
+        }
+
+        .hero-text-wrapper h1 {
+            font-size: 1.8rem;
+            /* co nhỏ title */
+        }
+    }
+
     /* =================== Banner =================== */
     .banner-container {
         width: 100%;
@@ -109,6 +152,19 @@
         50% {
             transform: scale(1.1);
         }
+    }
+      .advice .card-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .advice .card-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     /* =================== Modal =================== */
@@ -275,31 +331,34 @@
         right: 20px;
         z-index: 1080;
     }
+
     .notice-description {
-    display: none; /* ẩn mặc định */
-    margin-top: 5px;
-    font-size: 0.9rem;
-    color: #555;
-    transition: all 0.3s ease-in-out;
-    position: absolute; /* để không đẩy layout */
-    background: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    z-index: 10;
-    width: max-content;
-    max-width: 500px;
-}
+        display: none;
+        /* ẩn mặc định */
+        margin-top: 5px;
+        font-size: 0.9rem;
+        color: #555;
+        transition: all 0.3s ease-in-out;
+        position: absolute;
+        /* để không đẩy layout */
+        background: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        width: max-content;
+        max-width: 500px;
+    }
 
-.notice-item {
-    position: relative; /* để notice-description nằm đúng vị trí */
-    cursor: pointer;
-}
+    .notice-item {
+        position: relative;
+        /* để notice-description nằm đúng vị trí */
+        cursor: pointer;
+    }
 
-.notice-item:hover .notice-description {
-    display: block;
-}
-
+    .notice-item:hover .notice-description {
+        display: block;
+    }
 </style>
 
 @section('content')
@@ -307,12 +366,14 @@
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
             style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
-            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.4);"></div>
+
+            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
+
             <div style="position: relative; z-index: 2;">
-                <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
-                <p class="lead" data-aos="fade-up" data-aos-delay="200">
-                    {{ $carausel->description }}
-                </p>
+                <div class="hero-text-wrapper" style="max-width: 700px; margin: 0 auto;">
+                    <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
+                </div>
             </div>
         </section>
     @endif
@@ -324,12 +385,12 @@
             <div class="row g-4">
                 @foreach ($advices as $index => $advice)
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $index * 200 }}">
-                        <div class="card shadow-sm h-100">
+                        <div class="advice card shadow-sm h-100">
                             <img src="{{ $advice['image'] }}" class="card-img-top" alt="{{ $advice['title'] }}" />
                             <div class="card-body">
                                 <h5 class="card-title">{{ $advice['title'] }}</h5>
-                                <p class="card-text">{{ $advice['desc'] }}</p>
-                                <a href="{{ $advice['link'] }}" class="btn btn-sm btn-primary">Xem chi tiết</a>
+                                <p class="card-text">{{ $advice['shortdes'] }}</p>
+                                <a href="{{ route('activities.detail', $advice->slug) }}" class="btn btn-sm btn-primary">Xem chi tiết</a>
                             </div>
                         </div>
                     </div>
@@ -376,22 +437,33 @@
 
     {{-- Thông báo --}}
     <section class="container py-5">
-        <h2 class="section-title" data-aos="fade-up">Thông báo dành cho phụ huynh</h2>
+        <h2 class="section-title text-center" data-aos="fade-up">Thông báo dành cho phụ huynh</h2>
+
         @if ($notices->count() > 0)
-            <ul class="list-group shadow" data-aos="fade-left">
-                @foreach ($notices as $notice)
-                    <li class="list-group-item position-relative notice-item fw-bold">
-                        📢 {{ $notice->title }}
-                        <div class="notice-description">
-                            {{ $notice->description }}
+            <div class="accordion shadow" id="noticesAccordion" data-aos="fade-left">
+                @foreach ($notices as $key => $notice)
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ $key }}">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ $key }}" aria-expanded="false"
+                                aria-controls="collapse{{ $key }}">
+                                📢 {{ $notice->title }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ $key }}" class="accordion-collapse collapse"
+                            aria-labelledby="heading{{ $key }}" data-bs-parent="#noticesAccordion">
+                            <div class="accordion-body">
+                                {{ $notice->description }}
+                            </div>
                         </div>
-                    </li>
+                    </div>
                 @endforeach
-            </ul>
+            </div>
         @else
-            <p class="text-muted">Hiện chưa có thông báo nào.</p>
+            <p class="text-muted text-center">Hiện chưa có thông báo nào.</p>
         @endif
     </section>
+
 
     {{-- Lời yêu thương --}}
     <section class="container py-5">

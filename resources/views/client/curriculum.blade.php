@@ -5,41 +5,47 @@
 @section('content')
     <style>
         /* ------------------- Hero ------------------- */
-    .hero-text-wrapper {
-    text-align: center;
-    position: relative;
-    z-index: 2;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 15px 20px;
-    background: rgba(0, 0, 0, 0.45); /* nền mờ giúp chữ nổi bật */
-    border-radius: 0.5rem; /* bo tròn nhẹ */
-    color: #fff; /* chữ trắng */
-}
+        .hero-text-wrapper {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            /* nền mờ giúp chữ nổi bật */
+            border-radius: 0.5rem;
+            /* bo tròn nhẹ */
+            color: #fff;
+            /* chữ trắng */
+        }
 
-.hero-text-wrapper h1 {
-    margin-bottom: 10px;
-}
+        .hero-text-wrapper h1 {
+            margin-bottom: 10px;
+        }
 
-.hero-text-wrapper p {
-    margin: 0;
-}
+        .hero-text-wrapper p {
+            margin: 0;
+        }
 
-@media (max-width: 767px) {
-    .hero-text-wrapper {
-        max-width: 90%;
-        padding: 10px 15px;
-        background: rgba(0, 0, 0, 0.35); /* nền mờ nhẹ hơn trên mobile */
-    }
+        @media (max-width: 767px) {
+            .hero-text-wrapper {
+                max-width: 90%;
+                padding: 10px 15px;
+                background: rgba(0, 0, 0, 0.35);
+                /* nền mờ nhẹ hơn trên mobile */
+            }
 
-    .hero-text-wrapper p {
-        display: none; /* ẩn description trên mobile */
-    }
+            .hero-text-wrapper p {
+                display: none;
+                /* ẩn description trên mobile */
+            }
 
-    .hero-text-wrapper h1 {
-        font-size: 1.8rem; /* co nhỏ title */
-    }
-}
+            .hero-text-wrapper h1 {
+                font-size: 1.8rem;
+                /* co nhỏ title */
+            }
+        }
 
 
         /* ------------------- General ------------------- */
