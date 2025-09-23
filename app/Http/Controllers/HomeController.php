@@ -33,14 +33,12 @@ class HomeController extends Controller
     // Play activities, chỉ lấy 10 bản ghi gần nhất
     $playActivities = Activity::where('type', 2)
       ->where('status', 1)
-      ->latest()
-      ->take(10)
       ->get();
 
-    // Galleries, lấy tối đa 5 gallery với tối đa 3 ảnh mỗi gallery
+    // Galleries, lấy tối đa 5 gallery với tối đa 4 ảnh mỗi gallery
     $galleries = Gallery::with([
       'images' => function ($q) {
-        $q->take(3);
+        $q->take(4);
       }
     ])->take(5)->get();
 

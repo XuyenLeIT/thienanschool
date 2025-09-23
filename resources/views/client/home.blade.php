@@ -20,17 +20,16 @@
                         @endforeach
                     @endforeach
                 </div>
-
+                {{-- @dd($features) --}}
                 <!-- Content -->
                 <div class="col-md-6">
-                    <h2 class="mb-3">Điều Gì Làm Nên Sự Khác Biệt Của Chúng Tôi</h2>
-                    <p class="mb-4">Trường Mầm Non Thiên Ân mang đến môi trường học tập an toàn, yêu thương và sáng tạo,
-                        nơi trẻ được khuyến khích khám phá, phát triển toàn diện về trí tuệ, thể chất và cảm xúc.</p>
+                    <h2 class="mb-3">{{ $features[0]->title }}</h2>
+                    <p class="mb-4">{{ $features[0]->description }}</p>
 
                     <div class="row g-4">
                         @foreach ($features as $feature)
                             @foreach ($feature->subdes as $sub)
-                                <div class="col-6 d-flex">
+                                <div class="col-12 col-md-6 d-flex">
                                     <i class="{{ $sub->icon_class ?? 'fa-solid fa-star' }} me-2 fs-4"></i>
                                     <div>
                                         <h6 class="fw-bold mb-1">{{ $sub->title }}</h6>
@@ -40,6 +39,7 @@
                             @endforeach
                         @endforeach
                     </div>
+
                 </div>
             </div>
         </div>
@@ -66,30 +66,32 @@
         style="width:100%;">
         @foreach ($playActivities as $activity)
             <div class="slider-cell p-2">
-                <div class="card shadow-sm h-100">
-                    @if ($activity->image)
-                        <img src="{{ asset($activity->image) }}" class="card-img-top" alt="{{ $activity->title }}">
-                    @endif
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $activity->title }}</h5>
-                        <div class="card-text-activity">
-                            {{ $activity->shortdes }}
+                <a href="{{ route('activities.detail', $activity->slug) }}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm h-100">
+                        @if ($activity->image)
+                            <img src="{{ asset($activity->image) }}" class="card-img-top" alt="{{ $activity->title }}">
+                        @endif
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $activity->title }}</h5>
+                            <div class="card-text-activity">
+                                {{ $activity->shortdes }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         @endforeach
     </div>
 
+
     {{-- Galleries --}}
-    <section class="art-hero pt-3 pb-2">
+    <section class="art-hero pt-3">
         <div class="container">
             @foreach ($galleries as $gallery)
-                <div class="row align-items-center mb-5">
+                <div class="row align-items-center">
                     <div class="col-lg-6 mb-4 mb-lg-0">
                         <h1 class="display-5 fw-bold mb-3 mt-3">{{ $gallery->title }}</h1>
                         <p class="mb-4">{{ $gallery->description }}</p>
-                        <button class="btn btn-dark">Explore Gallery</button>
                     </div>
                     <div class="col-lg-6 position-relative">
                         @php $images = $gallery->images; @endphp
@@ -113,13 +115,21 @@
                                 <img src="{{ asset($images[2]->image_path) }}" class="img-fluid rounded" alt="Art bottom">
                             </div>
                         @endif
+
+                        @if ($images->count() > 3)
+                            <div class="art-image art-image-left shadow-sm"
+                                style="bottom:20px; left:0; position:absolute; z-index:2;">
+                                <img src="{{ asset($images[3]->image_path) }}" class="img-fluid rounded" alt="Art left">
+                            </div>
+                        @endif
                     </div>
+
                 </div>
             @endforeach
         </div>
     </section>
     {{-- Trial Registration Card --}}
-    <section id="trial-class" class="py-5" data-aos="fade-up">
+    <section id="trial-class" class="py-2" data-aos="fade-up">
         <div class="container">
             <div class="trial-card position-relative shadow-lg d-flex align-items-center justify-content-between flex-wrap">
 

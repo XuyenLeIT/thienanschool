@@ -68,7 +68,7 @@ class GalleryController extends Controller
 
         // Upload thêm ảnh mới (tối đa 3 ảnh)
         $currentCount = $gallery->images()->count();
-        $maxImages = 3;
+        $maxImages = 4;
 
         if ($request->hasFile('images')) {
             $newImages = $request->file('images');

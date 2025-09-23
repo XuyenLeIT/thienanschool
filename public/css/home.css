@@ -1,4 +1,4 @@
-/* ----------------- GLOBAL ----------------- */ 
+/* ----------------- GLOBAL ----------------- */
 body {
     box-sizing: border-box;
     margin: 0;
@@ -41,10 +41,18 @@ body {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
 }
 
-.img-stack img:nth-child(1) { transform: rotate(-2deg); }
-.img-stack img:nth-child(2) { transform: rotate(1deg); }
-.img-stack img:nth-child(3) { transform: rotate(-1deg); }
-.img-stack img:nth-child(4) { transform: rotate(2deg); }
+.img-stack img:nth-child(1) {
+    transform: rotate(-2deg);
+}
+.img-stack img:nth-child(2) {
+    transform: rotate(1deg);
+}
+.img-stack img:nth-child(3) {
+    transform: rotate(-1deg);
+}
+.img-stack img:nth-child(4) {
+    transform: rotate(2deg);
+}
 
 @media (max-width: 767px) {
     .img-stack {
@@ -118,99 +126,197 @@ body {
 }
 
 @media (max-width: 991.98px) {
-    .activities-slider .slider-cell { width: 50%; }
+    .activities-slider .slider-cell {
+        width: 50%;
+    }
 }
 @media (max-width: 767.98px) {
-    .activities-slider .slider-cell { width: 100%; }
+    .activities-slider .slider-cell {
+        width: 100%;
+    }
 }
 
 /* ----------------- GALLERIES SOLO IMAGE CHỒNG ----------------- */
-.art-hero .row {
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 30px;
-}
-
-/* Cột text */
-.art-hero .col-lg-6:first-child {
-    flex: 1 1 45%;
-    z-index: 5;
-}
-
-/* Cột image */
-.art-hero .col-lg-6:last-child {
-    flex: 1 1 50%;
-    position: relative;
-}
-
-/* Main image lớn */
-.art-image-main {
-    width: 100%;
-    height: 300px;
-    margin: auto;
+.art-hero .art-image {
     border-radius: 16px;
     overflow: hidden;
-    position: relative;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.art-hero .art-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ảnh chính */
+.art-hero .art-image-main {
+    height: 300px;
+    border-radius: 16px;
     z-index: 1;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
 }
 
-/* Các ảnh nhỏ luôn nằm trên ảnh lớn và lệch ra ngoài */
-.art-image-top,
-.art-image-bottom,
-.art-image-small {
+/* Ảnh top (phía trên bên phải) */
+.art-hero .art-image-top {
     width: 40%;
-    position: absolute;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    z-index: 10;
+    height: 150px;
+    transform: rotate(-6deg);
 }
 
-/* Vị trí các ảnh nhỏ lệch ra ngoài ảnh lớn */
-.art-image-top { top: -20px; left: -20px; transform: rotate(-10deg); }
-.art-image-bottom { bottom: -20px; right: -20px; transform: rotate(8deg); }
-.art-image-small:nth-child(3) { top: 50px; right: -40px; transform: rotate(-5deg); }
+/* Ảnh bottom (phía dưới bên phải) */
+.art-hero .art-image-bottom {
+    width: 38%;
+    height: 140px;
+    transform: rotate(6deg);
+}
 
-/* Hover animation */
-.art-image-main:hover,
-.art-image-top:hover,
-.art-image-bottom:hover,
-.art-image-small:hover {
+/* Ảnh left (phía dưới bên trái) */
+.art-hero .art-image-left {
+    width: 35%;
+    height: 130px;
+    transform: rotate(-8deg);
+}
+
+/* Hover effect chung */
+.art-hero .art-image:hover {
     transform: scale(1.05) rotate(0deg);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    /* z-index: 5; */
 }
 
-/* Responsive galleries */
+/* Responsive tablet */
 @media (max-width: 991px) {
-    .art-image-main { max-width: 300px; height: 400px; }
-    .art-image-top,
-    .art-image-bottom,
-    .art-image-small { width: 80px; height: 80px; }
-}
-
-@media (max-width: 767px) {
-    .art-hero .row { flex-direction: column; text-align: center; }
-    .art-hero .col-lg-6:first-child,
-    .art-hero .col-lg-6:last-child { flex: 1 1 100%; margin-bottom: 20px; }
-
-    .art-image-main { width: 100%; height: auto; max-height: 400px; margin: 0 auto; }
-    .art-image-top,
-    .art-image-bottom,
-    .art-image-small {
-        position: relative;
-        width: 50%;
-        height: auto;
-        margin: 10px auto;
-        transform: rotate(0deg);
-        z-index: 10;
+    .art-hero .art-image-main {
+        height: 250px;
+    }
+    .art-hero .art-image-top,
+    .art-hero .art-image-bottom,
+    .art-hero .art-image-left {
+        width: 35%;
+        height: 120px;
     }
 }
+
+/* Responsive mobile - chỉ giữ ảnh chính */
+.art-hero .art-image {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.art-hero .art-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ảnh chính */
+.art-hero .art-image-main {
+    height: 300px;
+    border-radius: 16px;
+    z-index: 1;
+    position: relative;
+}
+
+/* Ảnh top (phía trên bên phải) */
+.art-hero .art-image-top {
+    width: 40%;
+    height: 150px;
+    transform: rotate(-6deg);
+}
+
+/* Ảnh bottom (phía dưới bên phải) */
+.art-hero .art-image-bottom {
+    width: 38%;
+    height: 140px;
+    transform: rotate(6deg);
+}
+
+/* Ảnh left (phía dưới bên trái) */
+.art-hero .art-image-left {
+    width: 35%;
+    height: 130px;
+    transform: rotate(-8deg);
+}
+
+/* Hover effect chung */
+.art-hero .art-image:hover {
+    transform: scale(1.05) rotate(0deg);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive tablet */
+@media (max-width: 991px) {
+    .art-hero .art-image-main {
+        height: 250px;
+    }
+    .art-hero .art-image-top,
+    .art-hero .art-image-bottom,
+    .art-hero .art-image-left {
+        width: 35%;
+        height: 120px;
+    }
+}
+
+/* Responsive mobile - giữ ảnh sole */
+@media (max-width: 767px) {
+  .art-hero .row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .art-hero .col-lg-6 {
+    margin-bottom: 20px;
+  }
+
+  /* Ảnh chính full width */
+  .art-hero .art-image-main {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+    display: block;
+  }
+
+  .art-hero .art-image-main img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Giữ ảnh phụ nhưng thu nhỏ lại */
+  .art-hero .art-image-top,
+  .art-hero .art-image-bottom,
+  .art-hero .art-image-left {
+    width: 40%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* Sắp xếp lại vị trí cho gọn */
+  .art-hero .art-image-top {
+    top: -10px;
+    right: -10px;
+    transform: rotate(-5deg);
+  }
+
+  .art-hero .art-image-bottom {
+    bottom: -10px;
+    left: -10px;
+    transform: rotate(5deg);
+  }
+
+  .art-hero .art-image-left {
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%) rotate(3deg);
+  }
+}
+
 
 /* ----------------- CARD NEWS ----------------- */
 #news .card {
@@ -230,13 +336,18 @@ body {
     flex-direction: column;
     justify-content: space-between;
 }
+#news .card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 #news .card-text {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 /* ----------------- TRIAL CARD ----------------- */
 #trial-class .trial-card {
     background: linear-gradient(270deg, #ffecd2, #fcb69f, #ffecd2, #fcb69f);
@@ -256,17 +367,27 @@ body {
 
 /* Gradient animation */
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
-#trial-class .trial-card-bg { z-index: 0; }
+#trial-class .trial-card-bg {
+    z-index: 0;
+}
 
 @media (max-width: 767px) {
     #trial-class .trial-card {
         flex-direction: column;
         text-align: center;
     }
-    #trial-class .trial-image { margin-top: 20px; }
+    #trial-class .trial-image {
+        margin-top: 20px;
+    }
 }
