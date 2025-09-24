@@ -54,7 +54,7 @@
         border-radius: 20px;
         overflow: hidden;
         position: relative;
-        height: 250px;
+        height: 300px;
     }
 
     .banner {
@@ -153,7 +153,8 @@
             transform: scale(1.1);
         }
     }
-      .advice .card-title {
+
+    .advice .card-title {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -223,7 +224,7 @@
 
         /* tablet portrait */
         .banner-container {
-            height: 200px;
+            height: 300px;
         }
 
         .banner-title {
@@ -241,6 +242,7 @@
 
         .banner-content {
             padding: 0 15px;
+            height: 160px;
         }
 
         .modal-lg {
@@ -380,8 +382,8 @@
 
     {{-- Góc tư vấn --}}
     @if (count($advices) > 0)
-        <section class="container py-5">
-            <h2 class="section-title" data-aos="fade-up">Góc tư vấn</h2>
+        <section class="container py-1">
+            <h2 class="section-title m-3" data-aos="fade-up">Góc tư vấn</h2>
             <div class="row g-4">
                 @foreach ($advices as $index => $advice)
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $index * 200 }}">
@@ -390,7 +392,8 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $advice['title'] }}</h5>
                                 <p class="card-text">{{ $advice['shortdes'] }}</p>
-                                <a href="{{ route('activities.detail', $advice->slug) }}" class="btn btn-sm btn-primary">Xem chi tiết</a>
+                                <a href="{{ route('activities.detail', $advice->slug) }}" class="btn btn-sm btn-primary">Xem
+                                    chi tiết</a>
                             </div>
                         </div>
                     </div>
@@ -466,11 +469,11 @@
 
 
     {{-- Lời yêu thương --}}
-    <section class="container py-5">
+    <section class="container py-1">
         <h2 class="section-title" data-aos="fade-up">Tình yêu thương của bé</h2>
         <div class="row g-4">
             @forelse($lovemessages as $index => $msg)
-                <div class="col-md-4"
+                <div class="col-md-3"
                     data-aos="{{ $index % 3 == 0 ? 'fade-right' : ($index % 3 == 1 ? 'fade-up' : 'fade-left') }}">
                     <div
                         class="card h-100 shadow-sm text-center p-3 d-flex flex-column justify-content-center align-items-center">
@@ -506,83 +509,150 @@
             </div>
         @endif
     </section>
-
+    {{-- Include modal --}}
+    @include('client.partials.registration_modal')
     {{-- Toast container --}}
     <div id="toast-container"></div>
 
-    {{-- Include modal --}}
-    @include('client.partials.registration_modal')
-@endsection
 
-@section('scripts')
+    <style>
+        #toast-container {
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            /* an toàn cho notch */
+            right: 10px;
+            left: 10px;
+            /* đảm bảo không tràn màn hình nhỏ */
+            /* z-index: 2000; */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+            /* tránh toast che nút bấm */
+        }
+
+        .toast-custom {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 320px;
+            /* auto co giãn cho mobile */
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+        }
+
+        .toast-custom.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid #eee;
+        }
+
+        .toast-body {
+            margin-left: 12px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .toast-body strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .toast-body small {
+            color: #888;
+            font-style: italic;
+            display: block;
+        }
+
+        .toast-body p {
+            margin: 4px 0 0;
+        }
+    </style>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const container = document.getElementById("toast-container");
+            // Ẩn toast khi modal mở
+            const modalEl = document.getElementById("registrationModal");
+            modalEl.addEventListener("show.bs.modal", () => {
+                container.style.display = "none";
+            });
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                container.style.display = "flex";
+            });
+            // Hiện lại toast khi modal đóng
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                container.style.display = "flex";
+            });
             let feedbacks = [];
             let index = 0;
+            let isShowing = false; // đảm bảo chỉ 1 toast chạy
 
             async function loadFeedbacks() {
                 try {
                     let res = await fetch("{{ url('/api/feedbacks') }}");
                     feedbacks = await res.json();
                     if (feedbacks.length > 0) {
-                        showToast();
-                        setInterval(showToast, 10000);
+                        showNextToast();
                     }
                 } catch (error) {
                     console.error("Lỗi khi tải feedbacks:", error);
                 }
             }
 
-            function showToast() {
-                if (feedbacks.length === 0) return;
+            function showNextToast() {
+                if (isShowing || feedbacks.length === 0) return;
 
                 const current = feedbacks[index];
                 const toast = document.createElement("div");
-                toast.style.cssText = `
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 10px;
-            padding: 10px 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            width: 300px;
-            margin-top: 10px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.5s ease;
-        `;
+                toast.className = "toast-custom";
+
                 toast.innerHTML = `
-            <div class="d-flex align-items-start">
-                <img src="${current.avatar ? current.avatar : 'https://i.pravatar.cc/100'}" 
-                     class="rounded-circle me-3 border" 
-                     width="50" height="50" 
-                     alt="${current.name}">
-                <div>
-                    <strong class="d-block">${current.name}</strong>
-                    <small class="text-muted fst-italic">${current.parent ?? ''}</small>
-                    <p class="mb-0 mt-1" style="font-size:0.9rem; line-height:1.3;">
-                        ${current.feedback}
-                    </p>
+                <img src="${current.avatar ? current.avatar : 'https://i.pravatar.cc/100'}"
+                     class="toast-avatar" alt="${current.name}">
+                <div class="toast-body">
+                    <strong>${current.name}</strong>
+                    <small>${current.parent ?? ''}</small>
+                    <p>${current.feedback}</p>
                 </div>
-            </div>
-        `;
+            `;
 
                 container.appendChild(toast);
-                setTimeout(() => {
-                    toast.style.opacity = "1";
-                    toast.style.transform = "translateX(0)";
-                }, 50);
-                setTimeout(() => {
-                    toast.style.opacity = "0";
-                    toast.style.transform = "translateX(100%)";
-                    toast.addEventListener("transitionend", () => toast.remove());
-                }, 7000);
+                isShowing = true;
 
-                index = (index + 1) % feedbacks.length;
+                // hiện toast
+                setTimeout(() => toast.classList.add("show"), 50);
+
+                // sau 5s thì ẩn toast
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                    toast.addEventListener("transitionend", () => {
+                        toast.remove();
+                        isShowing = false;
+                        index = (index + 1) % feedbacks.length;
+                        setTimeout(showNextToast, 1000); // gọi toast tiếp theo sau 1s
+                    });
+                }, 5000);
             }
 
             loadFeedbacks();
         });
     </script>
+
+
+
 @endsection

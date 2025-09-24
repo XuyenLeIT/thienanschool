@@ -107,6 +107,7 @@ Route::prefix('admin')->name('admin.')->middleware('customAuth:admin')->group(fu
     Route::put('/registrations/{id}/update-result', [RegistrationController::class, 'updateResult'])->name('registrations.updateResult');
     Route::post('menus/sort', [MenuController::class, 'sort'])->name('menus.sort');
 
+    Route::resource('love-messages', LoveMessageController::class);
 });
 
 /*

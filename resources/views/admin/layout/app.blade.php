@@ -93,6 +93,7 @@
                         ['route' => 'admin.education.index', 'icon' => 'fa-graduation-cap', 'label' => 'Education'],
                         ['route' => 'admin.promotions.index', 'icon' => 'fa-bullhorn', 'label' => 'Promotions'],
                         ['route' => 'admin.accounts.index', 'icon' => 'fa-users', 'label' => 'Nhân Sự'],
+                         ['route' => 'admin.parent_notices.index', 'icon' => 'fa-solid fa-person-breastfeeding', 'label' => 'Phụ Huynh'],
                     ];
                 }
             @endphp
