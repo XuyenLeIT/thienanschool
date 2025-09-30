@@ -49,7 +49,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
             <li>
-                <a class="dropdown-item" href="{{ route('accounts.profile', $authUser->id ?? 0) }}">
+                <a class="dropdown-item" href="{{ route($authUser->role.'.accounts.profile', $authUser->id ?? 0) }}">
                     <i class="fas fa-user me-2"></i>Profile
                 </a>
             </li>
@@ -94,7 +94,8 @@
                         ['route' => 'admin.promotions.index', 'icon' => 'fa-bullhorn', 'label' => 'Promotions'],
                         ['route' => 'admin.accounts.index', 'icon' => 'fa-users', 'label' => 'Nhân Sự'],
                          ['route' => 'admin.parent_notices.index', 'icon' => 'fa-solid fa-person-breastfeeding', 'label' => 'Phụ Huynh'],
-                    ];
+                    ['route' => 'admin.registrations.index', 'icon' => 'fa-address-book', 'label' => 'Danh Sách Liên hệ'],
+                        ];
                 }
             @endphp
 

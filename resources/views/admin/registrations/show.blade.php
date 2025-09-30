@@ -5,6 +5,9 @@
 @section('content')
     <div class="container py-5">
         <h2 class="mb-4">Chi tiết đăng ký #{{ $registration->id }}</h2>
+        <div class="col-md-1">
+            <a href="{{ route('admin.registrations.index') }}" class="btn btn-secondary w-100 mb-2">Back</a>
+        </div>
 
         <div class="card shadow-sm p-4 mb-4">
             <p><strong>Họ tên phụ huynh:</strong> {{ $registration->parent_name }}</p>
@@ -33,9 +36,9 @@
             </p>
 
         </div>
-
-        <button id="toggle-form-btn" class="btn btn-primary mb-3">Cập nhật kết quả liên hệ</button>
-
+        @if ($authUser->role === 'manager')
+            <button id="toggle-form-btn" class="btn btn-primary mb-3">Cập nhật kết quả liên hệ</button>
+        @endif
         {{-- Form cập nhật kết quả liên hệ ẩn ban đầu --}}
         <div id="result-form-card" class="card shadow-sm p-4" style="display: none;">
             <h5>Ghi chú kết quả liên hệ</h5>

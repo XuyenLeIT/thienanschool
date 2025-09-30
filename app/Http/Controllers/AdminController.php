@@ -59,22 +59,33 @@ class AdminController extends Controller
     }
 
     /** ------------------ API THỐNG KÊ HỌC SINH ------------------ **/
-    public function stats(Request $request, $studentId)
-    {
-        $from = $request->from ?? now()->startOfMonth()->toDateString();
-        $to = $request->to ?? now()->toDateString();
-        $classname = $request->classname;
+public function stats(Request $request, $studentId)
+{
+    $from = $request->from ?? now()->startOfMonth()->toDateString();
+    $to   = $request->to ?? now()->toDateString();
+    $classname = $request->classname;
 
-        $query = Attendance::where('student_id', $studentId)->whereBetween('date', [$from, $to]);
-        if ($classname) $query->where('classname', $classname);
+    $query = Attendance::where('student_id', $studentId)
+                       ->whereBetween('date', [$from, $to]);
 
-        $records = $query->get();
-
-        return response()->json([
-            'presentDays' => $records->where('status', 'present')->count(),
-            'absentDays' => $records->where('status', 'absent')->count(),
-        ]);
+    if ($classname) {
+        $query->where('classname', $classname);
     }
+
+    $records = $query->get(['date', 'status', 'note']);
+
+    return response()->json([
+        'presentDays' => $records->where('status', 'present')->count(),
+        'absentDays'  => $records->where('status', 'absent')->count(),
+        'records'     => $records->map(fn($item) => [
+            'date'   => (string) $item->date, // an toàn hơn
+            'status' => $item->status,
+            'note'   => $item->note,
+        ]),
+    ]);
+}
+
+
 
     /** ------------------ LOGIN / LOGOUT ------------------ **/
     public function login() { return view('admin.login'); }

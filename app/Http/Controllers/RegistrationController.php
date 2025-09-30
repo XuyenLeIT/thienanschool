@@ -9,6 +9,7 @@ class RegistrationController extends Controller
 {
     public function index(Request $request)
     {
+                $authUser = session('auth_user');
         $query = Registration::query();
 
         // Filter trạng thái liên hệ
@@ -48,7 +49,7 @@ class RegistrationController extends Controller
 
         $registrations = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('admin.registrations.index', compact('registrations'));
+        return view('admin.registrations.index', compact('registrations','authUser'));
     }
 
 
@@ -77,8 +78,9 @@ class RegistrationController extends Controller
     }
     public function show($id)
     {
+        $authUser = session('auth_user');
         $registration = Registration::findOrFail($id);
-        return view('admin.registrations.show', compact('registration'));
+        return view('admin.registrations.show', compact('registration','authUser'));
     }
 
     // Cập nhật kết quả liên hệ (AJAX)
