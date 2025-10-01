@@ -4,7 +4,7 @@
 @section('content')
 <div class="container py-4">
     {{-- Back button --}}
-    <a href="{{ route('admin.accounts.index') }}" class="btn btn-secondary mb-4">
+    <a href="{{ route($authUser->role.'.accounts.index') }}" class="btn btn-secondary mb-4">
         <i class="fa-solid fa-arrow-left"></i> Quay lại
     </a>
 

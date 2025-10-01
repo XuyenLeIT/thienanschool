@@ -54,14 +54,14 @@ class RegistrationController extends Controller
 
 
 
-    public function toggleStatus($id)
-    {
-        $registration = Registration::findOrFail($id);
-        $registration->status = !$registration->status;
-        $registration->save();
+    // public function toggleStatus($id)
+    // {
+    //     $registration = Registration::findOrFail($id);
+    //     $registration->status = !$registration->status;
+    //     $registration->save();
 
-        return redirect()->back()->with('success', 'Trạng thái đã được cập nhật!');
-    }
+    //     return redirect()->back()->with('success', 'Trạng thái đã được cập nhật!');
+    // }
     public function store(Request $request)
     {
         $validated = $request->validate([

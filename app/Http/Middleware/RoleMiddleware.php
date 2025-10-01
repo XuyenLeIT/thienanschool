@@ -11,36 +11,37 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Lấy user id từ session
+        // Lấy user từ session
         $userLogin = session('auth_user');
 
         if (!$userLogin) {
             return redirect()->route('login');
         }
 
-        // Lấy user thực tế
+        // Lấy user từ DB
         $user = Account::find($userLogin->id);
-
+        view()->share('authUser', $user);
         if (!$user) {
-            session()->forget('userLogin');
+            // Xoá đúng key session
+            session()->forget('auth_user');
+
             return redirect()->route('login');
         }
 
-        // Ghi log để debug role hiện tại
-        \Log::info('RoleMiddleware - Auth User:', [
+        // Ghi log để debug
+        \Log::info('RoleMiddleware - Auth User', [
             'id' => $user->id,
             'role' => $user->role,
             'roles_required' => $roles
         ]);
 
-        // Kiểm tra role nếu truyền vào
+        // Kiểm tra role
         if (!empty($roles) && !in_array($user->role, $roles)) {
-            // dd($user->role);
             abort(403, 'Bạn không có quyền truy cập');
         }
 
-        // Gán user vào request để controller/view sử dụng
-        $request->merge(['auth_user' => $user]);
+        // Đưa user vào request
+        $request->attributes->set('auth_user', $user);
 
         return $next($request);
     }

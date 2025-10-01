@@ -6,7 +6,7 @@
         {{-- Header + Back --}}
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3>Thêm Nhân viên</h3>
-            <a href="{{ route('admin.accounts.index') }}" class="btn btn-secondary">
+            <a href="{{ route($authUser->role.'.accounts.index') }}" class="btn btn-secondary">
                 <i class="fa-solid fa-arrow-left"></i> Quay lại
             </a>
         </div>
@@ -25,7 +25,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.accounts.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route($authUser->role.'.accounts.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="row g-3">
@@ -182,7 +182,7 @@
         const manageClass = document.getElementById('classname');
 
         function toggleManageClass() {
-            if (roleSelect.value === 'teacher') {
+            if (['teacher','nanny'].includes(roleSelect.value)) {
                 manageClass.disabled = false;
             } else {
                 manageClass.disabled = true;

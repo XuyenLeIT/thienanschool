@@ -23,7 +23,8 @@ return new class extends Migration {
             $table->integer('age')->nullable();
             $table->string('address')->nullable();
             $table->boolean('gender')->default(false);
-            $table->boolean('status')->default(false);
+            $table->boolean('s_delete')->default(false);
+            $table->integer('status');
             $table->string('note')->nullable();
             $table->timestamps();
         });

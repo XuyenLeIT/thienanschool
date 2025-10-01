@@ -9,8 +9,9 @@ class DailyScheduleController extends Controller
 {
  public function index()
     {
+         $authUser = session('auth_user');
         $schedules = DailySchedule::orderBy('order')->get();
-        return view('admin.daily_schedules.index', compact('schedules'));
+        return view('admin.daily_schedules.index', compact('schedules','authUser'));
     }
 
     public function create()

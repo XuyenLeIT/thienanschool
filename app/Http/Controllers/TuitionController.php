@@ -45,13 +45,14 @@ class TuitionController extends Controller
         ]);
 
         $tuition->update($request->all());
-
-        return redirect()->route('admin.tuition.index')->with('success', 'Cập nhật thành công!');
+        $authUser = session('auth_user');
+        return redirect()->route($authUser->role.'.tuition.index')->with('success', 'Cập nhật thành công!');
     }
 
     public function destroy(Tuition $tuition)
     {
+           $authUser = session('auth_user');
         $tuition->delete();
-        return redirect()->route('admin.tuition.index')->with('success', 'Xóa thành công!');
+        return redirect()->route($authUser->role.'.tuition.index')->with('success', 'Xóa thành công!');
     }
 }

@@ -6,7 +6,7 @@
     <div class="container py-5">
         <h2 class="mb-4">Chi tiết đăng ký #{{ $registration->id }}</h2>
         <div class="col-md-1">
-            <a href="{{ route('admin.registrations.index') }}" class="btn btn-secondary w-100 mb-2">Back</a>
+            <a href="{{ route($authUser->role . '.registrations.index') }}" class="btn btn-secondary w-100 mb-2">Back</a>
         </div>
 
         <div class="card shadow-sm p-4 mb-4">
@@ -76,79 +76,77 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('toggle-form-btn');
-            const formCard = document.getElementById('result-form-card');
-            const form = document.getElementById('updateResultForm');
-            const submitBtn = document.getElementById('submitBtn');
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('toggle-form-btn');
+        const formCard = document.getElementById('result-form-card');
+        const form = document.getElementById('updateResultForm');
+        const submitBtn = document.getElementById('submitBtn');
 
+        const registrationId = {{ $registration->id }};
+        const userRole = "{{ $authUser->role }}"; // admin | manager
+
+        if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 formCard.style.display = formCard.style.display === 'none' ? 'block' : 'none';
             });
+        }
 
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Đang cập nhật...';
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Đang cập nhật...';
 
-                const data = {
-                    status: document.getElementById('status').value,
-                    result: document.getElementById('result').value,
-                    note_result: document.getElementById('note_result').value,
-                    _token: "{{ csrf_token() }}",
-                    _method: "PUT"
-                };
+            const data = {
+                status: document.getElementById('status').value,
+                result: document.getElementById('result').value,
+                note_result: document.getElementById('note_result').value
+            };
 
-                try {
-                    const res = await fetch(
-                        "{{ route('admin.registrations.updateResult', $registration->id) }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(data)
-                        });
+            try {
+                const res = await fetch(`/${userRole}/registrations/${registrationId}/update-result`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(data)
+                });
 
-                    const result = await res.json();
+                const result = await res.json();
 
-                    if (res.ok) {
-                        // Update UI trực tiếp
-                        const statusBadge = document.getElementById('status-badge');
-                        const resultText = document.getElementById('result-text');
-                        const noteResultText = document.getElementById('note-result-text');
+                if (res.ok) {
+                    document.getElementById('status-badge').textContent =
+                        data.status == 1 ? 'Đã liên hệ' : 'Chưa liên hệ';
 
-                        statusBadge.textContent = data.status == 1 ? 'Đã liên hệ' : 'Chưa liên hệ';
-                        statusBadge.className = data.status == 1 ? 'badge bg-success' :
-                            'badge bg-warning text-dark';
+                    document.getElementById('status-badge').className =
+                        data.status == 1 ? 'badge bg-success' : 'badge bg-warning text-dark';
 
-                        if (data.result === "") {
-                            resultText.textContent = "-";
-                        } else {
-                            resultText.textContent = data.result == 1 ?
-                                'Đã liên hệ - Bé đồng ý nhập học' : 'Thất bại - Đang tham khảo';
-                        }
+                    document.getElementById('result-text').textContent =
+                        data.result === "" ? "-" :
+                        data.result == 1 ? 'Đã liên hệ - Bé đồng ý nhập học' : 'Thất bại - Đang tham khảo';
 
-                        noteResultText.textContent = data.note_result || '-';
+                    document.getElementById('note-result-text').textContent =
+                        data.note_result || '-';
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Cập nhật thành công!',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        Swal.fire('Lỗi!', 'Cập nhật thất bại, thử lại.', 'error');
-                    }
-                } catch (err) {
-                    console.error(err);
+                    Swal.fire({
+                        icon: 'success',
+                        title: result.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
                     Swal.fire('Lỗi!', 'Cập nhật thất bại, thử lại.', 'error');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Cập nhật kết quả';
                 }
-            });
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Lỗi!', 'Cập nhật thất bại, thử lại.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Cập nhật kết quả';
+            }
         });
-    </script>
+    });
+</script>
 @endsection

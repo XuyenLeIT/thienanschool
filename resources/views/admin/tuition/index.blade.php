@@ -2,7 +2,7 @@
 
 @section('content')
 <h2>Danh sách Học phí & Chính sách</h2>
-<a href="{{ route('admin.tuition.create') }}" class="btn btn-success mb-3">Thêm mới</a>
+<a href="{{ route($authUser->role.'.tuition.create') }}" class="btn btn-success mb-3">Thêm mới</a>
 
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
@@ -24,8 +24,8 @@
             <td>{{ number_format($t->fee) }}</td>
             <td>{{ $t->note }}</td>
             <td>
-                <a href="{{ route('admin.tuition.edit', $t->id) }}" class="btn btn-sm btn-warning">Sửa</a>
-                <form action="{{ route('admin.tuition.destroy', $t->id) }}" method="POST" class="d-inline-block" 
+                <a href="{{ route($authUser->role.'.tuition.edit', $t->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                <form action="{{ route($authUser->role.'.tuition.destroy', $t->id) }}" method="POST" class="d-inline-block" 
                       onsubmit="return confirm('Bạn có chắc muốn xóa?');">
                     @csrf @method('DELETE')
                     <button class="btn btn-sm btn-danger">Xóa</button>

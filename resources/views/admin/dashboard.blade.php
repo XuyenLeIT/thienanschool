@@ -66,19 +66,22 @@
                 </div>
             </div>
         @endif
-
-
-
         {{-- Tiêu đề điểm danh --}}
         <h2 class="mb-4 mt-2">Danh Sách điểm danh - Lớp {{ $classname }}</h2>
         @php
-            // Lấy giờ hiện tại theo định dạng 24h
-            $currentTime = now()->format('H:i');
-            $canAttend = $currentTime >= '08:00';
+            // Lấy giờ hiện tại và ngày hiện tại theo timezone Việt Nam
+            $now = now()->setTimezone('Asia/Ho_Chi_Minh');
+            $currentTime = $now->format('H:i');
+
+            // Kiểm tra thứ hiện tại (0 = Chủ Nhật, 1 = Thứ Hai, ...)
+            $isSunday = $now->dayOfWeek === 0;
+
+            // Nút chỉ enable từ 08:00 và không phải Chủ Nhật
+            $canAttend = !$isSunday && $currentTime >= '08:00';
         @endphp
 
         @if (in_array($authUser->role, ['teacher', 'manager']))
-            <a href="{{ $canAttend ? route($authUser->role.'.attendances.form', $authUser->classname) : '#' }}"
+            <a href="{{ $canAttend ? route($authUser->role . '.attendances.form', $authUser->classname) : '#' }}"
                 class="btn btn-primary mt-2 mb-2 {{ $canAttend ? '' : 'disabled' }}"
                 {{ $canAttend ? '' : 'aria-disabled=true tabindex=-1' }}>
                 <i class="fa-solid fa-clipboard-user me-2"></i>
@@ -86,9 +89,14 @@
             </a>
 
             @unless ($canAttend)
-                <p class="text-muted small mt-1">Nút sẽ được kích hoạt sau 8:00 sáng.</p>
+                @if ($isSunday)
+                    <p class="text-muted small mt-1">Nút không khả dụng vào Chủ Nhật.</p>
+                @else
+                    <p class="text-muted small mt-1">Nút sẽ được kích hoạt sau 8:00 sáng.</p>
+                @endif
             @endunless
         @endif
+
 
 
         {{-- Bộ lọc --}}

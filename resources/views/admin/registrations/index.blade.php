@@ -63,7 +63,7 @@
                             </button>
                         </div>
                         <div class="col-6 col-md-1 d-grid">
-                            <a href="{{ route('admin.registrations.index') }}" class="btn btn-secondary">
+                            <a href="{{ route($authUser->role.'.registrations.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-undo"></i>
                             </a>
                         </div>
@@ -110,18 +110,6 @@
                                         class="btn btn-sm btn-outline-primary mb-1">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @if (in_array($authUser->role, ['manager']))
-                                        <a href="{{ route('manager.registrations.toggleStatus', $reg->id) }}"
-                                            class="btn btn-sm btn-outline-success mb-1"
-                                            onclick="return confirm('Bạn có chắc muốn thay đổi trạng thái đăng ký này không?')">
-                                            @if ($reg->status)
-                                                <i class="fas fa-times-circle me-1 text-danger"></i>
-                                            @else
-                                                <i class="fas fa-check-circle me-1 text-success"></i>
-                                            @endif
-
-                                        </a>
-                                    @endif
                                 </td>
                             </tr>
                         @empty
