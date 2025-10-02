@@ -59,29 +59,93 @@
 
     <!-- Thông tin liên hệ -->
     <section class="container py-5">
-        <h2 class="section-title text-center mb-4" data-aos="fade-up">📍 Thông tin trường</h2>
-        <div class="row g-4 align-items-center">
-            <div class="col-md-6 contact-info" data-aos="fade-right">
-                <div class="p-4 bg-light rounded shadow-sm">
-                    <p><i class="bi bi-geo-alt-fill text-danger"></i> <b>Địa chỉ:</b> 123 Đường ABC, Quận 1, TP.HCM</p>
-                    <p><i class="bi bi-telephone-fill text-success"></i> <b>Điện thoại:</b> 0123 456 789</p>
-                    <p><i class="bi bi-envelope-fill text-primary"></i> <b>Email:</b> lienhe@thienan.edu.vn</p>
-                    <p><i class="bi bi-facebook text-info"></i> <b>Fanpage:</b>
-                        <a href="#" target="_blank">facebook.com/mamnonthienan</a>
-                    </p>
-                    <p><i class="bi bi-chat-dots-fill text-warning"></i> <b>Zalo:</b> 0123 456 789</p>
+        <h2 class="section-title text-center mb-5 fw-bold" data-aos="fade-up">
+            📍 Thông tin Trường Mầm Non Thiên Ân
+        </h2>
+
+        <div class="row g-4">
+            <!-- Thông tin liên hệ -->
+            <div class="col-lg-5" data-aos="fade-right">
+                <div class="p-4 bg-white rounded-3 shadow-lg h-100">
+                    <h5 class="mb-4 text-primary fw-semibold">Liên hệ nhanh</h5>
+
+                    <!-- Địa chỉ -->
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-geo-alt-fill text-danger fs-4 me-3"></i>
+                        <div>
+                            <strong>Địa chỉ:</strong><br>
+                            123 Đường ABC, Quận 1, TP.HCM
+                        </div>
+                    </div>
+
+                    <!-- Số điện thoại cô 1 -->
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-telephone-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <strong>Cô Ngọc:</strong><br>
+                            <a href="tel:0912345678" class="text-decoration-none text-dark">
+                                0982 563 652
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Số điện thoại cô 2 -->
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-telephone-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <strong>Cô Oanh:</strong><br>
+                            <a href="tel:0987654321" class="text-decoration-none text-dark">
+                                0382 907 702
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-envelope-fill text-primary fs-4 me-3"></i>
+                        <div>
+                            <strong>Email:</strong><br>
+                            <a href="mailto:lienhe@thienan.edu.vn" class="text-decoration-none text-dark">
+                                lienhe@thienan.edu.vn
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Fanpage -->
+                    <div class="d-flex align-items-start mb-3">
+                        <i class="bi bi-facebook text-primary fs-4 me-3"></i>
+                        <div>
+                            <strong>Fanpage:</strong><br>
+                            <a href="https://www.facebook.com/profile.php?id=100012383971736" target="_blank"
+                                class="btn btn-sm btn-primary rounded-pill px-3 mt-1">
+                                <i class="bi bi-facebook me-1"></i> Theo dõi Fanpage
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Zalo -->
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-chat-dots-fill text-info fs-4 me-3"></i>
+                        <div>
+                            <strong>Zalo:</strong><br>
+                            <a href="https://zalo.me/0382907702" target="_blank"
+                                class="btn btn-sm btn-outline-info rounded-pill px-3 mt-1">
+                                Nhắn Zalo
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6" data-aos="fade-left">
-                <!-- Google Map -->
-                <div class="rounded overflow-hidden shadow-sm">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5025!2d106.700423!3d10.776889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3a123456%3A0xabcdef!2zVHLGsOG7nW5nIE3huqdtIE5vbg!5e0!3m2!1svi!2s!4v1690000000000!5m2!1svi!2s"
-                        width="100%" height="300" style="border: 0" allowfullscreen="" loading="lazy"></iframe>
+
+            <!-- Bản đồ -->
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="rounded-3 overflow-hidden shadow-lg h-100">
+             <iframe width="100%" height="100%" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.9236368629836!2d106.63269337408795!3d10.817155858443055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529672a426409%3A0x1c6f178245395fa4!2zMTI0IMSQLiBUcuG6p24gVGjDoWkgVMO0bmcsIFBoxrDhu51uZyAxNSwgVMOibiBCw6xuaCwgSOG7kyBDaMOtIE1pbmggNzAwMDAsIFZpZXRuYW0!5e0!3m2!1sen!2s!4v1759391431302!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>
     </section>
+
 
     <!-- Form liên hệ -->
     <section class="bg-light py-5">
@@ -134,8 +198,8 @@
                                     <button type="submit" class="btn btn-success btn-lg shadow-sm w-100 w-md-auto"
                                         id="submitBtn">
                                         <span id="btnText">Gửi đăng ký</span>
-                                        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"
-                                            aria-hidden="true"></span>
+                                        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none"
+                                            role="status" aria-hidden="true"></span>
                                     </button>
                                 </div>
                             </form>
@@ -145,11 +209,7 @@
             </div>
         </div>
     </section>
-
-
-
-
-
+    @include('client.partials.contact_icon')
 @endsection
 
 {{-- SweetAlert2 CDN --}}

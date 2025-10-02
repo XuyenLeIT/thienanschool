@@ -489,7 +489,7 @@
     </section>
 
     @include('client.partials.registration_modal')
-
+ @include('client.partials.contact_icon')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (window.location.href.includes("page=")) {

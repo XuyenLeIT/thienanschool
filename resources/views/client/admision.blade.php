@@ -251,4 +251,5 @@
         {{-- Include modal --}}
         @include('client.partials.registration_modal')
     </div>
+     @include('client.partials.contact_icon')
 @endsection

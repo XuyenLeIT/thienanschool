@@ -361,6 +361,7 @@
     .notice-item:hover .notice-description {
         display: block;
     }
+
 </style>
 
 @section('content')
@@ -511,117 +512,113 @@
     </section>
     {{-- Include modal --}}
     @include('client.partials.registration_modal')
+    @include('client.partials.contact_icon')
     {{-- Toast container --}}
     <div id="toast-container"></div>
 
 
-    <style>
-        #toast-container {
-            position: fixed;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            /* an toàn cho notch */
-            right: 10px;
-            left: 10px;
-            /* đảm bảo không tràn màn hình nhỏ */
-            /* z-index: 2000; */
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            pointer-events: none;
-            /* tránh toast che nút bấm */
-        }
+  <style>
+    #toast-container {
+        position: fixed;
+        bottom: calc(20px + env(safe-area-inset-bottom));
+        right: 10px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        pointer-events: none; /* tránh toast che nút bấm khác */
+    }
 
-        .toast-custom {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 10px;
-            padding: 12px 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 320px;
-            /* auto co giãn cho mobile */
-            margin-top: 20px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.5s ease;
-        }
+    .toast-custom {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 10px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+        margin-top: 10px;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.5s ease;
+        pointer-events: auto; /* cho phép hover */
+    }
 
-        .toast-custom.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .toast-custom.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
 
-        .toast-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 2px solid #eee;
-        }
+    .toast-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid #eee;
+    }
 
-        .toast-body {
-            margin-left: 12px;
-            font-size: 0.9rem;
-            line-height: 1.3;
-        }
+    .toast-body {
+        margin-left: 12px;
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
 
-        .toast-body strong {
-            display: block;
-            font-size: 1rem;
-        }
+    .toast-body strong {
+        display: block;
+        font-size: 1rem;
+    }
 
-        .toast-body small {
-            color: #888;
-            font-style: italic;
-            display: block;
-        }
+    .toast-body small {
+        color: #888;
+        font-style: italic;
+        display: block;
+    }
 
-        .toast-body p {
-            margin: 4px 0 0;
-        }
-    </style>
+    .toast-body p {
+        margin: 4px 0 0;
+    }
+</style>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const container = document.getElementById("toast-container");
-            // Ẩn toast khi modal mở
-            const modalEl = document.getElementById("registrationModal");
-            modalEl.addEventListener("show.bs.modal", () => {
-                container.style.display = "none";
-            });
-            modalEl.addEventListener("hidden.bs.modal", () => {
-                container.style.display = "flex";
-            });
-            // Hiện lại toast khi modal đóng
-            modalEl.addEventListener("hidden.bs.modal", () => {
-                container.style.display = "flex";
-            });
-            let feedbacks = [];
-            let index = 0;
-            let isShowing = false; // đảm bảo chỉ 1 toast chạy
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("toast-container");
 
-            async function loadFeedbacks() {
-                try {
-                    let res = await fetch("{{ url('/api/feedbacks') }}");
-                    feedbacks = await res.json();
-                    if (feedbacks.length > 0) {
-                        showNextToast();
-                    }
-                } catch (error) {
-                    console.error("Lỗi khi tải feedbacks:", error);
+        // Ẩn toast khi modal mở
+        const modalEl = document.getElementById("registrationModal");
+        modalEl.addEventListener("show.bs.modal", () => {
+            container.style.display = "none";
+        });
+        modalEl.addEventListener("hidden.bs.modal", () => {
+            container.style.display = "flex";
+        });
+
+        let feedbacks = [];
+        let index = 0;
+        let isShowing = false;
+        let hideTimeout; // lưu setTimeout để có thể tạm dừng
+
+        async function loadFeedbacks() {
+            try {
+                let res = await fetch("{{ url('/api/feedbacks') }}");
+                feedbacks = await res.json();
+                if (feedbacks.length > 0) {
+                    showNextToast();
                 }
+            } catch (error) {
+                console.error("Lỗi khi tải feedbacks:", error);
             }
+        }
 
-            function showNextToast() {
-                if (isShowing || feedbacks.length === 0) return;
+        function showNextToast() {
+            if (isShowing || feedbacks.length === 0) return;
 
-                const current = feedbacks[index];
-                const toast = document.createElement("div");
-                toast.className = "toast-custom";
+            const current = feedbacks[index];
+            const toast = document.createElement("div");
+            toast.className = "toast-custom";
 
-                toast.innerHTML = `
+            toast.innerHTML = `
                 <img src="${current.avatar ? current.avatar : 'https://i.pravatar.cc/100'}"
                      class="toast-avatar" alt="${current.name}">
                 <div class="toast-body">
@@ -631,27 +628,40 @@
                 </div>
             `;
 
-                container.appendChild(toast);
-                isShowing = true;
+            container.appendChild(toast);
+            isShowing = true;
 
-                // hiện toast
-                setTimeout(() => toast.classList.add("show"), 50);
+            // Hiện toast
+            setTimeout(() => toast.classList.add("show"), 50);
 
-                // sau 5s thì ẩn toast
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                    toast.addEventListener("transitionend", () => {
-                        toast.remove();
-                        isShowing = false;
-                        index = (index + 1) % feedbacks.length;
-                        setTimeout(showNextToast, 1000); // gọi toast tiếp theo sau 1s
-                    });
-                }, 5000);
+            // Ẩn toast sau 5s
+            hideTimeout = setTimeout(hideToast, 5000);
+
+            // Khi hover -> dừng đếm thời gian
+            toast.addEventListener("mouseenter", () => {
+                clearTimeout(hideTimeout);
+            });
+
+            // Khi rời chuột -> tiếp tục đếm ẩn sau 2s
+            toast.addEventListener("mouseleave", () => {
+                hideTimeout = setTimeout(hideToast, 2000);
+            });
+
+            function hideToast() {
+                toast.classList.remove("show");
+                toast.addEventListener("transitionend", () => {
+                    toast.remove();
+                    isShowing = false;
+                    index = (index + 1) % feedbacks.length;
+                    setTimeout(showNextToast, 1000); // Hiện toast tiếp theo
+                }, { once: true });
             }
+        }
 
-            loadFeedbacks();
-        });
-    </script>
+        loadFeedbacks();
+    });
+</script>
+
 
 
 

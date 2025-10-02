@@ -170,6 +170,6 @@
 
         </div>
     </section>
-
+ @include('client.partials.contact_icon')
 
 @endsection
