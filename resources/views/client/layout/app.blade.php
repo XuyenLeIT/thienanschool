@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
     <!-- Flickity CSS -->
     <link rel="stylesheet" href="{{ asset('css/flickity.min.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/root.css') }}">
     <style>
         body {
             font-family: "Quicksand", sans-serif;

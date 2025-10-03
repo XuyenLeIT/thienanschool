@@ -90,6 +90,17 @@
             margin-bottom: 10px;
         }
 
+        .banner-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+            border-radius: 5px;
+            animation: pulseBtn 2s infinite;
+            text-decoration: none;
+        }
+
         /* Shake animation */
         @keyframes shake {
 
@@ -235,8 +246,8 @@
 
                             <!-- Button -->
 
-                            <a href="#" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#registrationModal">
+
+                            <a href="#" class="banner-btn" data-bs-toggle="modal" data-bs-target="#registrationModal">
                                 Đăng Ký Ngay
                             </a>
                         @endif
@@ -251,5 +262,5 @@
         {{-- Include modal --}}
         @include('client.partials.registration_modal')
     </div>
-     @include('client.partials.contact_icon')
+    @include('client.partials.contact_icon')
 @endsection

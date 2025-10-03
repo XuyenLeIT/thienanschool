@@ -5,8 +5,8 @@
       ============================== */
     .contact-floating {
         position: fixed;
-        bottom: 115px;
-        right: 20px;
+        bottom: 70px;
+        right: 5px;
         display: flex;
         flex-direction: column;     /* xếp dọc */
         gap: 15px;
@@ -18,8 +18,8 @@
          🔥 Kiểu chung cho các nút
       ============================== */
     .contact-btn {
-        min-width: 60px;
-        height: 60px;
+        min-width: 55px;
+        height: 55px;
         border-radius: 50px;        /* phone có thể kéo dài khi hiển thị số */
         background: #0d6efd;
         color: #fff;
@@ -37,10 +37,10 @@
     }
 
     /* Icon chung */
-    .contact-btn i,
+    /* .contact-btn i,
     .contact-btn img {
         margin-right: 8px;
-    }
+    } */
 
     /* =============================
          🔥 Phone Button
@@ -59,8 +59,8 @@
       ============================== */
     .zalo-btn {
         background: #0068ff;
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         border-radius: 50%;
         padding: 0;
         justify-content: center;
@@ -84,7 +84,7 @@
       ============================== */
     @media (min-width: 769px) {
         .phone-btn {
-            width: 60px;                /* mặc định nhỏ */
+            width: 55px;                /* mặc định nhỏ */
             padding: 0 20px;
         }
 
@@ -126,7 +126,7 @@
         .phone-btn,
         .zalo-btn,
         .contact-btn {
-            width: 55px !important;
+            width: 50px !important;
             height: 55px !important;
             border-radius: 50% !important;
             padding: 0 !important;

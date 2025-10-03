@@ -1,0 +1,28 @@
+/* ----------------- 🎨 GLOBAL COLORS ----------------- */
+:root {
+    /* Màu chính pastel */
+    --main-light: #f7d3a2;             /* nền dịu */
+    --main-accent: #fcb69f;            /* điểm nhấn */
+    --main-accent-hover: #f1754b;      /* hover */
+
+    /* Màu chữ */
+    --text-primary: #4a2c2a;           /* chữ chính – nâu đậm */
+    --text-secondary: #6b3e2e;         /* chữ phụ – nâu sáng hơn */
+    --text-light: #ffffff;             /* chữ sáng */
+    --text-muted: #7a7a7a;             /* chữ mờ */
+
+    /* Màu nền phụ */
+    --bg-light: #fffaf5;               /* nền nhẹ hơn main-light */
+    --bg-card: #ffffff;                /* nền thẻ trắng */
+
+    /* Viền & bóng */
+    --border-light: #fbd5bb;
+    --shadow-light: rgba(252, 182, 159, 0.4);
+    --shadow-dark: rgba(0, 0, 0, 0.2);
+      --primary-color: #e76c43;      /* màu cam nhạt */
+    --secondary-color: #ffecd2;    /* màu kem */
+    --primary-hover: #ee5522;      /* màu hover */
+    --text-dark: #5a3e36;          /* chữ đậm */
+    --btn-radius: 0.5rem;
+    --btn-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}

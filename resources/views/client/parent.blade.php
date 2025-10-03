@@ -106,7 +106,7 @@
     .banner-btn {
         display: inline-block;
         padding: 0.75rem 1.5rem;
-        background-color: #dc3545;
+    background: var(--primary-color);
         color: #fff;
         font-weight: bold;
         border-radius: 5px;
@@ -166,6 +166,31 @@
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+    }
+
+    .tn-btn-readmore {
+        background-color: var(--primary-color);
+        color: var(--text-dark);
+        font-weight: 600;
+        border-radius: var(--btn-radius);
+        padding: 0.4rem 0.9rem;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        box-shadow: var(--btn-shadow);
+        text-align: center;
+    }
+
+    .tn-btn-readmore:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        color: var(--text-dark);
+    }
+
+    .tn-btn-readmore:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.25rem rgba(252, 182, 159, 0.3);
     }
 
     /* =================== Modal =================== */
@@ -361,7 +386,6 @@
     .notice-item:hover .notice-description {
         display: block;
     }
-
 </style>
 
 @section('content')
@@ -393,8 +417,12 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ $advice['title'] }}</h5>
                                 <p class="card-text">{{ $advice['shortdes'] }}</p>
-                                <a href="{{ route('activities.detail', $advice->slug) }}" class="btn btn-sm btn-primary">Xem
-                                    chi tiết</a>
+                                {{-- <a href="{{ route('activities.detail', $advice->slug) }}" class="btn btn-sm btn-primary">Xem
+                                    chi tiết</a> --}}
+                                <a href="{{ route('activities.detail', $advice->slug) }}"
+                                    class="tn-btn tn-btn-sm tn-btn-readmore">
+                                    Xem thêm
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -517,108 +545,110 @@
     <div id="toast-container"></div>
 
 
-  <style>
-    #toast-container {
-        position: fixed;
-        bottom: calc(20px + env(safe-area-inset-bottom));
-        right: 10px;
-        left: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        pointer-events: none; /* tránh toast che nút bấm khác */
-    }
-
-    .toast-custom {
-        display: flex;
-        align-items: center;
-        background: #fff;
-        border-radius: 10px;
-        padding: 6px 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 400px;
-        margin-top: 10px;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.5s ease;
-        pointer-events: auto; /* cho phép hover */
-    }
-
-    .toast-custom.show {
-        opacity: 1;
-        transform: translateX(0);
-    }
-
-    .toast-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
-        border: 2px solid #eee;
-    }
-
-    .toast-body {
-        margin-left: 12px;
-        font-size: 0.9rem;
-        line-height: 1.3;
-    }
-
-    .toast-body strong {
-        display: block;
-        font-size: 1rem;
-    }
-
-    .toast-body small {
-        color: #888;
-        font-style: italic;
-        display: block;
-    }
-
-    .toast-body p {
-        margin: 4px 0 0;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById("toast-container");
-
-        // Ẩn toast khi modal mở
-        const modalEl = document.getElementById("registrationModal");
-        modalEl.addEventListener("show.bs.modal", () => {
-            container.style.display = "none";
-        });
-        modalEl.addEventListener("hidden.bs.modal", () => {
-            container.style.display = "flex";
-        });
-
-        let feedbacks = [];
-        let index = 0;
-        let isShowing = false;
-        let hideTimeout; // lưu setTimeout để có thể tạm dừng
-
-        async function loadFeedbacks() {
-            try {
-                let res = await fetch("{{ url('/api/feedbacks') }}");
-                feedbacks = await res.json();
-                if (feedbacks.length > 0) {
-                    showNextToast();
-                }
-            } catch (error) {
-                console.error("Lỗi khi tải feedbacks:", error);
-            }
+    <style>
+        #toast-container {
+            position: fixed;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: 70px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+            /* tránh toast che nút bấm khác */
         }
 
-        function showNextToast() {
-            if (isShowing || feedbacks.length === 0) return;
+        .toast-custom {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 10px;
+            padding: 6px 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+            pointer-events: auto;
+            /* cho phép hover */
+        }
 
-            const current = feedbacks[index];
-            const toast = document.createElement("div");
-            toast.className = "toast-custom";
+        .toast-custom.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-            toast.innerHTML = `
+        .toast-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid #eee;
+        }
+
+        .toast-body {
+            margin-left: 12px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .toast-body strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .toast-body small {
+            color: #888;
+            font-style: italic;
+            display: block;
+        }
+
+        .toast-body p {
+            margin: 4px 0 0;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById("toast-container");
+
+            // Ẩn toast khi modal mở
+            const modalEl = document.getElementById("registrationModal");
+            modalEl.addEventListener("show.bs.modal", () => {
+                container.style.display = "none";
+            });
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                container.style.display = "flex";
+            });
+
+            let feedbacks = [];
+            let index = 0;
+            let isShowing = false;
+            let hideTimeout; // lưu setTimeout để có thể tạm dừng
+
+            async function loadFeedbacks() {
+                try {
+                    let res = await fetch("{{ url('/api/feedbacks') }}");
+                    feedbacks = await res.json();
+                    if (feedbacks.length > 0) {
+                        showNextToast();
+                    }
+                } catch (error) {
+                    console.error("Lỗi khi tải feedbacks:", error);
+                }
+            }
+
+            function showNextToast() {
+                if (isShowing || feedbacks.length === 0) return;
+
+                const current = feedbacks[index];
+                const toast = document.createElement("div");
+                toast.className = "toast-custom";
+
+                toast.innerHTML = `
                 <img src="${current.avatar ? current.avatar : 'https://i.pravatar.cc/100'}"
                      class="toast-avatar" alt="${current.name}">
                 <div class="toast-body">
@@ -628,39 +658,41 @@
                 </div>
             `;
 
-            container.appendChild(toast);
-            isShowing = true;
+                container.appendChild(toast);
+                isShowing = true;
 
-            // Hiện toast
-            setTimeout(() => toast.classList.add("show"), 50);
+                // Hiện toast
+                setTimeout(() => toast.classList.add("show"), 50);
 
-            // Ẩn toast sau 5s
-            hideTimeout = setTimeout(hideToast, 5000);
+                // Ẩn toast sau 5s
+                hideTimeout = setTimeout(hideToast, 5000);
 
-            // Khi hover -> dừng đếm thời gian
-            toast.addEventListener("mouseenter", () => {
-                clearTimeout(hideTimeout);
-            });
+                // Khi hover -> dừng đếm thời gian
+                toast.addEventListener("mouseenter", () => {
+                    clearTimeout(hideTimeout);
+                });
 
-            // Khi rời chuột -> tiếp tục đếm ẩn sau 2s
-            toast.addEventListener("mouseleave", () => {
-                hideTimeout = setTimeout(hideToast, 2000);
-            });
+                // Khi rời chuột -> tiếp tục đếm ẩn sau 2s
+                toast.addEventListener("mouseleave", () => {
+                    hideTimeout = setTimeout(hideToast, 2000);
+                });
 
-            function hideToast() {
-                toast.classList.remove("show");
-                toast.addEventListener("transitionend", () => {
-                    toast.remove();
-                    isShowing = false;
-                    index = (index + 1) % feedbacks.length;
-                    setTimeout(showNextToast, 1000); // Hiện toast tiếp theo
-                }, { once: true });
+                function hideToast() {
+                    toast.classList.remove("show");
+                    toast.addEventListener("transitionend", () => {
+                        toast.remove();
+                        isShowing = false;
+                        index = (index + 1) % feedbacks.length;
+                        setTimeout(showNextToast, 1000); // Hiện toast tiếp theo
+                    }, {
+                        once: true
+                    });
+                }
             }
-        }
 
-        loadFeedbacks();
-    });
-</script>
+            loadFeedbacks();
+        });
+    </script>
 
 
 

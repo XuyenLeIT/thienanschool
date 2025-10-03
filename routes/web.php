@@ -33,11 +33,11 @@ use App\Http\Controllers\{
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/curriculum', [CurriculumController::class, 'index'])->name('curriculum');
-Route::get('/parent', [ParentController::class, 'index'])->name('parent');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::get('/admission', [AdmissionController::class, 'index'])->name('admission');
-Route::get('/activities/{slug}', [ActivityController::class, 'detail'])->name('activities.detail');
+Route::get('/chuong-trinh-hoc', [CurriculumController::class, 'index'])->name('curriculum');
+Route::get('/phu-huynh', [ParentController::class, 'index'])->name('parent');
+Route::get('/lien-he', [ContactController::class, 'index'])->name('contact');
+Route::get('/tuyen-sinh', [AdmissionController::class, 'index'])->name('admission');
+Route::get('/hoat-dong/{slug}', [ActivityController::class, 'detail'])->name('activities.detail');
 
 Route::get('/login', [AdminController::class, 'login'])->name('login');
 Route::post('/login', [AdminController::class, 'checkLogin'])->name('login.post');

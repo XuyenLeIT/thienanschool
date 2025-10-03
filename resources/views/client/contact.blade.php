@@ -5,32 +5,67 @@
 
 @section('content')
     <style>
-        /* Căn chỉnh input/card */
+        /* Chiều cao mặc định (desktop & tablet) */
+        .map-container {
+            height: 100%;
+        }
+
+        /* ================== FORM LIÊN HỆ ================== */
+
+        .form-contact {
+            padding: 20px;
+            background: var(--main-light);
+            border-radius: 10px;
+        }
+
+        /* Input, Select, Textarea */
         #contactForm input,
         #contactForm select,
         #contactForm textarea {
-            border-radius: 0.5rem;
-            padding: 0.6rem 0.8rem;
-            border: 1px solid #ced4da;
             width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border-light, #ced4da);
+            border-radius: var(--btn-radius, 0.5rem);
+            font-size: 1rem;
+            transition: all 0.25s ease-in-out;
         }
 
-        /* Hover & focus effect */
+        /* Focus */
         #contactForm input:focus,
         #contactForm select:focus,
         #contactForm textarea:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(231, 108, 67, 0.25);
             outline: none;
         }
 
-        /* Responsive trên mobile */
-        @media (max-width: 767px) {
+        /* ================== BUTTON SUBMIT ================== */
+        .btn-submit {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: var(--btn-radius);
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            box-shadow: var(--btn-shadow);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
 
-            #contactForm input,
-            #contactForm select,
-            #contactForm textarea {
-                font-size: 1rem;
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background: var(--main-accent);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ================== RESPONSIVE ================== */
+        @media (max-width: 767px) {
+            .map-container {
+                height: 300px;
             }
 
             #contactForm button {
@@ -58,7 +93,7 @@
     @endif
 
     <!-- Thông tin liên hệ -->
-    <section class="container py-5">
+    <section class="container py-2">
         <h2 class="section-title text-center mb-5 fw-bold" data-aos="fade-up">
             📍 Thông tin Trường Mầm Non Thiên Ân
         </h2>
@@ -66,7 +101,7 @@
         <div class="row g-4">
             <!-- Thông tin liên hệ -->
             <div class="col-lg-5" data-aos="fade-right">
-                <div class="p-4 bg-white rounded-3 shadow-lg h-100">
+                <div class="p-4 bg-white rounded-3 shadow-lg">
                     <h5 class="mb-4 text-primary fw-semibold">Liên hệ nhanh</h5>
 
                     <!-- Địa chỉ -->
@@ -74,7 +109,7 @@
                         <i class="bi bi-geo-alt-fill text-danger fs-4 me-3"></i>
                         <div>
                             <strong>Địa chỉ:</strong><br>
-                            123 Đường ABC, Quận 1, TP.HCM
+                            124A Trần Thái Tông. Phường Tân Sơn ( Phường 15. Tân Bình cũ).
                         </div>
                     </div>
 
@@ -139,23 +174,28 @@
 
             <!-- Bản đồ -->
             <div class="col-lg-7" data-aos="fade-left">
-                <div class="rounded-3 overflow-hidden shadow-lg h-100">
-             <iframe width="100%" height="100%" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.9236368629836!2d106.63269337408795!3d10.817155858443055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529672a426409%3A0x1c6f178245395fa4!2zMTI0IMSQLiBUcuG6p24gVGjDoWkgVMO0bmcsIFBoxrDhu51uZyAxNSwgVMOibiBCw6xuaCwgSOG7kyBDaMOtIE1pbmggNzAwMDAsIFZpZXRuYW0!5e0!3m2!1sen!2s!4v1759391431302!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="map-container rounded-3 overflow-hidden shadow-lg">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.9236368629836!2d106.63269337408795!3d10.817155858443055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529672a426409%3A0x1c6f178245395fa4!2zMTI0IMSQLiBUcuG6p24gVGjDoWkgVMO0bmcsIFBoxrDhu51uZyAxNSwgVMOibiBCw6xuaCwgSOG7kyBDaMOtIE1pbmggNzAwMDAsIFZpZXRuYW0!5e0!3m2!1sen!2s!4v1759391431302!5m2!1sen!2s"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
+
         </div>
     </section>
 
 
     <!-- Form liên hệ -->
-    <section class="bg-light py-5">
+    <section class="bg-light py-3">
         <div class="container">
-            <h2 class="section-title text-center mb-5" data-aos="fade-up">
+            <h2 class="section-title text-center m-2 mb-3" data-aos="fade-up">
                 📬 Gửi tin nhắn cho chúng tôi
             </h2>
 
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-8 form-contact">
                     <div class="card shadow-sm border-0" data-aos="zoom-in">
                         <div class="card-body p-3">
                             <form id="contactForm" class="row g-4">
@@ -195,13 +235,14 @@
                                 </div>
 
                                 <div class="col-12 text-center">
-                                    <button type="submit" class="btn btn-success btn-lg shadow-sm w-100 w-md-auto"
+                                    <button type="submit" class="btn btn-submit btn-lg shadow-sm w-100 w-md-auto"
                                         id="submitBtn">
                                         <span id="btnText">Gửi đăng ký</span>
                                         <span id="btnSpinner" class="spinner-border spinner-border-sm d-none"
                                             role="status" aria-hidden="true"></span>
                                     </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>

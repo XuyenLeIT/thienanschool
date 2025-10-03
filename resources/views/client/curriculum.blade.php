@@ -4,7 +4,7 @@
 
 @section('content')
     <style>
-        /* ------------------- Hero ------------------- */
+        /* ------------------- HERO ------------------- */
         .hero-text-wrapper {
             text-align: center;
             position: relative;
@@ -13,11 +13,8 @@
             margin: 0 auto;
             padding: 15px 20px;
             background: rgba(0, 0, 0, 0.45);
-            /* nền mờ giúp chữ nổi bật */
-            border-radius: 0.5rem;
-            /* bo tròn nhẹ */
-            color: #fff;
-            /* chữ trắng */
+            border-radius: var(--btn-radius);
+            color: var(--text-light);
         }
 
         .hero-text-wrapper h1 {
@@ -33,50 +30,48 @@
                 max-width: 90%;
                 padding: 10px 15px;
                 background: rgba(0, 0, 0, 0.35);
-                /* nền mờ nhẹ hơn trên mobile */
             }
 
             .hero-text-wrapper p {
                 display: none;
-                /* ẩn description trên mobile */
             }
 
             .hero-text-wrapper h1 {
                 font-size: 1.8rem;
-                /* co nhỏ title */
             }
         }
 
-
-        /* ------------------- General ------------------- */
+        /* ------------------- GENERAL ------------------- */
         .section-title {
             text-align: center;
             font-weight: 700;
-            color: #444;
+            color: var(--text-primary);
             margin-bottom: 1.5rem;
         }
 
         .card {
+            border-radius: var(--btn-radius);
+            box-shadow: var(--btn-shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-4px) scale(1.01);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 24px var(--shadow-dark);
         }
 
-        /* ------------------- Age Groups ------------------- */
+        /* ------------------- AGE GROUPS ------------------- */
         .age-group-card {
             border-radius: 1rem;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 8px 20px var(--shadow-light);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             padding: 1rem;
         }
 
         .age-group-card:hover {
             transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 12px 24px var(--shadow-dark);
         }
 
         .age-group-card i {
@@ -84,17 +79,17 @@
             margin-bottom: 12px;
         }
 
-        @media(max-width:767px) {
+        @media (max-width: 767px) {
             .col-12.col-md-6.col-lg-3 {
                 flex: 0 0 100%;
                 max-width: 100%;
             }
         }
 
-        /* ------------------- Education Gallery ------------------- */
+        /* ------------------- EDUCATION GALLERY ------------------- */
         .art-gallery-section {
-            --frame-bg: #fff;
-            --frame-border: rgba(0, 0, 0, 0.06);
+            --frame-bg: var(--bg-card);
+            --frame-border: var(--border-light);
             --soft-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
         }
 
@@ -110,7 +105,6 @@
 
         .art-img-main {
             width: 100%;
-            height: auto;
             aspect-ratio: 9/7;
             object-fit: cover;
             border-radius: 12px;
@@ -125,7 +119,7 @@
         .art-caption {
             margin-top: 12px;
             font-size: .95rem;
-            color: #444;
+            color: var(--text-secondary);
             opacity: .9;
         }
 
@@ -136,17 +130,17 @@
         }
 
         .art-card {
-            position: relative;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--frame-border);
             background: var(--frame-bg);
-            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 8px 20px var(--shadow-light);
+            transition: transform .3s ease, box-shadow .3s ease;
         }
 
         .art-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 18px 40px var(--shadow-dark);
         }
 
         .art-card .art-img {
@@ -161,7 +155,6 @@
             inset: 0;
             display: flex;
             align-items: flex-end;
-            justify-content: flex-start;
             padding: 14px;
             background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.5) 100%);
             opacity: 0;
@@ -173,13 +166,13 @@
         }
 
         .art-overlay-text {
-            color: #fff;
+            color: var(--text-light);
             font-weight: 600;
             font-size: .95rem;
             text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
         }
 
-        @media(max-width:991px) {
+        @media (max-width: 991px) {
             .art-img-main {
                 aspect-ratio: 4/3;
             }
@@ -189,7 +182,7 @@
             }
         }
 
-        @media(max-width:767px) {
+        @media (max-width: 767px) {
             .art-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 12px;
@@ -205,31 +198,26 @@
             }
         }
 
-        /* ------------------- Daily Schedule ------------------- */
+        /* ------------------- DAILY SCHEDULE ------------------- */
         .daily-schedule-section {
-            background: #ffecd2;
+            background: var(--main-light);
             border-radius: 2rem;
-            position: relative;
             overflow: hidden;
             padding: 1rem 0.5rem;
         }
 
         .daily-schedule-section .table-primary {
-            background: linear-gradient(90deg, #ffecd2, #fcb69f);
-            color: #fff;
+            background: linear-gradient(90deg, var(--main-light), var(--main-accent));
+            color: var(--text-light);
             font-weight: 600;
         }
 
         .daily-schedule-section .table-bordered th,
         .daily-schedule-section .table-bordered td {
-            border-color: rgba(252, 182, 159, 0.4);
+            border-color: var(--border-light);
         }
 
-        .daily-schedule-section table {
-            width: 100% !important;
-        }
-
-        @media(max-width:767px) {
+        @media (max-width: 767px) {
 
             .daily-schedule-section table th,
             .daily-schedule-section table td {
@@ -239,7 +227,7 @@
             }
         }
 
-        /* ------------------- News ------------------- */
+        /* ------------------- NEWS ------------------- */
         #news .card-img-top {
             width: 100%;
             height: 200px;
@@ -247,19 +235,42 @@
         }
 
         #news .card-title {
-            overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        @media(max-width:991px) {
+        .btn-enroll {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: var(--btn-radius);
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            box-shadow: var(--btn-shadow);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-enroll:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-enroll-sm {
+            font-size: 0.875rem;
+            /* chữ nhỏ hơn */
+            padding: 0.35rem 0.9rem;
+            /* thu gọn padding */
+        }
+
+        @media (max-width: 991px) {
             #news .card-img-top {
                 height: 180px;
             }
         }
 
-        @media(max-width:767px) {
+        @media (max-width: 767px) {
             #news .col-12.col-md-6.col-lg-3 {
                 flex: 0 0 100%;
                 max-width: 100%;
@@ -270,9 +281,7 @@
             }
         }
 
-        /* ------------------- Promotion Banner ------------------- */
-
-        /* Banner promotion - desktop */
+        /* ------------------- PROMOTION BANNER ------------------- */
         .banner-card {
             display: flex;
             flex-direction: row;
@@ -285,36 +294,55 @@
             object-fit: cover;
         }
 
-        /* Mobile */
         @media (max-width: 767px) {
             .banner-card {
                 flex-direction: column;
-                /* ảnh trên, text dưới */
             }
 
             .banner-card .col-md-5,
             .banner-card .col-md-7 {
                 width: 100%;
                 padding: 0;
-                /* loại bỏ padding để ảnh chiếm full */
             }
 
             .banner-card .col-md-5 {
                 max-height: 200px;
-                /* giới hạn chiều cao ảnh */
                 overflow: hidden;
             }
 
             .banner-card .banner-img {
                 width: 100%;
                 height: 200px;
-                /* giữ tỉ lệ hợp lý */
                 object-fit: cover;
             }
 
             .banner-card .col-md-7 {
                 padding: 1rem 1.5rem;
             }
+        }
+
+        /* ------------------- ANIMATED BTN ------------------- */
+        .btn-enroll {
+            background: var(--primary-color);
+            /* màu cam nhạt từ root */
+            color: var(--text-light);
+            /* chữ trắng */
+            border: none;
+            border-radius: var(--btn-radius);
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            box-shadow: var(--btn-shadow);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-enroll:hover {
+            background: var(--primary-hover);
+            /* màu hover từ root */
+            transform: translateY(-3px);
+        }
+
+        .btn-enroll:active {
+            transform: translateY(0);
         }
 
         .animated-btn {
@@ -334,15 +362,15 @@
         }
     </style>
 
-    {{-- ------------------- Hero ------------------- --}}
+    {{-- ------------------- HERO ------------------- --}}
     @if ($carausel)
         <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
-            style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
+            style="background: url('{{ asset($carausel->image) }}') no-repeat center/cover; min-height: 50vh; position: relative;">
 
             <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
 
             <div style="position: relative; z-index: 2;">
-                <div class="hero-text-wrapper" style="max-width: 700px; margin: 0 auto;">
+                <div class="hero-text-wrapper">
                     <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
                     <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
                 </div>
@@ -350,7 +378,7 @@
         </section>
     @endif
 
-    {{-- ------------------- Age Groups ------------------- --}}
+    {{-- ------------------- AGE GROUPS ------------------- --}}
     <section class="container py-2">
         <h2 class="section-title">Các độ tuổi</h2>
         <div class="row g-4">
@@ -366,7 +394,7 @@
         </div>
     </section>
 
-    {{-- ------------------- Education Gallery ------------------- --}}
+    {{-- ------------------- EDUCATION GALLERY ------------------- --}}
     <section class="bg-light py-2 art-gallery-section" data-aos="fade-up">
         <div class="container">
             <h2 class="section-title mb-4">Nội dung giáo dục</h2>
@@ -407,7 +435,7 @@
         </div>
     </section>
 
-    {{-- ------------------- Daily Schedule ------------------- --}}
+    {{-- ------------------- DAILY SCHEDULE ------------------- --}}
     <section class="daily-schedule-section py-1 m-4" data-aos="fade-up">
         <div class="container">
             <h2 class="section-title">Lịch học mẫu một ngày</h2>
@@ -436,7 +464,7 @@
         </div>
     </section>
 
-    {{-- ------------------- News ------------------- --}}
+    {{-- ------------------- NEWS ------------------- --}}
     <section id="news" class="container py-1">
         <h2 class="section-title m-2" data-aos="fade-up">Tin tức & Sự kiện</h2>
         <div class="row g-4">
@@ -449,8 +477,10 @@
                             <h5 class="card-title">{{ $item->title }}</h5>
                             <p class="card-text">{{ Str::limit($item->shortdes ?? strip_tags($item->description), 100) }}
                             </p>
-                            <a href="{{ route('activities.detail', $item->slug) }}" class="btn btn-sm btn-primary">Xem
-                                thêm</a>
+                            <a href="{{ route('activities.detail', $item->slug) }}" class="btn btn-sm btn-enroll">
+                                Xem thêm
+                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -463,7 +493,7 @@
         </div>
     </section>
 
-    {{-- ------------------- Promotion Banner ------------------- --}}
+    {{-- ------------------- PROMOTION BANNER ------------------- --}}
     <section class="container py-2" data-aos="fade-up">
         <h2 class="section-title text-center">Khuyến mãi nhập học sớm</h2>
         @if ($promotion)
@@ -477,8 +507,11 @@
                         <div class="col-md-7 p-4 d-flex flex-column justify-content-center bg-light">
                             <h3 class="fw-bold mb-3">{{ $promotion->title }}</h3>
                             <p class="mb-3">{{ $promotion->description }}</p>
-                            <a href="#" class="btn btn-danger btn-lg w-auto animated-btn" data-bs-toggle="modal"
-                                data-bs-target="#registrationModal">Đăng Ký Ngay</a>
+                            <a href="#" class="btn btn-enroll btn-lg w-auto animated-btn" data-bs-toggle="modal"
+                                data-bs-target="#registrationModal">
+                                Đăng Ký Ngay
+                            </a>
+
                         </div>
                     </div>
                 </div>
@@ -489,21 +522,14 @@
     </section>
 
     @include('client.partials.registration_modal')
- @include('client.partials.contact_icon')
+    @include('client.partials.contact_icon')
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (window.location.href.includes("page=")) {
                 const newsSection = document.getElementById("news");
                 if (newsSection) newsSection.scrollIntoView({
                     behavior: "smooth"
-                });
-            }
-            if (window.innerWidth <= 767) {
-                document.querySelectorAll('.banner-img-container').forEach(function(div) {
-                    const img = div.querySelector('img');
-                    if (img) {
-                        div.style.backgroundImage = 'url(' + img.src + ')';
-                    }
                 });
             }
         });

@@ -3,6 +3,7 @@
 @section('title', 'Trang chủ')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 
+
 @section('content')
 
     {{-- Hero Carousel --}}
@@ -61,7 +62,7 @@
         </div>
     </section>
     {{-- Activities Slider --}}
-    <div class="activities-slider p-3"
+    <div class="activities-slider p-5"
         data-flickity='{"cellAlign":"left","contain":true,"wrapAround":true,"autoPlay":2000,"pageDots":true,"prevNextButtons":true,"groupCells":true}'
         style="width:100%;">
         @foreach ($playActivities as $activity)
@@ -129,34 +130,30 @@
         </div>
     </section>
     {{-- Trial Registration Card --}}
-    <section id="trial-class" class="py-2" data-aos="fade-up">
-        <div class="container">
-            <div class="trial-card position-relative shadow-lg d-flex align-items-center justify-content-between flex-wrap">
+<section id="trial-class" class="py-2" data-aos="fade-up">
+    <div class="container">
+        <div class="trial-card">
 
-                {{-- Background gradient --}}
-                <div class="trial-card-bg position-absolute top-0 start-0 w-100 h-100"
-                    style="background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0)); transform: rotate(20deg);">
-                </div>
+            {{-- Text Content --}}
+            <div class="trial-content">
+                <h2 class="display-5 fw-bold mb-3">{{ $promotion->title }}</h2>
+                <p class="mb-4 fs-5">{{ $promotion->description }}</p>
 
-                {{-- Text Content --}}
-                <div class="trial-content text-center text-md-start p-4" style="z-index:2; flex:1; min-width:250px;">
-                    <h2 class="display-5 fw-bold mb-3">{{ $promotion->title }}</h2>
-                    <p class="mb-4 fs-5">{{ $promotion->description }}</p>
-                    {{-- Button Đăng Ký trong card --}}
-                    <a href="#" class="btn btn-light btn-lg trial-btn shadow-lg" data-bs-toggle="modal"
-                        data-bs-target="#registrationModal">
-                        Đăng Ký Ngay
-                    </a>
-                </div>
-
-                {{-- Image minh họa --}}
-                <div class="trial-image text-center p-3" style="z-index:2; flex:1; width:200px;">
-                    <img src="{{ $promotion->image }}" alt="{{ $promotion->title }}" class="img-fluid">
-                </div>
-
+                <a href="#" class="trial-btn" data-bs-toggle="modal"
+                   data-bs-target="#registrationModal">
+                    Đăng Ký Ngay
+                </a>
             </div>
+
+            {{-- Image minh họa --}}
+            <div class="trial-image">
+                <img src="{{ $promotion->image }}" alt="{{ $promotion->title }}">
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
     {{-- News --}}
     <section id="news" class="container py-2">
         <h2 class="section-title" data-aos="fade-up">Tin tức & Sự kiện</h2>
@@ -171,9 +168,11 @@
                             <p class="card-text">
                                 {{ Str::limit($news->shortdes ?? strip_tags($news->description), 100) }}
                             </p>
-                            <a href="{{ route('activities.detail', $news->slug) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ route('activities.detail', $news->slug) }}"
+                                class="tn-btn tn-btn-sm tn-btn-readmore">
                                 Xem thêm
                             </a>
+
                         </div>
                     </div>
                 </div>
