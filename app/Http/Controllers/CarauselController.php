@@ -35,7 +35,7 @@ class CarauselController extends Controller
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:8192',
             'status' => 'nullable',
-            'page' => 'required|in:1,2,3,4,5',
+            'page' => 'required|in:1,2,3,4,5,6',
         ]);
 
         // Nếu page != TYPE_HOME, kiểm tra số lượng record hiện có
@@ -90,7 +90,7 @@ class CarauselController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:8192',
             'status' => 'nullable',
-            'page' => 'required|in:1,2,3,4,5'
+            'page' => 'required|in:1,2,3,4,5,6',
         ]);
 
         // Kiểm tra giới hạn 1 record cho các type ngoại trừ TYPE_HOME

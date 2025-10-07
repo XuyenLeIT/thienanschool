@@ -12,6 +12,7 @@ class Carausel extends Model
       const TYPE_CURRICULUM = 3;
       const TYPE_ADMISSION = 4;
       const TYPE_CONTACT = 5;
+        const TYPE_DETAIL = 6;
 
       const STATUS_HIDE = 0;
       const STATUS_SHOW = 1;
@@ -24,6 +25,7 @@ class Carausel extends Model
                   self::TYPE_CURRICULUM => 'Curriculum',
                   self::TYPE_ADMISSION => 'Admission',
                   self::TYPE_CONTACT => 'Contact',
+                  self::TYPE_DETAIL => 'Detail',
             ];
       }
 

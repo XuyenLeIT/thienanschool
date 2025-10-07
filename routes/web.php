@@ -66,7 +66,7 @@ foreach ($roles as $role) {
         ->group(function () use ($role) {
 
             /* === ROUTE CHUNG cho tất cả admin / manager / teacher === */
-            Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+            Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
             // Profile
             Route::get('/accounts/profile/{id}', [AdminController::class, 'profile'])->name('accounts.profile');

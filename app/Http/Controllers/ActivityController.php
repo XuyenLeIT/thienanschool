@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\Carausel;
+use App\Models\Promotion;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class ActivityController extends Controller
 {
@@ -68,7 +70,6 @@ class ActivityController extends Controller
 
             DB::commit();
             return redirect()->route('admin.activities.index')->with('success', 'Thêm hoạt động thành công!');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             $this->cleanupFiles($savedFiles);
@@ -76,7 +77,7 @@ class ActivityController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $this->cleanupFiles($savedFiles);
-            \Log::error("Activity Store Error: " . $e->getMessage());
+            Log::error("Activity Store Error: " . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['general' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
@@ -227,7 +228,6 @@ class ActivityController extends Controller
             $this->cleanupFiles($deleteAfterCommit);
 
             return redirect()->route('admin.activities.index')->with('success', 'Cập nhật thành công!');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             $this->cleanupFiles($savedFiles); // rollback file mới
@@ -235,7 +235,7 @@ class ActivityController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $this->cleanupFiles($savedFiles); // rollback file mới
-            \Log::error("Update activity error: " . $e->getMessage());
+            Log::error("Update activity error: " . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['general' => 'Có lỗi xảy ra: ' . $e->getMessage()]);
@@ -259,7 +259,7 @@ class ActivityController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            \Log::error("extractImagesFromHtml error: " . $e->getMessage());
+            Log::error("extractImagesFromHtml error: " . $e->getMessage());
         }
         return $images;
     }
@@ -272,7 +272,7 @@ class ActivityController extends Controller
                 $imagePath = public_path($activity->image);
                 if (file_exists($imagePath)) {
                     if (!@unlink($imagePath)) {
-                        \Log::warning("Không thể xóa ảnh đại diện: " . $imagePath);
+                        Log::warning("Không thể xóa ảnh đại diện: " . $imagePath);
                     }
                 }
             }
@@ -291,13 +291,13 @@ class ActivityController extends Controller
                         $file = public_path($src);
                         if (file_exists($file)) {
                             if (!@unlink($file)) {
-                                \Log::warning("Không thể xóa ảnh trong description: " . $file);
+                                Log::warning("Không thể xóa ảnh trong description: " . $file);
                             }
                         }
                     }
                 }
             } catch (\Exception $e) {
-                \Log::error("Lỗi khi xử lý ảnh description: " . $e->getMessage());
+                Log::error("Lỗi khi xử lý ảnh description: " . $e->getMessage());
             }
 
             // 3. Xóa record trong DB
@@ -308,13 +308,13 @@ class ActivityController extends Controller
                 ->with('success', 'Xóa thành công!');
         } catch (\Illuminate\Database\QueryException $e) {
             // Lỗi liên quan DB
-            \Log::error("DB Error khi xóa activity: " . $e->getMessage());
+            Log::error("DB Error khi xóa activity: " . $e->getMessage());
             return redirect()
                 ->back()
                 ->withErrors(['general' => 'Không thể xóa do lỗi cơ sở dữ liệu.']);
         } catch (\Exception $e) {
             // Lỗi khác
-            \Log::error("Destroy activity error: " . $e->getMessage());
+            Log::error("Destroy activity error: " . $e->getMessage());
             return redirect()
                 ->back()
                 ->withErrors(['general' => 'Có lỗi xảy ra khi xóa: ' . $e->getMessage()]);
@@ -323,19 +323,25 @@ class ActivityController extends Controller
     public function detail($slug)
     {
         try {
+            $carausel = Carausel::where('page', Carausel::TYPE_DETAIL)
+                ->where('status', Carausel::STATUS_SHOW)
+                ->first();
             $activity = Activity::where('status', 1)
                 ->where('slug', $slug)
                 ->firstOrFail();
 
-            $otherActivities = Activity::where('id', '!=', $activity->id)
+            // Thêm paginate (ví dụ: 5 bản ghi mỗi trang)
+            $otherActivities = Activity::where('status', 1)
+                ->where('id', '!=', $activity->id)
                 ->latest()
-                ->get();
+                ->paginate(6); // hoặc ->simplePaginate(5)
 
-            return view('client.detail', compact('activity', 'otherActivities'));
+            $promotion = Promotion::where('type', Promotion::TYPE_PROGRAM)
+                ->first();
+            return view('client.detail', compact('activity', 'otherActivities', 'promotion','carausel'));
         } catch (\Exception $e) {
-            \Log::error("Activity Detail Error: " . $e->getMessage());
+            Log::error("Activity Detail Error: " . $e->getMessage());
             return redirect()->route('home')->withErrors(['general' => 'Không tìm thấy hoạt động này!']);
         }
     }
-
 }

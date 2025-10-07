@@ -2,6 +2,48 @@
 
 @section('title', 'blog - Trường Mầm Non Thiên Ân')
 <style>
+        /* =================== Herro =================== */
+    .hero-text-wrapper {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 15px 20px;
+        background: rgba(0, 0, 0, 0.45);
+        /* nền mờ giúp chữ nổi bật */
+        border-radius: 0.5rem;
+        /* bo tròn nhẹ */
+        color: #fff;
+        /* chữ trắng */
+    }
+
+    .hero-text-wrapper h1 {
+        margin-bottom: 10px;
+    }
+
+    .hero-text-wrapper p {
+        margin: 0;
+    }
+
+    @media (max-width: 767px) {
+        .hero-text-wrapper {
+            max-width: 90%;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.35);
+            /* nền mờ nhẹ hơn trên mobile */
+        }
+
+        .hero-text-wrapper p {
+            display: none;
+            /* ẩn description trên mobile */
+        }
+
+        .hero-text-wrapper h1 {
+            font-size: 1.8rem;
+            /* co nhỏ title */
+        }
+    }
     /* Lắc nhẹ vô hạn */
     @keyframes wiggle {
 
@@ -55,8 +97,23 @@
     }
 </style>
 @section('content')
+    {{-- Hero --}}
+    @if ($carausel)
+        <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
+            style="background: url('{{ asset($carausel->image) }}') no-repeat center center; background-size: cover; min-height: 50vh; position: relative;">
+
+            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
+
+            <div style="position: relative; z-index: 2;">
+                <div class="hero-text-wrapper" style="max-width: 700px; margin: 0 auto;">
+                    <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
+                </div>
+            </div>
+        </section>
+    @endif
     <!-- Hero -->
-    <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
+    {{-- <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
         style="background: url('https://picsum.photos/1600/500?parents') no-repeat center center; 
            background-size: cover; min-height: 40vh; position: relative;">
         <div style="position:absolute; inset:0; background: rgba(0,0,0,0.4);"></div>
@@ -66,7 +123,7 @@
                 Kết nối chặt chẽ giữa nhà trường và gia đình 💕
             </p>
         </div>
-    </section>
+    </section> --}}
     <section id="activity-detail" class="py-5 bg-light">
         <div class="container">
             <div class="row">
@@ -121,7 +178,8 @@
                     </div>
 
                     {{-- Bài viết khác --}}
-                    <div class="mt-5">
+                    {{-- Bài viết khác --}}
+                    <div id="other-articles" class="mt-5">
                         <h4 class="fw-bold mb-3">Bài viết khác</h4>
                         <div class="row g-4">
                             @foreach ($otherActivities as $item)
@@ -143,33 +201,60 @@
                                 </div>
                             @endforeach
                         </div>
+
+                        <div class="mt-4 d-flex justify-content-center">
+                            {{ $otherActivities->onEachSide(1)->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
+
+
                 </div>
                 {{-- Cột banner quảng cáo --}}
                 <div class="col-lg-3">
-                    <div class="sticky-top" style="top: 80px;">
+                    <div class="sticky-top" style="top: 20px;">
+                        @if ($promotion)
+                            <div class="card mb-4 shadow-sm animate-banner">
+                                <img src="{{ asset($promotion->image) }}" class="card-img-top"
+                                    alt="{{ $promotion->title }}">
 
-                        {{-- Banner 1: Khuyến mãi balo --}}
-                        <div class="card mb-4 shadow-sm animate-banner" data-aos="fade-left">
-                            <img src="https://picsum.photos/300/400?ad1" class="card-img-top" alt="Khuyến mãi balo">
-                            <div class="card-body text-center">
-                                <h6 class="fw-bold text-primary">🎒 Khuyến mãi BALO</h6>
-                                <p class="small mb-2">
-                                    Tặng balo xinh xắn cho <b>5 bé đầu tiên</b> đăng ký nhập học tháng này.
-                                </p>
-                                <a href="#" class="btn btn-sm btn-outline-primary">Đăng ký ngay</a>
+                                <div class="card-body text-center">
+                                    <h6 class="fw-bold text-primary">{{ $promotion->title }}</h6>
+                                    <p class="small mb-2">{!! $promotion->description !!}</p>
+                                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                        data-bs-target="#registrationModal">
+                                        Đăng Ký Ngay
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-
-
+                        @else
+                            <p class="text-muted text-center">Chưa có khuyến mãi</p>
+                        @endif
                     </div>
                 </div>
+
 
             </div>
 
 
         </div>
     </section>
- @include('client.partials.contact_icon')
+    {{-- Include modal --}}
+    @include('client.partials.registration_modal')
+    @include('client.partials.contact_icon')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Nếu URL có tham số page => nghĩa là đang ở trang phân trang
+            if (window.location.search.includes('page=')) {
+                const section = document.getElementById('other-articles');
+                if (section) {
+                    // Cuộn xuống vị trí của phần "Bài viết khác"
+                    section.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    </script>
 
 @endsection
