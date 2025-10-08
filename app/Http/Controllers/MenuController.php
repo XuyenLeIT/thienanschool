@@ -4,14 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class MenuController extends Controller
 {
     public function index()
     {
         $menus = Menu::orderBy('order')->get();
-        return view('admin.menus.index', compact('menus'));
+        // Lấy hôm nay theo múi giờ VN
+        $today = Carbon::now('Asia/Ho_Chi_Minh');
+
+        // Lấy thứ Hai của tuần hiện tại
+        $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
+
+        // Lấy thứ Bảy của tuần hiện tại
+        $endOfWeek = $today->copy()->endOfWeek(Carbon::SATURDAY);
+
+        // Format ngày-tháng theo dạng dd/mm
+        $weekRange = $startOfWeek->format('d/m') . ' - ' . $endOfWeek->format('d/m');
+
+        return view('admin.menus.index', compact('menus', 'weekRange'));
     }
+
 
     public function create()
     {
@@ -59,7 +73,7 @@ class MenuController extends Controller
     }
     public function sort(Request $request)
     {
-        $order = $request->order; 
+        $order = $request->order;
 
         foreach ($order as $index => $id) {
             $menu = Menu::find($id);
@@ -71,5 +85,4 @@ class MenuController extends Controller
 
         return response()->json(['status' => 'success']);
     }
-
 }

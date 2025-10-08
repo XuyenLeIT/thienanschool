@@ -130,6 +130,7 @@
                                 'icon' => 'fa-address-book',
                                 'label' => 'Danh Sách Liên hệ',
                             ],
+                             ['route' => 'manager.menus.index', 'icon' => 'fa-solid fa-burger', 'label' => 'Menus'],
                             ['route' => 'manager.accounts.index', 'icon' => 'fa-users', 'label' => 'Nhân Sự'],
                             ['route' => 'manager.students.index', 'icon' => 'fa-users', 'label' => 'Student'],
                         ];
