@@ -10,41 +10,43 @@
     @include('client.partials.hero', ['carausels' => $carausels])
 
     {{-- Features Section --}}
-    <section class="py-2 bg-light" data-aos="fade-up">
-        <div class="container">
-            <div class="row align-items-center">
-                <!-- Img Stack -->
-                <div class="col-md-6 mb-4 mb-md-0 img-stack d-none d-md-block">
+<section class="py-2 bg-light" data-aos="fade-up">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Image Stack -->
+            <div class="col-md-6 d-none d-md-block">
+                <div class="img-stack">
                     @foreach ($features as $feature)
                         @foreach ($feature->images as $img)
-                            <img src="{{ asset($img->image) }}" class="img-fluid rounded shadow mb-2">
+                            <img src="{{ asset($img->image) }}" alt="Feature image">
                         @endforeach
                     @endforeach
                 </div>
-                {{-- @dd($features) --}}
-                <!-- Content -->
-                <div class="col-md-6">
-                    <h2 class="mb-3">{{ $features[0]->title }}</h2>
-                    <p class="mb-4">{{ $features[0]->description }}</p>
+            </div>
 
-                    <div class="row g-4">
-                        @foreach ($features as $feature)
-                            @foreach ($feature->subdes as $sub)
-                                <div class="col-12 col-md-6 d-flex">
-                                    <i class="{{ $sub->icon_class ?? 'fa-solid fa-star' }} me-2 fs-4"></i>
-                                    <div>
-                                        <h6 class="fw-bold mb-1">{{ $sub->title }}</h6>
-                                        <p class="mb-0">{{ $sub->description }}</p>
-                                    </div>
+            <!-- Content -->
+            <div class="col-md-6">
+                <h2 class="mb-3 fw-bold text-primary">{{ $features[0]->title }}</h2>
+                <p class="mb-4 text-muted">{{ $features[0]->description }}</p>
+
+                <div class="row g-4">
+                    @foreach ($features as $feature)
+                        @foreach ($feature->subdes as $sub)
+                            <div class="col-12 col-md-6 d-flex">
+                                <i class="{{ $sub->icon_class ?? 'fa-solid fa-star' }} me-2 fs-4 text-warning"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">{{ $sub->title }}</h6>
+                                    <p class="mb-0 text-muted small">{{ $sub->description }}</p>
                                 </div>
-                            @endforeach
+                            </div>
                         @endforeach
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
 
     {{-- Programs --}}
     <section id="programs" class="bg-light py-2">
@@ -91,7 +93,7 @@
             @foreach ($galleries as $gallery)
                 <div class="row align-items-center">
                     <div class="col-lg-6 mb-4 mb-lg-0">
-                        <h1 class="display-5 fw-bold mb-3 mt-3">{{ $gallery->title }}</h1>
+                        <h3 class="display-6 fw-bold mb-3 mt-3">{{ $gallery->title }}</h3>
                         <p class="mb-4">{{ $gallery->description }}</p>
                     </div>
                     <div class="col-lg-6 position-relative">
@@ -130,29 +132,28 @@
         </div>
     </section>
     {{-- Trial Registration Card --}}
-<section id="trial-class" class="py-2" data-aos="fade-up">
-    <div class="container">
-        <div class="trial-card">
+    <section id="trial-class" class="py-2" data-aos="fade-up">
+        <div class="container">
+            <div class="trial-card">
 
-            {{-- Text Content --}}
-            <div class="trial-content">
-                <h2 class="display-5 fw-bold mb-3">{{ $promotion->title }}</h2>
-                <p class="mb-4 fs-5">{{ $promotion->description }}</p>
+                {{-- Text Content --}}
+                <div class="trial-content">
+                    <h2 class="display-6 fw-bold mb-3">{{ $promotion->title }}</h2>
+                    <p class="mb-4 fs-5">{{ $promotion->description }}</p>
 
-                <a href="#" class="trial-btn" data-bs-toggle="modal"
-                   data-bs-target="#registrationModal">
-                    Đăng Ký Ngay
-                </a>
+                    <a href="#" class="trial-btn" data-bs-toggle="modal" data-bs-target="#registrationModal">
+                        Đăng Ký Ngay
+                    </a>
+                </div>
+
+                {{-- Image minh họa --}}
+                <div class="trial-image">
+                    <img src="{{ $promotion->image }}" alt="{{ $promotion->title }}">
+                </div>
+
             </div>
-
-            {{-- Image minh họa --}}
-            <div class="trial-image">
-                <img src="{{ $promotion->image }}" alt="{{ $promotion->title }}">
-            </div>
-
         </div>
-    </div>
-</section>
+    </section>
 
     {{-- News --}}
     <section id="news" class="container py-2">

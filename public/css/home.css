@@ -3,70 +3,58 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #ffecd2; /* nền trang chủ đạo */
+    background-color: #ffecd2;
+    /* nền trang chủ đạo */
 }
 
 .container,
 .row {
     max-width: 100%;
     overflow-x: hidden;
-    overflow-y: hidden; /* bỏ scroll dọc */
+    overflow-y: hidden;
+    /* bỏ scroll dọc */
 }
 
 /* ----------------- IMG STACK ----------------- */
 .img-stack {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    max-width: 100%;
-    padding: 20px 0;
-    overflow: hidden;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 10px;
 }
 
 .img-stack img {
-    border-radius: 1rem;
-    width: 200px;
-    height: 250px;
+    width: 48%; /* chia 2 cột */
+    height: 220px;
     object-fit: cover;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-    transition: transform 0.4s, box-shadow 0.4s;
-    cursor: pointer;
-    z-index: 1;
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
+/* So le nhẹ tạo cảm giác art */
+.img-stack img:nth-child(odd) {
+    transform: translateY(10px);
+}
+.img-stack img:nth-child(even) {
+    transform: translateY(-10px);
+}
+
+/* Hover effect */
 .img-stack img:hover {
-    transform: scale(1.05) rotate(0deg);
-    z-index: 10;
+    transform: scale(1.05);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+    z-index: 10;
 }
 
-.img-stack img:nth-child(1) {
-    transform: rotate(-2deg);
-}
-.img-stack img:nth-child(2) {
-    transform: rotate(1deg);
-}
-.img-stack img:nth-child(3) {
-    transform: rotate(-1deg);
-}
-.img-stack img:nth-child(4) {
-    transform: rotate(2deg);
-}
-
+/* Responsive: ẩn trên mobile */
 @media (max-width: 767px) {
     .img-stack {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .img-stack img {
-        width: 80%;
-        height: auto;
-        transform: none !important;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        margin: 0 auto;
+        display: none;
     }
 }
+
 
 /* ----------------- HERO CAROUSEL & ACTIVITIES SLIDER ----------------- */
 .hero-carousel,
@@ -130,6 +118,7 @@ body {
         width: 50%;
     }
 }
+
 @media (max-width: 767.98px) {
     .activities-slider .slider-cell {
         width: 100%;
@@ -191,6 +180,7 @@ body {
     .art-hero .art-image-main {
         height: 250px;
     }
+
     .art-hero .art-image-top,
     .art-hero .art-image-bottom,
     .art-hero .art-image-left {
@@ -253,6 +243,7 @@ body {
     .art-hero .art-image-main {
         height: 250px;
     }
+
     .art-hero .art-image-top,
     .art-hero .art-image-bottom,
     .art-hero .art-image-left {
@@ -323,6 +314,7 @@ body {
     flex-direction: column;
     height: 100%;
 }
+
 #news .card-img-top {
     width: 100%;
     height: 200px;
@@ -330,23 +322,27 @@ body {
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
 }
+
 #news .card-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
 #news .card-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 #news .card-text {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 /* ------------ BUTTON READ MORE ------------- */
 .tn-btn-readmore {
     background-color: var(--primary-color);
@@ -418,6 +414,7 @@ body {
     text-decoration: none;
     transition: 0.3s ease;
 }
+
 .trial-btn:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);
@@ -426,9 +423,11 @@ body {
 /* --- Mobile --- */
 @media (max-width: 767px) {
     #trial-class .trial-card {
-        flex-direction: column;                  /* xếp cột khi mobile */
+        flex-direction: column;
+        /* xếp cột khi mobile */
         text-align: center;
-        background: url('../images/bg-trial.jpg') no-repeat center/cover; /* BG mặc định */
+        background: url('../images/bg-trial.jpg') no-repeat center/cover;
+        /* BG mặc định */
         position: relative;
         color: var(--text-light);
     }
@@ -443,17 +442,20 @@ body {
     }
 
     #trial-class .trial-content {
-        z-index: 2;                               /* nổi hơn overlay */
+        z-index: 2;
+        /* nổi hơn overlay */
     }
 
     #trial-class .trial-image {
-        display: none;                            /* ẩn ảnh riêng khi mobile */
+        display: none;
+        /* ẩn ảnh riêng khi mobile */
     }
 
     .trial-btn {
         background: rgba(255, 255, 255, 0.85);
         color: var(--text-dark);
     }
+
     .trial-btn:hover {
         background: #fff;
     }
