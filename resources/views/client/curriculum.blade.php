@@ -96,115 +96,126 @@
 
         /* ------------------- EDUCATION GALLERY ------------------- */
         .art-gallery-section {
-            --frame-bg: var(--bg-card);
-            --frame-border: var(--border-light);
-            --soft-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-        }
+    --frame-bg: var(--bg-card);
+    --frame-border: var(--border-light);
+    --soft-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
 
-        .art-frame {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), #fafafa);
-            padding: 22px;
-            border-radius: 18px;
-            border: 1px solid var(--frame-border);
-            box-shadow: var(--soft-shadow);
-            position: relative;
-            overflow: hidden;
-        }
+/* Ảnh lớn bên trái */
+.art-frame {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), #fafafa);
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid var(--frame-border);
+    box-shadow: var(--soft-shadow);
+    position: relative;
+    overflow: hidden;
+}
 
-        .art-img-main {
-            width: 100%;
-            aspect-ratio: 9/7;
-            object-fit: cover;
-            border-radius: 12px;
-            transition: transform .6s ease;
-        }
+.art-img-main {
+    width: 100%;
+    aspect-ratio: 9/7;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform .6s ease;
+}
 
-        .art-frame:hover .art-img-main {
-            transform: scale(1.02) rotate(-0.5deg);
-            filter: saturate(1.02);
-        }
+.art-frame:hover .art-img-main {
+    transform: scale(1.02) rotate(-0.5deg);
+    filter: saturate(1.02);
+}
 
-        .art-caption {
-            margin-top: 12px;
-            font-size: .95rem;
-            color: var(--text-secondary);
-            opacity: .9;
-        }
+.art-caption {
+    margin-top: 12px;
+    font-size: .95rem;
+    color: var(--text-secondary);
+    opacity: .9;
+}
 
-        .art-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
+/* Grid ảnh nhỏ bên phải */
+.art-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
 
-        .art-card {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--frame-border);
-            background: var(--frame-bg);
-            box-shadow: 0 8px 20px var(--shadow-light);
-            transition: transform .3s ease, box-shadow .3s ease;
-        }
+.art-card {
+    position: relative; /* để overlay nằm trên ảnh */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--frame-border);
+    background: var(--frame-bg);
+    box-shadow: 0 8px 20px var(--shadow-light);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
 
-        .art-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 18px 40px var(--shadow-dark);
-        }
+.art-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 40px var(--shadow-dark);
+}
 
-        .art-card .art-img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-            transition: transform .6s ease;
-        }
+.art-card .art-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    transition: transform .4s ease;
+}
 
-        .art-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: flex-end;
-            padding: 14px;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.5) 100%);
-            opacity: 0;
-            transition: opacity .35s ease;
-        }
+/* Overlay dưới ảnh */
+.art-overlay {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0,0,0,0.55);
+    opacity: 0;
+    transition: opacity .35s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .art-card:hover .art-overlay {
-            opacity: 1;
-        }
+/* Hiển thị overlay khi hover */
+.art-card:hover .art-overlay {
+    opacity: 1;
+}
 
-        .art-overlay-text {
-            color: var(--text-light);
-            font-weight: 600;
-            font-size: .95rem;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-        }
+/* Text overlay */
+.art-overlay-text {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
 
-        @media (max-width: 991px) {
-            .art-img-main {
-                aspect-ratio: 4/3;
-            }
+/* Responsive */
+@media (max-width: 991px) {
+    .art-img-main {
+        aspect-ratio: 4/3;
+    }
 
-            .art-card .art-img {
-                height: 160px;
-            }
-        }
+    .art-card .art-img {
+        height: 160px;
+    }
+}
 
-        @media (max-width: 767px) {
-            .art-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
+@media (max-width: 767px) {
+    .art-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
 
-            .art-card .art-img {
-                height: 140px;
-            }
+    .art-card .art-img {
+        height: 140px;
+    }
 
-            .art-frame {
-                padding: 14px;
-                border-radius: 12px;
-            }
-        }
+    .art-frame {
+        padding: 14px;
+        border-radius: 12px;
+    }
+}
 
         /* ------------------- DAILY SCHEDULE ------------------- */
         .daily-schedule-section {
@@ -403,45 +414,49 @@
     </section>
 
     {{-- ------------------- EDUCATION GALLERY ------------------- --}}
-    <section class="bg-light py-2 art-gallery-section" data-aos="fade-up">
-        <div class="container">
-            <h2 class="section-title mb-4">Nội dung giáo dục</h2>
-            @if ($educationContent)
-                <div class="row g-4 align-items-center">
-                    <div class="col-lg-6" data-aos="fade-right">
-                        <figure class="art-frame">
-                            <img src="{{ asset($educationContent->main_image) }}"
-                                alt="{{ $educationContent->title ?? 'Education Content' }}" class="art-img art-img-main">
-                            @if (!empty($educationContent->caption))
-                                <figcaption class="art-caption">{{ $educationContent->caption }}</figcaption>
-                            @endif
-                        </figure>
-                    </div>
-                    <div class="col-lg-6" data-aos="fade-left">
-                        @if ($educationContent->items && $educationContent->items->count())
-                            <div class="art-grid">
-                                @foreach ($educationContent->items as $item)
-                                    <div class="art-card">
-                                        <img src="{{ asset($item->image) }}"
-                                            alt="{{ $item->overlay_text ?? 'Education item' }}" class="art-img">
-                                        @if (!empty($item->overlay_text))
-                                            <div class="art-overlay">
-                                                <div class="art-overlay-text">{{ $item->overlay_text }}</div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-muted">Chưa có nội dung chi tiết.</p>
+ <section class="bg-light py-2 art-gallery-section" data-aos="fade-up">
+    <div class="container">
+        <h2 class="section-title mb-4">Trải nghiệm vui nhộn cùng các hoạt động</h2>
+        @if ($educationContent)
+            <div class="row g-4 align-items-center">
+                {{-- Ảnh lớn bên trái --}}
+                <div class="col-lg-6" data-aos="fade-right">
+                    <figure class="art-frame">
+                        <img src="{{ asset($educationContent->main_image) }}"
+                             alt="{{ $educationContent->title ?? 'Education Content' }}" class="art-img art-img-main">
+                        @if (!empty($educationContent->caption))
+                            <figcaption class="art-caption">{{ $educationContent->caption }}</figcaption>
                         @endif
-                    </div>
+                    </figure>
                 </div>
-            @else
-                <p class="text-center text-muted">Hiện chưa có nội dung giáo dục nào được cập nhật.</p>
-            @endif
-        </div>
-    </section>
+
+                {{-- Ảnh nhỏ bên phải --}}
+                <div class="col-lg-6" data-aos="fade-left">
+                    @if ($educationContent->items && $educationContent->items->count())
+                        <div class="art-grid">
+                            @foreach ($educationContent->items as $item)
+                                <div class="art-card">
+                                    <img src="{{ asset($item->image) }}"
+                                         alt="{{ $item->overlay_text ?? 'Education item' }}"
+                                         class="art-img">
+                                    @if (!empty($item->overlay_text))
+                                        <div class="art-overlay">
+                                            <div class="art-overlay-text">{{ $item->overlay_text }}</div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">Chưa có nội dung chi tiết.</p>
+                    @endif
+                </div>
+            </div>
+        @else
+            <p class="text-center text-muted">Hiện chưa có nội dung giáo dục nào được cập nhật.</p>
+        @endif
+    </div>
+</section>
 
     {{-- ------------------- DAILY SCHEDULE ------------------- --}}
     <section class="daily-schedule-section py-1 m-4" data-aos="fade-up">
