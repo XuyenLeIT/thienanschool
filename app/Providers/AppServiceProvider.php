@@ -23,10 +23,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            // Lấy user từ session
+            // Lấy user từ session (nếu có)
             $userLogin = session('auth_user');
-            // Lấy user từ DB
-            $user = Account::find($userLogin->id);
+
+            // Mặc định là null
+            $user = null;
+
+            // Kiểm tra tồn tại và có id hợp lệ
+            if ($userLogin && isset($userLogin->id)) {
+                $user = Account::find($userLogin->id);
+            }
+
+            // Chia sẻ biến (dù null vẫn chia sẻ được, không lỗi)
             $view->with('authUser', $user);
         });
     }
