@@ -1,6 +1,12 @@
 @extends('client.layout.app')
 
-@section('title', 'Trang chủ')
+@section('title', 'Trang chủ | Trường Mầm Non Thiên Ân')
+@section('meta_description', 'Trang chủ Trường Mầm Non Thiên Ân - môi trường học tập an toàn, sáng tạo và thân thiện cho trẻ nhỏ.')
+@section('meta_keywords', 'mầm non, giáo dục trẻ em, Thiên Ân School, chương trình học, hoạt động trẻ em')
+@section('og_title', 'Trang chủ Trường Mầm Non Thiên Ân')
+@section('og_description', 'Trải nghiệm môi trường học tập an toàn và sáng tạo tại Trường Mầm Non Thiên Ân.')
+@section('og_image', $carausels->first()?->image ?? asset('images/share-image.jpg'))
+
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 
 @section('content')
