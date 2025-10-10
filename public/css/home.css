@@ -370,93 +370,92 @@ body {
 }
 
 /* ---------------- TRIAL CARD ---------------- */
-
-/* --- Trial Card --- */
+/* === Trial Card Desktop === */
 #trial-class .trial-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(270deg, var(--main-light), var(--main-accent));
-    background-size: cover;
+    background: linear-gradient(135deg, var(--main-accent), var(--main-light));
     border-radius: 1.5rem;
     overflow: hidden;
-    padding: 2rem;
-    gap: 1.5rem;
+    padding: 3rem;
+    gap: 2rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Nội dung */
 #trial-class .trial-content {
     flex: 1;
     z-index: 2;
 }
 
-/* Ảnh */
 #trial-class .trial-image {
     flex: 1;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #trial-class .trial-image img {
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     border-radius: 1rem;
 }
 
-/* Nút */
+/* === Button === */
 .trial-btn {
     display: inline-block;
-    background: var(--primary-color);
-    color: var(--text-light);
+    background: var(--primary-color, #ff7b00);
+    color: #fff;
     font-weight: 600;
-    padding: 0.75rem 1.5rem;
-    border: none;
+    padding: 0.8rem 2rem;
     border-radius: 50px;
     text-decoration: none;
     transition: 0.3s ease;
 }
 
 .trial-btn:hover {
-    background: var(--primary-hover);
+    background: var(--primary-hover, #e96a00);
     transform: translateY(-2px);
 }
 
-/* --- Mobile --- */
+/* === Mobile Layout === */
 @media (max-width: 767px) {
     #trial-class .trial-card {
         flex-direction: column;
-        /* xếp cột khi mobile */
         text-align: center;
-        background: url('../images/bg-trial.jpg') no-repeat center/cover;
-        /* BG mặc định */
+        padding: 3rem 1.5rem;
+        background: var(--trial-bg) no-repeat center/cover;
+        color: #fff;
         position: relative;
-        color: var(--text-light);
     }
 
-    /* overlay làm mờ */
+    /* Overlay toàn card */
     #trial-class .trial-card::before {
         content: "";
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.35);
+        background: rgba(0, 0, 0, 0.55);
         z-index: 1;
+        border-radius: 1.5rem;
     }
 
     #trial-class .trial-content {
-        z-index: 2;
-        /* nổi hơn overlay */
+        z-index: 2; /* nổi trên overlay */
     }
 
     #trial-class .trial-image {
         display: none;
-        /* ẩn ảnh riêng khi mobile */
     }
 
     .trial-btn {
-        background: rgba(255, 255, 255, 0.85);
-        color: var(--text-dark);
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+        font-weight: 700;
     }
 
     .trial-btn:hover {
         background: #fff;
+        color: var(--primary-color);
     }
 }

@@ -3,49 +3,48 @@
 @section('title', 'Trang chủ')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 
-
 @section('content')
 
     {{-- Hero Carousel --}}
     @include('client.partials.hero', ['carausels' => $carausels])
 
     {{-- Features Section --}}
-<section class="py-2 bg-light" data-aos="fade-up">
-    <div class="container">
-        <div class="row align-items-center">
-            <!-- Image Stack -->
-            <div class="col-md-6 d-none d-md-block">
-                <div class="img-stack">
-                    @foreach ($features as $feature)
-                        @foreach ($feature->images as $img)
-                            <img src="{{ asset($img->image) }}" alt="Feature image">
+    <section class="py-2 bg-light" data-aos="fade-up">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Image Stack -->
+                <div class="col-md-6 d-none d-md-block">
+                    <div class="img-stack">
+                        @foreach ($features as $feature)
+                            @foreach ($feature->images as $img)
+                                <img src="{{ asset($img->image) }}" alt="Feature image">
+                            @endforeach
                         @endforeach
-                    @endforeach
+                    </div>
                 </div>
-            </div>
 
-            <!-- Content -->
-            <div class="col-md-6">
-                <h2 class="mb-3 fw-bold text-primary">{{ $features[0]->title }}</h2>
-                <p class="mb-4 text-muted">{{ $features[0]->description }}</p>
+                <!-- Content -->
+                <div class="col-md-6">
+                    <h2 class="mb-3 fw-bold text-primary">{{ $features[0]->title }}</h2>
+                    <p class="mb-4 text-muted">{{ $features[0]->description }}</p>
 
-                <div class="row g-4">
-                    @foreach ($features as $feature)
-                        @foreach ($feature->subdes as $sub)
-                            <div class="col-12 col-md-6 d-flex">
-                                <i class="{{ $sub->icon_class ?? 'fa-solid fa-star' }} me-2 fs-4 text-warning"></i>
-                                <div>
-                                    <h6 class="fw-bold mb-1">{{ $sub->title }}</h6>
-                                    <p class="mb-0 text-muted small">{{ $sub->description }}</p>
+                    <div class="row g-4">
+                        @foreach ($features as $feature)
+                            @foreach ($feature->subdes as $sub)
+                                <div class="col-12 col-md-6 d-flex">
+                                    <i class="{{ $sub->icon_class ?? 'fa-solid fa-star' }} me-2 fs-4 text-warning"></i>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ $sub->title }}</h6>
+                                        <p class="mb-0 text-muted small">{{ $sub->description }}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            @endforeach
                         @endforeach
-                    @endforeach
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
     {{-- Programs --}}
@@ -63,6 +62,7 @@
             </div>
         </div>
     </section>
+
     {{-- Activities Slider --}}
     <div class="activities-slider p-5"
         data-flickity='{"cellAlign":"left","contain":true,"wrapAround":true,"autoPlay":2000,"pageDots":true,"prevNextButtons":true,"groupCells":true}'
@@ -85,7 +85,6 @@
             </div>
         @endforeach
     </div>
-
 
     {{-- Galleries --}}
     <section class="art-hero pt-3">
@@ -126,38 +125,36 @@
                             </div>
                         @endif
                     </div>
-
                 </div>
             @endforeach
         </div>
     </section>
-    {{-- Trial Registration Card --}}
-    <section id="trial-class" class="py-2" data-aos="fade-up">
-        <div class="container">
-            <div class="trial-card">
 
-                {{-- Text Content --}}
-                <div class="trial-content">
-                    <h2 class="display-6 fw-bold mb-3">{{ $promotion->title }}</h2>
-                    <p class="mb-4 fs-5">{{ $promotion->description }}</p>
+{{-- Trial Registration Card --}}
+<section id="trial-class" class="py-2" data-aos="fade-up">
+    <div class="container">
+        <div class="trial-card" style="--trial-bg: url('{{ asset($promotion->image) }}');">
+            <div class="trial-content">
+                <h2 class="display-6 fw-bold mb-3 text-white">{{ $promotion->title }}</h2>
+                <p class="mb-4 fs-5 text-white">{{ $promotion->description }}</p>
+                <a href="#" class="trial-btn" data-bs-toggle="modal" data-bs-target="#registrationModal">
+                    Đăng Ký Ngay
+                </a>
+            </div>
 
-                    <a href="#" class="trial-btn" data-bs-toggle="modal" data-bs-target="#registrationModal">
-                        Đăng Ký Ngay
-                    </a>
-                </div>
-
-                {{-- Image minh họa --}}
-                <div class="trial-image">
-                    <img src="{{ $promotion->image }}" alt="{{ $promotion->title }}">
-                </div>
-
+            <div class="trial-image">
+                <img src="{{ asset($promotion->image) }}" alt="{{ $promotion->title }}">
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+
+
 
     {{-- News --}}
     <section id="news" class="container py-2">
-        <h2 class="section-title" data-aos="fade-up">Tin tức & Sự kiện</h2>
+        <h2 class="section-title m-2" id="section-title" data-aos="fade-up">Tin tức & Sự kiện</h2>
         <div class="row g-4">
             @forelse($newsActivities as $key => $news)
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="{{ $key * 200 }}">
@@ -173,7 +170,6 @@
                                 class="tn-btn tn-btn-sm tn-btn-readmore">
                                 Xem thêm
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -186,22 +182,34 @@
             </div>
         </div>
     </section>
-    {{-- Include modal --}}
-    @include('client.partials.registration_modal')
-    {{-- Floating Contact Icons --}}
 
+    {{-- Include modal & icons --}}
+    @include('client.partials.registration_modal')
     @include('client.partials.contact_icon')
+
 @endsection
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        if (window.location.href.includes("page=")) {
-            const newsSection = document.getElementById("news");
-            if (newsSection) {
-                newsSection.scrollIntoView({
-                    behavior: "smooth"
-                });
-            }
+    document.addEventListener("DOMContentLoaded", function () {
+        // Chỉ chạy khi có tham số page=
+        if (window.location.search.includes("page=")) {
+            window.addEventListener("load", function () {
+                const section = document.getElementById("section-title");
+                if (section) {
+                    const headerOffset = 120; // chiều cao header hoặc navbar
+                    const elementPosition = section.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerOffset;
+
+                    // Cuộn mượt mà tới vị trí chính xác
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth",
+                        });
+                    }, 100); // delay nhẹ để DOM ổn định
+                }
+            });
         }
     });
 </script>
+
