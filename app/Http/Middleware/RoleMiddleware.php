@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Account;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
@@ -20,7 +21,6 @@ class RoleMiddleware
 
         // Lấy user từ DB
         $user = Account::find($userLogin->id);
-        view()->share('authUser', $user);
         if (!$user) {
             // Xoá đúng key session
             session()->forget('auth_user');
@@ -29,7 +29,7 @@ class RoleMiddleware
         }
 
         // Ghi log để debug
-        \Log::info('RoleMiddleware - Auth User', [
+        Log::info('RoleMiddleware - Auth User', [
             'id' => $user->id,
             'role' => $user->role,
             'roles_required' => $roles

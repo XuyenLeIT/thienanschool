@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Account;
 use App\Models\Carausel;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -21,5 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer('*', function ($view) {
+            // Lấy user từ session
+            $userLogin = session('auth_user');
+            // Lấy user từ DB
+            $user = Account::find($userLogin->id);
+            $view->with('authUser', $user);
+        });
     }
 }

@@ -1,156 +1,198 @@
 @extends('admin.layout.app')
-@section('title', 'Thông tin cá nhân')
+
+@section('title', 'Quản lý tài khoản')
 
 @section('content')
-<div class="container my-4">
-    <div class="row">
-        {{-- Sidebar --}}
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        @if ($account->avatar)
-                            <img id="avatarPreview" src="{{ asset($account->avatar) }}" class="rounded-circle shadow" width="120" height="120" alt="Avatar">
-                        @else
-                            <img id="avatarPreview" src="https://via.placeholder.com/120x120?text=Avatar" class="rounded-circle shadow" width="120" height="120" alt="Avatar">
-                        @endif
+<div class="container mt-4">
+
+    {{-- Thông báo --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Tabs --}}
+    <ul class="nav nav-tabs" id="accountTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#profile" role="tab">Cập nhật hồ sơ</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#password" role="tab">Đổi mật khẩu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#reset" role="tab">Reset mật khẩu</a>
+        </li>
+    </ul>
+
+    <div class="tab-content border border-top-0 p-3 rounded-bottom shadow-sm bg-white">
+
+        {{-- Tab 1 --}}
+        <div class="tab-pane fade show active" id="profile" role="tabpanel">
+            <h5 class="mb-3"><i class="fa-solid fa-user me-2"></i> Cập nhật hồ sơ</h5>
+            <form method="POST" action="{{ route($authUser->role.'.accounts.update-profile') }}" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="active_tab" value="profile">
+
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" name="address" class="form-control"
+                        value="{{ old('address', session('auth_user')->address ?? '') }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ảnh đại diện</label>
+                    <input type="file" name="avatar" id="avatarInput" class="form-control">
+                    <div class="mt-2">
+                        <img id="avatarPreview"
+                             src="{{ asset(session('auth_user')->avatar ?? 'default-avatar.png') }}"
+                             class="rounded-circle border"
+                             style="width: 100px; height: 100px; object-fit: cover;">
                     </div>
-                    <h4>{{ $account->fullname }}</h4>
-                    <p class="text-muted mb-1">{{ ucfirst($account->role) }}</p>
-                    <span class="badge {{ $account->status ? 'bg-success' : 'bg-danger' }}">
-                        {{ $account->status ? 'Active' : 'Inactive' }}
-                    </span>
                 </div>
-                <div class="list-group list-group-flush">
-                    <a href="#info" class="list-group-item list-group-item-action active" data-bs-toggle="tab">
-                        <i class="fa-solid fa-id-card me-2"></i> Thông tin chung
-                    </a>
-                    <a href="#password" class="list-group-item list-group-item-action" data-bs-toggle="tab">
-                        <i class="fa-solid fa-key me-2"></i> Đổi mật khẩu
-                    </a>
-                    <a href="#reset" class="list-group-item list-group-item-action" data-bs-toggle="tab">
-                        <i class="fa-solid fa-user-lock me-2"></i> Reset mật khẩu
-                    </a>
-                </div>
-            </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-save me-1"></i> Lưu thay đổi
+                </button>
+            </form>
         </div>
 
-        {{-- Content --}}
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-body tab-content">
+        {{-- Tab 2 --}}
+        <div class="tab-pane fade" id="password" role="tabpanel">
+            <h5 class="mb-3"><i class="fa-solid fa-key me-2"></i> Đổi mật khẩu</h5>
+            <form method="POST" action="{{ route($authUser->role.'.accounts.change-password') }}">
+                @csrf
+                <input type="hidden" name="active_tab" value="password">
 
-                    {{-- Tab Info --}}
-                    <div class="tab-pane fade show active" id="info">
-                        <h5 class="mb-3"><i class="fa-solid fa-id-card me-2"></i> Cập nhật thông tin</h5>
-                        <form method="POST" action="{{ route('admin.accounts.update-profile') }}" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="fullname" class="form-label">Họ và tên</label>
-                                        <input type="text" name="fullname" readonly class="form-control" value="{{ old('fullname', $account->fullname) }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="phone" class="form-label">Số điện thoại</label>
-                                        <input type="text" readonly name="phone" class="form-control" value="{{ old('phone', $account->phone) }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="address" class="form-label">Địa chỉ</label>
-                                        <input type="text" name="address" class="form-control" value="{{ old('address', $account->address) }}">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="startdate" class="form-label">Ngày bắt đầu</label>
-                                        <input type="date" readonly name="startdate" class="form-control" value="{{ old('startdate', $account->startdate?->format('Y-m-d')) }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="avatarInput" class="form-label">Ảnh đại diện</label>
-                                        <input type="file" id="avatarInput" name="avatar" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="status" class="form-label">Trạng thái</label>
-                                        <select name="status" disabled class="form-select">
-                                            <option value="1" {{ $account->status ? 'selected' : '' }}>Active</option>
-                                            <option value="0" {{ !$account->status ? 'selected' : '' }}>Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Các field không cho update --}}
-                            <p><strong>Email:</strong> {{ $account->email }}</p>
-                            <p><strong>Manage Class:</strong> {{ $account->manage_class ?? '-' }}</p>
-                            <p><strong>Note:</strong> {{ $account->note ?? '-' }}</p>
-
-                            @if ($account->reason_ban)
-                                <p class="text-danger"><strong>Lý do ban:</strong> {{ $account->reason_ban }}</p>
-                            @endif
-
-                            <button type="submit" class="btn btn-success mt-3">
-                                <i class="fa-solid fa-save me-1"></i> Cập nhật thông tin
-                            </button>
-                        </form>
-                    </div>
-
-                    {{-- Tab Change Password --}}
-                    <div class="tab-pane fade" id="password">
-                        <h5 class="mb-3"><i class="fa-solid fa-key me-2"></i> Đổi mật khẩu</h5>
-                        <form method="POST" action="{{ route('admin.accounts.change-password') }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="current_password" class="form-label">Mật khẩu hiện tại</label>
-                                <input type="password" name="current_password" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="new_password" class="form-label">Mật khẩu mới</label>
-                                <input type="password" name="new_password" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="new_password_confirmation" class="form-label">Xác nhận mật khẩu mới</label>
-                                <input type="password" name="new_password_confirmation" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa-solid fa-save me-1"></i> Cập nhật mật khẩu
-                            </button>
-                        </form>
-                    </div>
-
-                    {{-- Tab Reset Password --}}
-                    <div class="tab-pane fade" id="reset">
-                        <h5 class="mb-3"><i class="fa-solid fa-user-lock me-2"></i> Reset mật khẩu</h5>
-                        <form method="POST" action="{{ route('password.send-otp') }}">
-                            @csrf
-                            <p>Bạn có chắc muốn reset mật khẩu của <strong>{{ $account->fullname }}</strong> không?</p>
-                            <input type="hidden" name="email" value="{{ $account->email }}">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa-solid fa-rotate-left me-1"></i> Reset mật khẩu
-                            </button>
-                        </form>
-                    </div>
-
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" name="current_password" class="form-control">
+                    @error('current_password')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
-            </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" name="new_password" class="form-control">
+                    @error('new_password')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Xác nhận mật khẩu mới</label>
+                    <input type="password" name="new_password_confirmation" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-warning">
+                    <i class="fa-solid fa-rotate me-1"></i> Đổi mật khẩu
+                </button>
+            </form>
+        </div>
+
+        {{-- Tab 3 --}}
+        <div class="tab-pane fade" id="reset" role="tabpanel">
+            <h5 class="mb-3"><i class="fa-solid fa-envelope me-2"></i> Reset mật khẩu</h5>
+            <form method="POST" action="{{ route('password.send-otp') }}">
+                @csrf
+                <input type="hidden" name="active_tab" value="reset">
+
+                <div class="mb-3">
+                    <label class="form-label">Email tài khoản</label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}">
+                </div>
+
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Gửi mã OTP
+                </button>
+            </form>
         </div>
     </div>
 </div>
 @endsection
 
-@push('scripts')
+@section('scripts')
 <script>
-    document.getElementById('avatarInput').addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function (event) {
-                document.getElementById('avatarPreview').setAttribute('src', event.target.result);
-            }
-            reader.readAsDataURL(file);
-        }
+document.addEventListener('DOMContentLoaded', function () {
+    const tabLinks = document.querySelectorAll('a[data-bs-toggle="tab"]');
+    let activeTabId = localStorage.getItem('activeTabId');
+
+    // Lưu tab đang mở
+    tabLinks.forEach(link => {
+        link.addEventListener('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabId', e.target.getAttribute('href'));
+        });
     });
+
+    // Ưu tiên session active_tab
+    @if (session('active_tab'))
+        activeTabId = "#{{ session('active_tab') }}";
+        localStorage.setItem('activeTabId', activeTabId);
+    @endif
+
+    // Kích hoạt lại tab
+    if (activeTabId) {
+        const tabTrigger = document.querySelector(`[href="${activeTabId}"]`);
+        if (tabTrigger) new bootstrap.Tab(tabTrigger).show();
+    }
+
+    // Preview avatar
+    const avatarInput = document.getElementById('avatarInput');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => document.getElementById('avatarPreview').src = ev.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 🚀 Loading button khi submit form
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function () {
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.setAttribute('data-original-text', btn.innerHTML);
+                btn.innerHTML = `
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Đang xử lý...
+                `;
+            }
+        });
+    });
+
+    // 🧩 Khi trang load lại (sau redirect), khôi phục nút về trạng thái ban đầu
+    window.addEventListener('pageshow', function () {
+        document.querySelectorAll('button[type="submit"]').forEach(btn => {
+            if (btn.disabled) {
+                btn.disabled = false;
+                const originalText = btn.getAttribute('data-original-text');
+                if (originalText) btn.innerHTML = originalText;
+            }
+        });
+    });
+});
 </script>
-@endpush
+@endsection

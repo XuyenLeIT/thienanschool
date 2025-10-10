@@ -7,7 +7,7 @@
 @section('content')
 
     {{-- Hero Carousel --}}
-    {{-- @include('client.partials.hero', ['carausels' => $carausels]) --}}
+    @include('client.partials.hero', ['carausels' => $carausels])
 
     {{-- Features Section --}}
     <section class="py-2 bg-light" data-aos="fade-up">
