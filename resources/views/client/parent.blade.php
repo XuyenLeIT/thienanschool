@@ -1,6 +1,13 @@
 @extends('client.layout.app')
 
 @section('title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
+@section('meta_description', 'Cập nhật thông tin cho phụ huynh: thực đơn hàng tuần, thông báo, lời yêu thương, góc tư vấn và khuyến mãi nhập học tại Trường Mầm Non Thiên Ân.')
+@section('meta_keywords', 'phụ huynh, thực đơn mầm non, thông báo phụ huynh, góc tư vấn, trường mầm non Thiên Ân')
+@section('og_title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
+@section('og_description', 'Thông tin hữu ích cho phụ huynh: thực đơn, thông báo, lời yêu thương và khuyến mãi nhập học sớm.')
+@section('og_image', $carausel->image ?? $promotion->image ?? asset('images/share-image.jpg'))
+@section('canonical', url()->current())
+
 
 <style>
     /* =================== Herro =================== */

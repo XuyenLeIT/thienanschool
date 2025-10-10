@@ -1,6 +1,14 @@
 @extends('client.layout.app')
 
+{{-- SEO --}}
 @section('title', 'Chương trình học - Trường Mầm Non Thiên Ân')
+@section('meta_description', 'Tìm hiểu chương trình học tại Trường Mầm Non Thiên Ân: các độ tuổi, nội dung giáo dục, lịch học mẫu và thông tin khuyến mãi nhập học sớm.')
+@section('meta_keywords', 'chương trình học, mầm non, giáo dục trẻ em, Thiên Ân, nhập học')
+@section('og_title', 'Chương trình học - Trường Mầm Non Thiên Ân')
+@section('og_description', 'Cập nhật chương trình học: độ tuổi, nội dung giáo dục, lịch học mẫu và các khuyến mãi nhập học sớm tại Trường Mầm Non Thiên Ân.')
+@section('og_image', $carausel->image ?? ($promotion->image ?? asset('images/share-image.jpg')))
+@section('canonical', url()->current())
+
 
 @section('content')
     <style>

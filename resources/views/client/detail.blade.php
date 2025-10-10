@@ -1,6 +1,21 @@
 @extends('client.layout.app')
 
-@section('title', 'blog - Trường Mầm Non Thiên Ân')
+@section('title', $activity->title . ' - Trường Mầm Non Thiên Ân')
+
+{{-- Meta SEO --}}
+@section('meta_description', $activity->shortdes ?? Str::limit(strip_tags($activity->description), 150))
+@section('meta_keywords', 'phụ huynh, mầm non, giáo dục, ' . $activity->title)
+@section('og_title', $activity->title . ' - Trường Mầm Non Thiên Ân')
+@section('og_description', $activity->shortdes ?? Str::limit(strip_tags($activity->description), 150))
+@section('og_image', $activity->image ? asset($activity->image) : asset('images/share-image.jpg'))
+@section('og_url', url()->current())
+@section('canonical', url()->current())
+@section('twitter_card', 'summary_large_image')
+@section('twitter_site', '@ten_truong') {{-- đổi @ten_truong thành handle thật --}}
+@section('twitter_title', $activity->title)
+@section('twitter_description', $activity->shortdes ?? Str::limit(strip_tags($activity->description), 150))
+@section('twitter_image', $activity->image ? asset($activity->image) : asset('images/share-image.jpg'))
+
 <style>
         /* =================== Herro =================== */
     .hero-text-wrapper {

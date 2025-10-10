@@ -1,6 +1,14 @@
 @extends('client.layout.app')
 
+{{-- SEO --}}
 @section('title', 'Tuyển sinh - Trường Mầm Non Thiên Ân')
+@section('meta_description', 'Tuyển sinh tại Trường Mầm Non Thiên Ân - thông tin về quy trình, độ tuổi, hồ sơ cần chuẩn bị và học phí cho năm học mới.')
+@section('meta_keywords', 'tuyển sinh, mầm non, nhập học, Thiên Ân, giáo dục trẻ em')
+@section('og_title', 'Tuyển sinh - Trường Mầm Non Thiên Ân')
+@section('og_description', 'Cập nhật thông tin tuyển sinh: quy trình, độ tuổi, hồ sơ và học phí tại Trường Mầm Non Thiên Ân.')
+@section('og_image', $carausel->image ?? ($promotion->image ?? asset('images/share-image.jpg')))
+@section('canonical', url()->current())
+
 
 @section('content')
     <style>
