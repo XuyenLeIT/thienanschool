@@ -1,10 +1,12 @@
-/* ----------------- GLOBAL ----------------- */
+/* =====================================================
+   🌸 GLOBAL SETUP
+===================================================== */
 body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     background-color: #ffecd2;
-    /* nền trang chủ đạo */
+    /* Nền trang chủ đạo */
 }
 
 .container,
@@ -12,10 +14,12 @@ body {
     max-width: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
-    /* bỏ scroll dọc */
+    /* Bỏ scroll dọc */
 }
 
-/* ----------------- IMG STACK ----------------- */
+/* =====================================================
+   🖼️ IMAGE STACK (ảnh sole hai cột)
+===================================================== */
 .img-stack {
     display: flex;
     flex-wrap: wrap;
@@ -25,7 +29,8 @@ body {
 }
 
 .img-stack img {
-    width: 48%; /* chia 2 cột */
+    width: 48%;
+    /* chia 2 cột */
     height: 220px;
     object-fit: cover;
     border-radius: 14px;
@@ -37,6 +42,7 @@ body {
 .img-stack img:nth-child(odd) {
     transform: translateY(10px);
 }
+
 .img-stack img:nth-child(even) {
     transform: translateY(-10px);
 }
@@ -55,16 +61,16 @@ body {
     }
 }
 
-
-/* ----------------- HERO CAROUSEL & ACTIVITIES SLIDER ----------------- */
+/* =====================================================
+   🎠 HERO CAROUSEL & ACTIVITIES SLIDER
+===================================================== */
 .hero-carousel,
 .activities-slider {
     overflow-x: hidden;
     overflow-y: hidden;
     width: 100%;
     box-sizing: border-box;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0 15px;
 }
 
 /* Card slider */
@@ -125,7 +131,9 @@ body {
     }
 }
 
-/* ----------------- GALLERIES SOLO IMAGE CHỒNG ----------------- */
+/* =====================================================
+   🖌️ ART HERO (Galleries Solo Image chồng)
+===================================================== */
 .art-hero .art-image {
     border-radius: 16px;
     overflow: hidden;
@@ -147,35 +155,32 @@ body {
     position: relative;
 }
 
-/* Ảnh top (phía trên bên phải) */
+/* Ảnh phụ */
 .art-hero .art-image-top {
     width: 40%;
     height: 150px;
     transform: rotate(-6deg);
 }
 
-/* Ảnh bottom (phía dưới bên phải) */
 .art-hero .art-image-bottom {
     width: 38%;
     height: 140px;
     transform: rotate(6deg);
 }
 
-/* Ảnh left (phía dưới bên trái) */
 .art-hero .art-image-left {
     width: 35%;
     height: 130px;
     transform: rotate(-8deg);
 }
 
-/* Hover effect chung */
+/* Hover effect */
 .art-hero .art-image:hover {
     transform: scale(1.05) rotate(0deg);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    /* z-index: 5; */
 }
 
-/* Responsive tablet */
+/* Tablet */
 @media (max-width: 991px) {
     .art-hero .art-image-main {
         height: 250px;
@@ -189,81 +194,17 @@ body {
     }
 }
 
-/* Responsive mobile - chỉ giữ ảnh chính */
-.art-hero .art-image {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.art-hero .art-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Ảnh chính */
-.art-hero .art-image-main {
-    height: 300px;
-    border-radius: 16px;
-    z-index: 1;
-    position: relative;
-}
-
-/* Ảnh top (phía trên bên phải) */
-.art-hero .art-image-top {
-    width: 40%;
-    height: 150px;
-    transform: rotate(-6deg);
-}
-
-/* Ảnh bottom (phía dưới bên phải) */
-.art-hero .art-image-bottom {
-    width: 38%;
-    height: 140px;
-    transform: rotate(6deg);
-}
-
-/* Ảnh left (phía dưới bên trái) */
-.art-hero .art-image-left {
-    width: 35%;
-    height: 130px;
-    transform: rotate(-8deg);
-}
-
-/* Hover effect chung */
-.art-hero .art-image:hover {
-    transform: scale(1.05) rotate(0deg);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive tablet */
-@media (max-width: 991px) {
-    .art-hero .art-image-main {
-        height: 250px;
-    }
-
-    .art-hero .art-image-top,
-    .art-hero .art-image-bottom,
-    .art-hero .art-image-left {
-        width: 35%;
-        height: 120px;
-    }
-}
-
-/* Responsive mobile - giữ ảnh sole */
+/* Mobile */
 @media (max-width: 767px) {
     .art-hero .row {
-        flex-direction: column;
-        text-align: center;
+        display: block;
+        margin: auto;
     }
 
     .art-hero .col-lg-6 {
         margin-bottom: 20px;
     }
 
-    /* Ảnh chính full width */
     .art-hero .art-image-main {
         width: 100%;
         height: auto;
@@ -276,10 +217,8 @@ body {
         width: 100%;
         height: auto;
         object-fit: cover;
-        display: block;
     }
 
-    /* Giữ ảnh phụ nhưng thu nhỏ lại */
     .art-hero .art-image-top,
     .art-hero .art-image-bottom,
     .art-hero .art-image-left {
@@ -287,28 +226,11 @@ body {
         height: auto;
         border-radius: 8px;
     }
-
-    /* Sắp xếp lại vị trí cho gọn */
-    .art-hero .art-image-top {
-        top: -10px;
-        right: -10px;
-        transform: rotate(-5deg);
-    }
-
-    .art-hero .art-image-bottom {
-        bottom: -10px;
-        left: -10px;
-        transform: rotate(5deg);
-    }
-
-    .art-hero .art-image-left {
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%) rotate(3deg);
-    }
 }
 
-/* ----------------- CARD NEWS ----------------- */
+/* =====================================================
+   📰 NEWS CARD
+===================================================== */
 #news .card {
     display: flex;
     flex-direction: column;
@@ -342,8 +264,38 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+/* Mobile: căn giữa card tin tức */
+@media (max-width: 767.98px) {
+    /* Row căn giữa */
+    #news .row {
+        display: flex;             /* vẫn flex */
+        flex-direction: column;    /* stack card dọc */
+        align-items: center;       /* căn giữa toàn bộ col */
+        margin-left: 0 !important; /* loại bỏ negative margin */
+        margin-right: 0 !important;
+        gap: 1rem;                 /* space giữa card */
+    }
 
-/* ------------ BUTTON READ MORE ------------- */
+    /* Col full-width max */
+    #news .col-10,
+    #news .col-sm-8 {
+        width: 100% !important;
+        max-width: 400px;          /* giới hạn chiều rộng */
+        margin: 0 auto;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    /* Card full-width */
+    #news .card {
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+
+/* =====================================================
+   🔘 BUTTON READ MORE
+===================================================== */
 .tn-btn-readmore {
     background-color: var(--primary-color);
     color: var(--text-dark);
@@ -369,8 +321,9 @@ body {
     box-shadow: 0 0 0 0.25rem rgba(252, 182, 159, 0.3);
 }
 
-/* ---------------- TRIAL CARD ---------------- */
-/* === Trial Card Desktop === */
+/* =====================================================
+   🎓 TRIAL CLASS CARD
+===================================================== */
 #trial-class .trial-card {
     display: flex;
     align-items: center;
@@ -402,7 +355,6 @@ body {
     border-radius: 1rem;
 }
 
-/* === Button === */
 .trial-btn {
     display: inline-block;
     background: var(--primary-color, #ff7b00);
@@ -419,7 +371,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* === Mobile Layout === */
+/* Mobile */
 @media (max-width: 767px) {
     #trial-class .trial-card {
         flex-direction: column;
@@ -430,7 +382,6 @@ body {
         position: relative;
     }
 
-    /* Overlay toàn card */
     #trial-class .trial-card::before {
         content: "";
         position: absolute;
@@ -441,7 +392,7 @@ body {
     }
 
     #trial-class .trial-content {
-        z-index: 2; /* nổi trên overlay */
+        z-index: 2;
     }
 
     #trial-class .trial-image {
@@ -457,5 +408,102 @@ body {
     .trial-btn:hover {
         background: #fff;
         color: var(--primary-color);
+    }
+}
+
+/* =====================================================
+   💡 FEATURE CONTENT (mục nổi bật)
+===================================================== */
+.feature-row {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.feature-item {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
+}
+
+.feature-item:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-3px);
+}
+
+.feature-item i {
+    color: #ffb703;
+    flex-shrink: 0;
+}
+
+.feature-text h6 {
+    font-weight: 700;
+    color: #222;
+}
+
+.feature-text p {
+    color: #555;
+    font-size: 0.9rem;
+    text-align: justify;
+}
+
+/* ======================================
+   🎓 CHƯƠNG TRÌNH HỌC — RESPONSIVE OPTIMIZED
+====================================== */
+
+#programs .section-title {
+    font-size: 1.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* Card style */
+#programs .program-card {
+    transition: all 0.3s ease;
+}
+
+#programs .program-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Icon */
+#programs i {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#programs .program-card:hover i {
+    transform: scale(1.1);
+    color: #ffb703;
+}
+
+
+
+/* 🔹 Mobile: căn giữa row & card, giữ khoảng cách đều */
+@media (max-width: 767.98px) {
+    #programs {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Row căn giữa */
+    #programs .row {
+        display: block;
+        margin: auto;
+    }
+
+    /* Card full-width nhưng max-width giới hạn */
+    #programs .col-10 {
+        flex: 0 0 100%;
+        max-width: 400px;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        margin: 0 auto;
+        /* ✅ quan trọng để căn giữa col */
+    }
+
+    /* Card style */
+    #programs .program-card {
+        margin: 0 auto;
+        width: 100%;
+        max-height: 300px;
     }
 }
