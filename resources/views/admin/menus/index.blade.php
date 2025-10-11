@@ -3,6 +3,15 @@
 
 @section('content')
 <style>
+    /* ✅ Ép toàn bộ màu trở về RGB khi export ảnh */
+.exporting, .exporting * {
+    color-scheme: only light;
+    color: rgb(0, 0, 0) !important;
+    background-color: transparent !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: none !important;
+}
+
     /* Khung bao quanh toàn bộ thực đơn */
 #previewLayout {
     position: relative;
