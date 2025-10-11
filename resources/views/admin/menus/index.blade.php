@@ -182,6 +182,11 @@
     integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<!-- ✅ Thư viện thay thế ổn định hơn html2canvas -->
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.3.0/dist/dom-to-image-more.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -205,66 +210,43 @@ document.addEventListener('DOMContentLoaded', function() {
         preview.style.backgroundImage = e.target.value ? `url('${e.target.value}')` : '';
     });
 
-    // ✅ Xuất ảnh
+    // ✅ Xuất ảnh bằng dom-to-image-more
     document.getElementById('exportImageBtn').addEventListener('click', async () => {
         const preview = document.getElementById('previewLayout');
 
-        // Ẩn các phần không cần export
+        // Ẩn phần không cần xuất
         document.querySelectorAll('.no-export').forEach(el => el.classList.add('hide-during-export'));
 
-        // ⚡ Thêm class ép toàn bộ Bootstrap về RGB (tránh oklch)
-        document.body.classList.add('force-rgb');
-
         try {
-            const canvas = await html2canvas(preview, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: null,
-                ignoreElements: (el) => {
-                    // Bỏ qua phần tử có màu oklch để không crash
-                    const style = window.getComputedStyle(el);
-                    return (
-                        style.color?.includes('oklch') ||
-                        style.backgroundColor?.includes('oklch') ||
-                        style.borderColor?.includes('oklch')
-                    );
+            const blob = await domtoimage.toBlob(preview, {
+                quality: 1,
+                bgcolor: 'white',
+                style: {
+                    transform: 'scale(1)',
+                    transformOrigin: 'top left'
+                },
+                filter: (node) => {
+                    // Bỏ qua phần tử không cần export
+                    return !node.classList?.contains('no-export');
                 }
             });
 
             const link = document.createElement('a');
             link.download = 'menu-layout.png';
-            link.href = canvas.toDataURL('image/png');
+            link.href = URL.createObjectURL(blob);
             link.click();
-        } catch (error) {
-            console.error("❌ Lỗi khi xuất ảnh:", error);
-            alert("Có lỗi khi xuất ảnh. Vui lòng thử lại!");
+        } catch (err) {
+            console.error("❌ Lỗi khi xuất ảnh:", err);
+            alert("Không thể xuất ảnh, vui lòng thử lại!");
         } finally {
-            // Khôi phục lại giao diện
             document.querySelectorAll('.no-export').forEach(el => el.classList.remove('hide-during-export'));
-            document.body.classList.remove('force-rgb');
         }
     });
 });
 </script>
 
-{{-- 🧩 CSS phụ hỗ trợ ép RGB khi export --}}
 <style>
-body.force-rgb, body.force-rgb * {
-    /* Ép Bootstrap về RGB thuần */
-    --bs-primary: rgb(13,110,253) !important;
-    --bs-secondary: rgb(108,117,125) !important;
-    --bs-success: rgb(25,135,84) !important;
-    --bs-info: rgb(13,202,240) !important;
-    --bs-warning: rgb(255,193,7) !important;
-    --bs-danger: rgb(220,53,69) !important;
-    --bs-light: rgb(248,249,250) !important;
-    --bs-dark: rgb(33,37,41) !important;
-    --bs-body-bg: rgb(255,255,255) !important;
-    --bs-body-color: rgb(0,0,0) !important;
-
-    color-scheme: light !important;
-    box-shadow: none !important;
-}
+/* CSS phụ vẫn giữ nguyên */
+.hide-during-export { display: none !important; }
 </style>
-
 @endsection
