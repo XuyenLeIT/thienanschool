@@ -1,100 +1,561 @@
-{{-- PROMOTION BANNER --}}
-<section class="container py-2" data-aos="fade-up">
-    <h2 class="section-title text-center">Khuyến mãi nhập học sớm</h2>
-    @if ($promotion)
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-12 px-2 mx-auto"> <!-- padding 2 bên + căn giữa -->
-                <div class="card shadow-lg rounded banner-card d-flex flex-row flex-wrap">
-                    <!-- IMAGE -->
-                    <div class="col-md-5 col-12 p-0 w-100 w-md-auto">
-                        <img src="{{ asset($promotion->image) }}" class="img-fluid banner-img w-100" alt="{{ $promotion->title }}">
+@extends('client.layout.app')
+
+@section('title', 'Chương trình học - Trường Mầm Non Thiên Ân')
+@section('meta_description',
+    'Tìm hiểu chương trình học tại Trường Mầm Non Thiên Ân: các độ tuổi, nội dung giáo dục,
+    lịch học mẫu và thông tin khuyến mãi nhập học sớm.')
+@section('meta_keywords', 'chương trình học, mầm non, giáo dục trẻ em, Thiên Ân, nhập học')
+@section('og_title', 'Chương trình học - Trường Mầm Non Thiên Ân')
+@section('og_description',
+    'Cập nhật chương trình học: độ tuổi, nội dung giáo dục, lịch học mẫu và các khuyến mãi nhập
+    học sớm tại Trường Mầm Non Thiên Ân.')
+@section('og_image', $carausel->image ?? ($promotion->image ?? asset('images/share-image.jpg')))
+@section('canonical', url()->current())
+
+@section('content')
+    <style>
+        /* ------------------- BASE ------------------- */
+        .section-title {
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            border-radius: var(--btn-radius);
+            box-shadow: var(--btn-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 24px var(--shadow-dark);
+        }
+
+        /* ------------------- HERO ------------------- */
+        .hero-text-wrapper {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: var(--btn-radius);
+            color: var(--text-light);
+        }
+
+        .hero-text-wrapper h1 {
+            margin-bottom: 10px;
+        }
+
+        .hero-text-wrapper p {
+            margin: 0;
+        }
+
+        /* ------------------- AGE GROUPS ------------------- */
+        .age-group-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 8px 20px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .age-group-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px var(--shadow-dark);
+        }
+
+        .age-group-card i {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* ------------------- EDUCATION GALLERY ------------------- */
+        .art-gallery-section {
+            --frame-bg: var(--bg-card);
+            --frame-border: var(--border-light);
+            --soft-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        .art-frame {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), #fafafa);
+            padding: 22px;
+            border-radius: 18px;
+            border: 1px solid var(--frame-border);
+            box-shadow: var(--soft-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .art-img-main {
+            width: 100%;
+            aspect-ratio: 9/7;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform .6s ease;
+        }
+
+        .art-frame:hover .art-img-main {
+            transform: scale(1.02) rotate(-0.5deg);
+            filter: saturate(1.02);
+        }
+
+        .art-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .art-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--frame-border);
+            background: var(--frame-bg);
+            box-shadow: 0 8px 20px var(--shadow-light);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .art-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 18px 40px var(--shadow-dark);
+        }
+
+        .art-card .art-img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+
+        .art-overlay {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity .35s ease;
+        }
+
+        .art-card:hover .art-overlay {
+            opacity: 1;
+        }
+
+        .art-overlay-text {
+            color: #fff;
+            font-weight: 600;
+            font-size: .95rem;
+            text-align: center;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ------------------- DAILY SCHEDULE ------------------- */
+        .daily-schedule-section {
+            background: var(--main-light);
+            border-radius: 2rem;
+            overflow: hidden;
+            padding: 1rem 0.5rem;
+        }
+
+        .daily-schedule-section .table-primary {
+            background: linear-gradient(90deg, var(--main-light), var(--main-accent));
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .daily-schedule-section .table-bordered th,
+        .daily-schedule-section .table-bordered td {
+            border-color: var(--border-light);
+        }
+
+        /* ------------------- NEWS ------------------- */
+        #news .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        #news .card-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        #news .btn-enroll {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: var(--btn-radius);
+            font-weight: 500;
+            padding: 0.4rem 1rem;
+            box-shadow: var(--btn-shadow);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        #news .btn-enroll:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ------------------- PROMOTION BANNER ------------------- */
+        .banner-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(145deg, #fff, #f8f9fa);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .banner-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .banner-card .banner-img {
+            width: 100%;
+            object-fit: cover;
+            border-radius: 1.5rem;
+            transition: transform 0.5s ease;
+        }
+
+        .banner-card:hover .banner-img {
+            transform: scale(1.01);
+        }
+
+        .banner-card .banner-content {
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .banner-card .banner-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .banner-card .banner-content p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.2rem;
+        }
+
+        .banner-card .btn-enroll {
+            width: fit-content;
+            padding: 0.6rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+             background: var(--primary-color);
+        }
+
+        .banner-card .btn-enroll:hover {
+            transform: translateY(-2px);
+              background: var(--primary-hover);
+        }
+
+        /* Mobile: image trên, content dưới, image chiếm 40% card */
+        @media (max-width: 767.98px) {
+            .banner-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 0;
+            }
+
+            .banner-card .banner-img-wrapper {
+                order: 1;
+                width: 100%;
+                height: 40vh;
+                /* image chiếm 40% chiều cao */
+                max-height: 200px;
+                overflow: hidden;
+                border-radius: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .banner-card .banner-img {
+                height: 100%;
+                object-fit: cover;
+                border-radius: inherit;
+            }
+
+            .banner-card .banner-content {
+                order: 2;
+                padding: 1rem;
+            }
+
+            .banner-card .banner-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .banner-card .banner-content p {
+                font-size: 0.95rem;
+            }
+
+            .banner-card .btn-enroll {
+                width: 100%;
+                max-width: 220px;
+                margin: 0.5rem auto 0;
+            }
+        }
+
+
+        /* ------------------- RESPONSIVE ------------------- */
+        @media (max-width: 767.98px) {
+            .hero-text-wrapper {
+                max-width: 90%;
+                padding: 10px 15px;
+            }
+
+            .hero-text-wrapper p {
+                display: none;
+            }
+
+            .hero-text-wrapper h1 {
+                font-size: 1.8rem;
+            }
+
+            .col-12.col-md-6.col-lg-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .art-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .art-card .art-img {
+                height: 140px;
+            }
+
+            .art-frame {
+                padding: 14px;
+                border-radius: 12px;
+            }
+
+            .daily-schedule-section table th,
+            .daily-schedule-section table td {
+                font-size: .85rem;
+                padding: .5rem .25rem;
+                text-align: center;
+            }
+
+            #news .col-md-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            #news .card-img-top {
+                height: 160px;
+            }
+
+            #news .btn-enroll {
+                width: 100% !important;
+                display: block;
+                margin: auto;
+            }
+
+        }
+
+        /* ------------------- ANIMATED BUTTON ------------------- */
+        .animated-btn {
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+
+    {{-- HERO --}}
+    @if ($carausel)
+        <section class="hero d-flex flex-column justify-content-center align-items-center text-white text-center"
+            style="background: url('{{ asset($carausel->image) }}') no-repeat center/cover; min-height:50vh; position:relative;">
+            <div class="hero-overlay" style="position:absolute; inset:0; background: rgba(0,0,0,0.1);"></div>
+            <div style="position:relative; z-index:2;">
+                <div class="hero-text-wrapper">
+                    <h1 data-aos="fade-up">{{ $carausel->title }}</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="200">{{ $carausel->description }}</p>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- AGE GROUPS --}}
+    <section class="container py-2">
+        <h2 class="section-title">Các độ tuổi</h2>
+        <div class="row g-4">
+            @foreach ([['icon' => 'fa-solid fa-star', 'color' => 'text-primary', 'title' => 'Nhà trẻ (0–3 tuổi)', 'desc' => 'Phát triển kỹ năng vận động cơ bản, cảm xúc, giao tiếp đầu đời.'], ['icon' => 'fa-solid fa-paintbrush', 'color' => 'text-success', 'title' => 'Mẫu giáo bé (3–4 tuổi)', 'desc' => 'Tập trung kỹ năng ngôn ngữ, tự lập, hoạt động nhóm đơn giản.'], ['icon' => 'fa-solid fa-book', 'color' => 'text-warning', 'title' => 'Mẫu giáo nhỡ (4–5 tuổi)', 'desc' => 'Khám phá khoa học, toán học cơ bản, phát triển tư duy sáng tạo.'], ['icon' => 'fa-solid fa-futbol', 'color' => 'text-danger', 'title' => 'Mẫu giáo lớn (5–6 tuổi)', 'desc' => 'Chuẩn bị kiến thức, kỹ năng xã hội và tâm lý trước khi vào lớp 1.']] as $group)
+                <div class="col-md-6 col-lg-3 col-12">
+                    <div class="card age-group-card h-100">
+                        <i class="{{ $group['icon'] }} {{ $group['color'] }} fa-3x"></i>
+                        <h5 class="fw-bold mt-2">{{ $group['title'] }}</h5>
+                        <p class="text-muted">{{ $group['desc'] }}</p>
                     </div>
-                    <!-- CONTENT -->
-                    <div class="col-md-7 col-12 banner-content p-3 w-100 w-md-auto">
-                        <h3 class="fw-bold">{{ $promotion->title }}</h3>
-                        <p>{{ $promotion->description }}</p>
-                        <a href="#" class="btn btn-enroll btn-lg animated-btn mx-auto d-block" 
-                           data-bs-toggle="modal" data-bs-target="#registrationModal">
-                           Đăng Ký Ngay
-                        </a>
+                </div>
+            @endforeach
+        </div>
+    </section>
+
+    {{-- EDUCATION GALLERY --}}
+    <section class="bg-light py-2 art-gallery-section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title mb-4">Trải nghiệm vui nhộn cùng các hoạt động</h2>
+            @if ($educationContent)
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <figure class="art-frame">
+                            <img src="{{ asset($educationContent->main_image) }}" class="art-img art-img-main"
+                                alt="{{ $educationContent->title ?? 'Education Content' }}">
+                            @if (!empty($educationContent->caption))
+                                <figcaption class="art-caption">{{ $educationContent->caption }}</figcaption>
+                            @endif
+                        </figure>
+                    </div>
+                    <div class="col-lg-6" data-aos="fade-left">
+                        @if ($educationContent->items && $educationContent->items->count())
+                            <div class="art-grid">
+                                @foreach ($educationContent->items as $item)
+                                    <div class="art-card">
+                                        <img src="{{ asset($item->image) }}" class="art-img"
+                                            alt="{{ $item->overlay_text ?? 'Education item' }}">
+                                        @if (!empty($item->overlay_text))
+                                            <div class="art-overlay">
+                                                <div class="art-overlay-text">{{ $item->overlay_text }}</div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-muted">Chưa có nội dung chi tiết.</p>
+                        @endif
+                    </div>
+                </div>
+            @else
+                <p class="text-center text-muted">Hiện chưa có nội dung giáo dục nào được cập nhật.</p>
+            @endif
+        </div>
+    </section>
+
+    {{-- DAILY SCHEDULE --}}
+    <section class="daily-schedule-section py-1 m-4" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Lịch học mẫu một ngày</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Hoạt động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($schedules as $schedule)
+                            <tr>
+                                <td>{{ $schedule->time }}</td>
+                                <td>{{ $schedule->activity }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="2">Chưa có dữ liệu.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    {{-- NEWS --}}
+    <section id="news" class="container py-1">
+        <h2 class="section-title m-2" data-aos="fade-up">Tin tức & Sự kiện</h2>
+        <div class="row g-4 p-2">
+            @forelse($news as $key => $item)
+                <div class="col-md-3 col-12" data-aos="fade-up" data-aos-delay="{{ $key * 200 }}">
+                    <div class="card shadow-sm">
+                        <img src="{{ $item->image ? asset($item->image) : 'https://via.placeholder.com/400x250' }}"
+                            class="card-img-top" alt="{{ $item->title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $item->title }}</h5>
+                            <p class="card-text">{{ Str::limit($item->shortdes ?? strip_tags($item->description), 100) }}
+                            </p>
+                            <a href="{{ route('activities.detail', $item->slug) }}" class="btn btn-sm btn-enroll">Xem
+                                thêm</a>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="text-muted">Chưa có tin tức nào.</p>
+            @endforelse
+        </div>
+        <div class="d-flex justify-content-center mt-4">{{ $news->links('pagination::bootstrap-5') }}</div>
+    </section>
+
+    {{-- PROMOTION BANNER --}}
+    <section class="container p-2" data-aos="fade-up">
+        <h2 class="section-title text-center">Khuyến mãi nhập học sớm</h2>
+        @if ($promotion)
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-12 p-2 mx-auto">
+                    <div class="card banner-card p-2 d-flex flex-row flex-wrap align-items-center">
+                        {{-- Desktop: image 4 cột, content 6 cột --}}
+                        <div class="col-md-4 col-12 order-1 order-md-1 banner-img-wrapper p-0">
+                            <img src="{{ asset($promotion->image) }}" class="img-fluid banner-img w-100"
+                                alt="{{ $promotion->title }}">
+                        </div>
+                        <div class="col-md-6 col-12 order-2 order-md-2 banner-content">
+                            <h3>{{ $promotion->title }}</h3>
+                            <p>{{ $promotion->description }}</p>
+                            <a href="#" class="btn btn-enroll animated-btn mx-auto d-block" data-bs-toggle="modal"
+                                data-bs-target="#registrationModal">Đăng Ký Ngay</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    @else
-        <p class="text-center">Hiện chưa có khuyến mãi nhập học sớm.</p>
-    @endif
-</section>
+        @else
+            <p class="text-center">Hiện chưa có khuyến mãi nhập học sớm.</p>
+        @endif
+    </section>
 
-<style>
-/* ------------------- PROMOTION BANNER ------------------- */
-.banner-card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 1rem;
-    overflow: hidden;
-}
+    @include('client.partials.registration_modal')
+    @include('client.partials.contact_icon')
 
-.banner-card .banner-img {
-    width: 100%;
-    max-height: 250px;
-    object-fit: cover;
-    border-radius: var(--btn-radius);
-}
-
-.banner-card .banner-content {
-    padding: 1.5rem 1rem;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background: var(--bg-light);
-}
-
-.banner-card .btn-enroll {
-    background: var(--primary-color) !important;
-    color: var(--text-light) !important;
-    width: 100%;
-    max-width: 220px;
-    margin-top: 0.5rem;
-}
-
-.banner-card .btn-enroll:hover {
-    background: var(--primary-hover) !important;
-}
-
-/* ------------------- RESPONSIVE MOBILE ------------------- */
-@media (max-width: 767.98px) {
-    .banner-card {
-        flex-direction: column;
-        text-align: center;
-        margin: 0 15px; /* padding 2 bên trên mobile */
-    }
-
-    .banner-card .banner-content {
-        padding: 0.8rem 1rem; /* padding nhỏ hơn trên mobile */
-    }
-
-    .banner-card .banner-img {
-        height: 200px;
-        max-height: 200px;
-        border-radius: var(--btn-radius);
-    }
-
-    .banner-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.8rem;
-    }
-
-    .banner-card p {
-        font-size: 0.95rem;
-        margin-bottom: 1rem;
-    }
-
-    .banner-card .btn-enroll {
-        max-width: 100%;
-        margin: 0.5rem auto 0; /* căn giữa button */
-    }
-}
-</style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.location.href.includes("page=")) {
+                const newsSection = document.getElementById("news");
+                if (newsSection) newsSection.scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+        });
+    </script>
+@endsection
