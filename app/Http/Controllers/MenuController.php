@@ -8,24 +8,28 @@ use Illuminate\Support\Carbon;
 
 class MenuController extends Controller
 {
-    public function index()
-    {
-        $menus = Menu::orderBy('order')->get();
-        // Lấy hôm nay theo múi giờ VN
-        $today = Carbon::now('Asia/Ho_Chi_Minh');
+  public function index(Request $request)
+{
+    $menus = Menu::orderBy('order')->get();
 
-        // Lấy thứ Hai của tuần hiện tại
+    // Lấy hôm nay theo múi giờ Việt Nam
+    $today = Carbon::now('Asia/Ho_Chi_Minh');
+
+    // Nếu có tham số ?week=next thì lấy tuần tới
+    if ($request->query('week') === 'next') {
+        $startOfWeek = $today->copy()->addWeek()->startOfWeek(Carbon::MONDAY);
+        $endOfWeek = $today->copy()->addWeek()->endOfWeek(Carbon::SATURDAY);
+    } else {
+        // Mặc định là tuần hiện tại
         $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
-
-        // Lấy thứ Bảy của tuần hiện tại
         $endOfWeek = $today->copy()->endOfWeek(Carbon::SATURDAY);
-
-        // Format ngày-tháng theo dạng dd/mm
-        $weekRange = $startOfWeek->format('d/m') . ' - ' . $endOfWeek->format('d/m');
-
-        return view('admin.menus.index', compact('menus', 'weekRange'));
     }
 
+    // Format ngày tháng theo dạng dd/mm
+    $weekRange = $startOfWeek->format('d/m') . ' - ' . $endOfWeek->format('d/m');
+
+    return view('admin.menus.index', compact('menus', 'weekRange'));
+}
 
     public function create()
     {
@@ -44,7 +48,7 @@ class MenuController extends Controller
 
         Menu::create($data);
 
-        return redirect()->route('admin.menus.index')->with('success', 'Thêm thực đơn thành công!');
+        return redirect()->route('manager.menus.index')->with('success', 'Thêm thực đơn thành công!');
     }
 
     public function edit(Menu $menu)
@@ -63,13 +67,13 @@ class MenuController extends Controller
 
         $menu->update($data);
 
-        return redirect()->route('admin.menus.index')->with('success', 'Cập nhật thực đơn thành công!');
+        return redirect()->route('manager.menus.index')->with('success', 'Cập nhật thực đơn thành công!');
     }
 
     public function destroy(Menu $menu)
     {
         $menu->delete();
-        return redirect()->route('admin.menus.index')->with('success', 'Xóa thực đơn thành công!');
+        return redirect()->route('manager.menus.index')->with('success', 'Xóa thực đơn thành công!');
     }
     public function sort(Request $request)
     {

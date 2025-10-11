@@ -133,6 +133,8 @@ foreach ($roles as $role) {
                     'tuition' => TuitionController::class,
                     'registrations' => RegistrationController::class,
                 ]);
+                  Route::post('/menus/sort', [MenuController::class, 'sort'])
+        ->name('menus.sort');
                 // Thêm route khôi phục
                 Route::patch('students/{id}/restore', [StudentController::class, 'restore'])
                     ->name('students.restore');
