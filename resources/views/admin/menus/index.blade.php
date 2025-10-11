@@ -3,14 +3,16 @@
 
 @section('content')
 <style>
-    /* ✅ Ép toàn bộ màu trở về RGB khi export ảnh */
-.exporting, .exporting * {
-    color-scheme: only light;
-    color: rgb(0, 0, 0) !important;
-    background-color: transparent !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    box-shadow: none !important;
-}
+  --bs-body-bg: rgb(255,255,255);
+  --bs-body-color: rgb(0,0,0);
+  --bs-primary: rgb(13,110,253);
+  --bs-secondary: rgb(108,117,125);
+  --bs-success: rgb(25,135,84);
+  --bs-info: rgb(13,202,240);
+  --bs-warning: rgb(255,193,7);
+  --bs-danger: rgb(220,53,69);
+  --bs-light: rgb(248,249,250);
+  --bs-dark: rgb(33,37,41);
 
     /* Khung bao quanh toàn bộ thực đơn */
 #previewLayout {
