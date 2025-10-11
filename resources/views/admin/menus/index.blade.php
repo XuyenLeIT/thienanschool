@@ -3,16 +3,6 @@
 
 @section('content')
 <style>
-  --bs-body-bg: rgb(255,255,255);
-  --bs-body-color: rgb(0,0,0);
-  --bs-primary: rgb(13,110,253);
-  --bs-secondary: rgb(108,117,125);
-  --bs-success: rgb(25,135,84);
-  --bs-info: rgb(13,202,240);
-  --bs-warning: rgb(255,193,7);
-  --bs-danger: rgb(220,53,69);
-  --bs-light: rgb(248,249,250);
-  --bs-dark: rgb(33,37,41);
 
     /* Khung bao quanh toàn bộ thực đơn */
 #previewLayout {
@@ -188,18 +178,20 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Sortable
+
+    // ✅ Sắp xếp hàng (Sortable)
     const el = document.getElementById('sortable');
     if (el) {
-        Sortable.create(el, {
-            animation: 150
-        });
+        Sortable.create(el, { animation: 150 });
     }
 
-    // Chọn Layout
+    // ✅ Chọn layout
     document.getElementById('layoutSelect').addEventListener('change', (e) => {
         ['table','card','poster'].forEach(l => {
             document.getElementById(`layout-${l}`).classList.add('d-none');
@@ -207,29 +199,72 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById(`layout-${e.target.value}`).classList.remove('d-none');
     });
 
-    // Chọn nền
+    // ✅ Chọn nền
     document.getElementById('bgSelect').addEventListener('change', (e) => {
         const preview = document.getElementById('previewLayout');
         preview.style.backgroundImage = e.target.value ? `url('${e.target.value}')` : '';
     });
 
-    // Xuất ảnh
-    document.getElementById('exportImageBtn').addEventListener('click', () => {
+    // ✅ Xuất ảnh
+    document.getElementById('exportImageBtn').addEventListener('click', async () => {
+        const preview = document.getElementById('previewLayout');
+
+        // Ẩn các phần không cần export
         document.querySelectorAll('.no-export').forEach(el => el.classList.add('hide-during-export'));
 
-        html2canvas(document.getElementById('previewLayout'), {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: null,
-        }).then(canvas => {
+        // ⚡ Thêm class ép toàn bộ Bootstrap về RGB (tránh oklch)
+        document.body.classList.add('force-rgb');
+
+        try {
+            const canvas = await html2canvas(preview, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: null,
+                ignoreElements: (el) => {
+                    // Bỏ qua phần tử có màu oklch để không crash
+                    const style = window.getComputedStyle(el);
+                    return (
+                        style.color?.includes('oklch') ||
+                        style.backgroundColor?.includes('oklch') ||
+                        style.borderColor?.includes('oklch')
+                    );
+                }
+            });
+
             const link = document.createElement('a');
             link.download = 'menu-layout.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
-
+        } catch (error) {
+            console.error("❌ Lỗi khi xuất ảnh:", error);
+            alert("Có lỗi khi xuất ảnh. Vui lòng thử lại!");
+        } finally {
+            // Khôi phục lại giao diện
             document.querySelectorAll('.no-export').forEach(el => el.classList.remove('hide-during-export'));
-        });
+            document.body.classList.remove('force-rgb');
+        }
     });
 });
 </script>
+
+{{-- 🧩 CSS phụ hỗ trợ ép RGB khi export --}}
+<style>
+body.force-rgb, body.force-rgb * {
+    /* Ép Bootstrap về RGB thuần */
+    --bs-primary: rgb(13,110,253) !important;
+    --bs-secondary: rgb(108,117,125) !important;
+    --bs-success: rgb(25,135,84) !important;
+    --bs-info: rgb(13,202,240) !important;
+    --bs-warning: rgb(255,193,7) !important;
+    --bs-danger: rgb(220,53,69) !important;
+    --bs-light: rgb(248,249,250) !important;
+    --bs-dark: rgb(33,37,41) !important;
+    --bs-body-bg: rgb(255,255,255) !important;
+    --bs-body-color: rgb(0,0,0) !important;
+
+    color-scheme: light !important;
+    box-shadow: none !important;
+}
+</style>
+
 @endsection
