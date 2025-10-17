@@ -573,7 +573,7 @@
             padding: 6px 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 300px;
             margin-top: 10px;
             opacity: 0;
             transform: translateX(100%);
