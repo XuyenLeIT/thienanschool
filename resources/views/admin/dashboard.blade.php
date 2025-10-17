@@ -10,7 +10,7 @@
         }
     </style>
     <div class="container-fluid">
-        @if (in_array($authUser->role, ['admin', 'manager']))
+        @if (in_array($authUser->role, ['admin', 'manager','teacher']))
             <div class="card shadow-sm border-0 rounded-3 mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center bg-light">
                     <h5 class="mb-0">
@@ -280,9 +280,11 @@
                 const presentBadge = modalEl.querySelector('#presentBadge' + studentId);
                 const absentBadge = modalEl.querySelector('#absentBadge' + studentId);
                 const tableBody = modalEl.querySelector('#attendanceTable' + studentId);
-
+                const ROLE = "{{ $authUser->role}}";
+                console.log("ROLE",ROLE);
+                
                 const updateStats = () => {
-                    axios.get(`student/${studentId}/stats`, {
+                    axios.get(`/${ROLE}/student/${studentId}/stats`, {
                             params: {
                                 from: fromInput.value,
                                 to: toInput.value,

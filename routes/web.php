@@ -32,6 +32,7 @@ use App\Http\Controllers\{
 | Public Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/chuong-trinh-hoc', [CurriculumController::class, 'index'])->name('curriculum');
 Route::get('/phu-huynh', [ParentController::class, 'index'])->name('parent');
@@ -74,8 +75,10 @@ foreach ($roles as $role) {
             Route::put('/profile/update', [AdminController::class, 'updateProfile'])->name('accounts.update-profile');
 
             // Attendance
-            Route::get('/attendances/{classname}/{date?}', [AttendanceController::class, 'form'])->name('attendances.form');
-            Route::post('/attendances/store', [AttendanceController::class, 'store'])->name('attendances.store');
+            Route::get('/attendances/{classname?}/{date?}', [AttendanceController::class, 'form'])
+                ->name('attendances.form');
+            Route::post('/attendances/store', [AttendanceController::class, 'store'])
+                ->name('attendances.store');
             Route::get('/student/{studentId}/stats', [AdminController::class, 'stats'])->name('attendances.stats');
 
             /* === PHÂN QUYỀN RIÊNG TỪNG ROLE === */
@@ -133,8 +136,8 @@ foreach ($roles as $role) {
                     'tuition' => TuitionController::class,
                     'registrations' => RegistrationController::class,
                 ]);
-                  Route::post('/menus/sort', [MenuController::class, 'sort'])
-        ->name('menus.sort');
+                Route::post('/menus/sort', [MenuController::class, 'sort'])
+                    ->name('menus.sort');
                 // Thêm route khôi phục
                 Route::patch('students/{id}/restore', [StudentController::class, 'restore'])
                     ->name('students.restore');

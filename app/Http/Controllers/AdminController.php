@@ -26,7 +26,7 @@ class AdminController extends Controller
         $staffCount = Account::where('role', '!=', 'teacher')->count();
 
         // Tổng số học sinh
-        $studentCount = Student::where('status', 1)->count();
+        $studentCount = Student::where('status', 2)->count();
 
         // Danh sách các lớp (code => tên hiển thị)
         $classList = Student::$classGrades;
@@ -47,7 +47,7 @@ class AdminController extends Controller
 
         // Lấy học sinh theo lớp
         $students = $classname ? Student::where('classname', $classname)
-            ->where('status', 1)->get() : null;
+            ->where('status', 2)->get() : null;
 
         // Lấy điểm danh theo ngày
         $attendances = $classname ? Attendance::where('classname', $classname)

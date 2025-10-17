@@ -1,106 +1,121 @@
 @extends('admin.layout.app')
-@section('title', 'Điểm danh lớp ' . $classname)
 
 @section('content')
-    <div class="container">
-        <a href="{{ route('teacher.dashboard') }}" class="btn btn-info">
-            <i class="fas fa-home me-2"></i> Back
+<div class="container mt-4">
+    {{-- 🔙 Nút quay về Dashboard --}}
+    <div class="mb-3">
+        <a href="{{ route($authUser->role . '.dashboard') }}" class="btn btn-secondary">
+            ⬅️ Quay về Dashboard
         </a>
-        {{-- <h3 class="mb-3">Điểm danh lớp {{ $classname }} ({{ $date }})</h3> --}}
-        <h3 class="mb-3">Điểm danh lớp {{ $gradeLabel }} ({{ $date }})</h3>
-        {{-- Button chọn các ngày đã điểm danh --}}
-        <div class="mb-3">
-            @php
-                $today = now()->toDateString();
-                $yesterday = now()->subDay()->toDateString();
-            @endphp
-
-            {{-- Nút hôm nay để điểm danh mới --}}
-            <a href="{{ route('teacher.attendances.form', [$classname, $today]) }}"
-                class="btn btn-sm {{ $date == $today ? 'btn-primary' : 'btn-outline-primary' }} me-1 mb-1">
-                {{ $today }}
-            </a>
-
-            {{-- Nút chỉnh sửa ngày hôm qua --}}
-            @if (in_array($yesterday, $attendanceDates->toArray()))
-                <a href="{{ route('teacher.attendances.form', [$classname, $yesterday]) }}"
-                    class="btn btn-sm {{ $date == $yesterday ? 'btn-primary' : 'btn-outline-primary' }} me-1 mb-1">
-                    {{ $yesterday }}
-                </a>
-            @endif
-        </div>
-
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        <form action="{{ route('teacher.attendances.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="classname" value="{{ $classname }}">
-            <input type="hidden" name="date" value="{{ $date }}">
-
-            <table class="table table-bordered table-responsive">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Học sinh</th>
-                        <th>Trạng thái</th>
-                        <th>Ghi chú</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($students as $i => $student)
-                        @php
-                            $presentId = 'present_' . $student->id;
-                            $absentId = 'absent_' . $student->id;
-                            $studentAttendance = $attendances->firstWhere('student_id', $student->id);
-                            $status = $studentAttendance->status ?? 'present';
-                            $note = $studentAttendance->note ?? '';
-                        @endphp
-                        <tr>
-                            <td>{{ $i + 1 }}</td>
-                            <td>{{ $student->fullname }}</td>
-                            <td class="d-flex flex-column flex-md-row align-items-start">
-                                <div class="form-check me-3 mb-2 mb-md-0">
-                                    <input type="radio" class="form-check-input" id="{{ $presentId }}"
-                                        name="students[{{ $student->id }}][status]" value="present"
-                                        {{ $status === 'present' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="{{ $presentId }}">Có mặt</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="{{ $absentId }}"
-                                        name="students[{{ $student->id }}][status]" value="absent"
-                                        {{ $status === 'absent' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="{{ $absentId }}">Vắng</label>
-                                </div>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control note-input"
-                                    name="students[{{ $student->id }}][note]" value="{{ $note }}"
-                                    placeholder="Ghi chú...">
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <button type="submit" class="btn btn-success px-4">
-                {{ $attendances->isNotEmpty() ? 'Cập nhật' : 'Lưu điểm danh' }}
-            </button>
-        </form>
     </div>
 
-    <style>
-        .note-input {
-            min-height: 40px;
-            font-size: 1rem;
-        }
+    <h3>📋 Điểm danh lớp {{ $gradeLabel ?? $classname ?? '' }} - Ngày {{ $date ?? now()->toDateString() }}</h3>
 
-        @media (max-width: 768px) {
-            .form-check {
-                width: 100%;
-            }
-        }
-    </style>
+    {{-- 📝 Nút chỉnh sửa ngày hôm qua (nếu có điểm danh hôm qua) --}}
+    @if(($attendanceDates ?? collect())->contains($yesterday))
+        <a href="{{ route($authUser->role . '.attendances.form', [$classname, $yesterday]) }}"
+           class="btn btn-warning btn-sm m-1">
+            📝 Chỉnh sửa điểm danh ngày {{ $yesterday }}
+        </a>
+    @endif
+
+    {{-- 🏫 Chọn lớp (chỉ cho admin/manager) --}}
+    @if(in_array($authUser->role, ['admin', 'manager']))
+    <form action="{{ route($authUser->role . '.attendances.form') }}" method="get" class="mb-3 d-flex gap-2">
+        <select name="classname" class="form-select" style="width:200px">
+            <option value="">-- Chọn lớp --</option>
+            @foreach(($classGrades ?? []) as $code => $label)
+                <option value="{{ $code }}" {{ $classname == $code ? 'selected' : '' }}>
+                    {{ $label }}
+                </option>
+            @endforeach
+        </select>
+        <input type="hidden" name="date" value="{{ $today }}">
+        <button type="submit" class="btn btn-primary">Xem</button>
+    </form>
+    @endif
+
+    {{-- 🔔 Thông báo --}}
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    {{-- 🧾 Form điểm danh --}}
+    @if(!empty($classname))
+    <form action="{{ route($authUser->role . '.attendances.store') }}" method="post">
+        @csrf
+        <input type="hidden" name="classname" value="{{ $classname }}">
+        <input type="hidden" name="date" value="{{ $date ?? now()->toDateString() }}">
+
+        <table class="table table-bordered align-middle">
+            <thead>
+                <tr class="table-secondary">
+                    <th width="5%">#</th>
+                    <th>Tên học sinh</th>
+                    <th width="20%">Trạng thái</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($students as $index => $student)
+                    @php
+                        $record = $attendances->firstWhere('student_id', $student->id);
+                    @endphp
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $student->fullname }}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <label>
+                                    <input type="radio" name="students[{{ $student->id }}][status]" value="present"
+                                           {{ ($record && $record->status === 'present') || !$record ? 'checked' : '' }}
+                                           {{ !$canEdit ? 'disabled' : '' }}>
+                                    Có mặt
+                                </label>
+                                <label>
+                                    <input type="radio" name="students[{{ $student->id }}][status]" value="absent"
+                                           {{ $record && $record->status === 'absent' ? 'checked' : '' }}
+                                           {{ !$canEdit ? 'disabled' : '' }}>
+                                    Vắng
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" name="students[{{ $student->id }}][note]"
+                                   class="form-control"
+                                   value="{{ $record->note ?? '' }}"
+                                   {{ !$canEdit ? 'readonly' : '' }}>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="4" class="text-center">Không có học sinh trong lớp này.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+
+        @if ($canEdit)
+        <div class="text-end">
+            <button type="submit" class="btn btn-success">💾 Lưu điểm danh</button>
+        </div>
+        @endif
+    </form>
+    @endif
+
+    {{-- 📅 Ngày đã điểm danh --}}
+    @if(!empty($attendanceDates) && count($attendanceDates))
+    <hr>
+    <div>
+        <h5>📅 Ngày đã điểm danh:</h5>
+        @foreach ($attendanceDates as $d)
+            <a href="{{ route($authUser->role . '.attendances.form', [$classname, $d]) }}"
+               class="btn btn-outline-secondary btn-sm m-1 {{ $d == $date ? 'active' : '' }}">
+                {{ $d }}
+            </a>
+        @endforeach
+    </div>
+    @endif
+</div>
 @endsection
