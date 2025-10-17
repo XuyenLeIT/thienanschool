@@ -620,7 +620,7 @@
 
 
 
-    {{-- <script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
             const container = document.getElementById("toast-container");
 
@@ -701,7 +701,7 @@
 
             loadFeedbacks();
         });
-    </script> --}}
+    </script>
 
 
 

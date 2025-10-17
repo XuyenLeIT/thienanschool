@@ -1,29 +1,33 @@
 <!-- 🔥 Floating Contact Buttons -->
 <style>
     /* =============================
-         🔥 Vị trí và layout chính
+         📌 Layout chính và tránh tràn ngang
       ============================== */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden !important;
+    }
+
     .contact-floating {
         position: fixed;
         bottom: 70px;
-        right: 5px;
+        right: 10px; /* giảm để không tràn */
         display: flex;
         flex-direction: column;
-        /* xếp dọc */
         gap: 15px;
         z-index: 9999;
         align-items: flex-end;
-        /* căn phải */
+        max-width: calc(100vw - 20px); /* tránh tràn trên mobile */
+        overflow-x: hidden;
     }
 
     /* =============================
-         🔥 Kiểu chung cho các nút
+         🎨 Kiểu chung cho các nút
       ============================== */
     .contact-btn {
         min-width: 55px;
         height: 55px;
         border-radius: 50px;
-        /* phone có thể kéo dài khi hiển thị số */
         background: #0d6efd;
         color: #fff;
         display: inline-flex;
@@ -39,26 +43,19 @@
         overflow: hidden;
     }
 
-    /* Icon chung */
-    /* .contact-btn i,
-    .contact-btn img {
-        margin-right: 8px;
-    } */
-
     /* =============================
-         🔥 Phone Button
+         ☎️ Phone Button
       ============================== */
     .phone-btn {
         background: linear-gradient(45deg, #28a745, #34d058);
     }
 
-    /* Class riêng cho icon phone */
     .phone-icon {
         font-size: 22px;
     }
 
     /* =============================
-         🔥 Zalo Button
+         💬 Zalo Button
       ============================== */
     .zalo-btn {
         background: #0068ff;
@@ -75,89 +72,11 @@
         margin-right: 0;
     }
 
-    /* Hiệu ứng lan tỏa */
-    @keyframes pulseRing {
-        0% {
-            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
-        }
-
-        70% {
-            box-shadow: 0 0 0 20px rgba(13, 110, 253, 0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
-        }
-    }
-
     /* =============================
-         🔥 Hover hiệu ứng cho Desktop & Tablet
+         ⬆️ Go Top Button
       ============================== */
-    @media (min-width: 769px) {
-        .phone-btn {
-            width: 55px;
-            /* mặc định nhỏ */
-            padding: 0 20px;
-        }
-
-        .phone-btn .phone-text {
-            opacity: 0;
-            max-width: 0;
-            transition: all 0.3s ease;
-        }
-
-        /* Khi hover → kéo dài nút và hiện số */
-        .phone-btn:hover {
-            width: 200px;
-            /* 👉 giãn ngang */
-            border-radius: 50px;
-        }
-
-        .phone-btn:hover .phone-text {
-            opacity: 1;
-            max-width: 150px;
-            /* 👉 hiện số */
-            margin-left: 10px;
-        }
-    }
-
-    /* =============================
-         🔥 Responsive cho Mobile
-      ============================== */
-    @media (max-width: 768px) {
-
-        /* Ẩn số điện thoại */
-        .phone-text {
-            display: none !important;
-        }
-
-        /* Icon phone đứng yên, không lệch */
-        .phone-icon {
-            margin-right: 0 !important;
-        }
-
-        /* Nút tròn, không giãn */
-        .phone-btn,
-        .zalo-btn,
-        .contact-btn {
-            width: 50px !important;
-            height: 55px !important;
-            border-radius: 50% !important;
-            padding: 0 !important;
-            justify-content: center !important;
-            transition: none !important;
-        }
-
-        /* 🚫 Tắt hiệu ứng hover trên mobile */
-        .contact-btn:hover {
-            transform: none !important;
-            width: 55px !important;
-        }
-    }
-
     .gotop-btn {
         background: #6c757d;
-        /* Màu xám Bootstrap secondary */
         width: 55px;
         height: 55px;
         border-radius: 50%;
@@ -173,22 +92,95 @@
     .gotop-btn:hover {
         background: #495057;
     }
+
+    /* =============================
+         🌊 Hiệu ứng lan tỏa
+      ============================== */
+    @keyframes pulseRing {
+        0% {
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 20px rgba(13, 110, 253, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        }
+    }
+
+    /* =============================
+         💻 Hover cho Desktop
+      ============================== */
+    @media (min-width: 769px) {
+        .phone-btn {
+            width: 55px;
+            padding: 0 20px;
+        }
+
+        .phone-btn .phone-text {
+            opacity: 0;
+            max-width: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Khi hover → hiện số */
+        .phone-btn:hover {
+            width: 200px;
+            border-radius: 50px;
+        }
+
+        .phone-btn:hover .phone-text {
+            opacity: 1;
+            max-width: 150px;
+            margin-left: 10px;
+        }
+    }
+
+    /* =============================
+         📱 Responsive cho Mobile
+      ============================== */
+    @media (max-width: 768px) {
+        .phone-text {
+            display: none !important;
+        }
+
+        .phone-icon {
+            margin-right: 0 !important;
+        }
+
+        .contact-btn,
+        .zalo-btn,
+        .phone-btn {
+            width: 55px !important;
+            height: 55px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            justify-content: center !important;
+            transition: none !important;
+        }
+
+        /* Tắt hiệu ứng hover */
+        .contact-btn:hover {
+            transform: none !important;
+            width: 55px !important;
+        }
+    }
 </style>
 
 <div class="contact-floating">
-    <!-- 📞 Phone -->
+    <!-- 📞 Gọi ngay -->
     <a href="tel:0912345678" class="contact-btn phone-btn" title="Gọi ngay">
         <i class="fa-solid fa-phone phone-icon"></i>
         <span class="phone-text">0912&nbsp;345&nbsp;678</span>
     </a>
 
     <!-- 💬 Zalo -->
-    <a href="https://zalo.me/0382907702" target="_blank" class="contact-btn zalo-btn" title="Nhắn Zalo">
+    <a href="https://zalo.me/0382907702" target="_blank" class="contact-btn zalo-btn" title="Nhắn qua Zalo">
         <img src="/icon/zaloicon.png" alt="Zalo">
     </a>
 
-    <!-- ⬆️ Go to Top -->
-    <button class="gotop-btn" title="Lên đầu trang" onclick="window.scrollTo(0,0)">
+    <!-- ⬆️ Lên đầu trang -->
+    <button class="gotop-btn" title="Lên đầu trang" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 </div>
