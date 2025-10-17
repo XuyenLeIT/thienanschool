@@ -1,11 +1,13 @@
 @extends('client.layout.app')
 
 @section('title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
-@section('meta_description', 'Cập nhật thông tin cho phụ huynh: thực đơn hàng tuần, thông báo, lời yêu thương, góc tư vấn và khuyến mãi nhập học tại Trường Mầm Non Thiên Ân.')
+@section('meta_description', 'Cập nhật thông tin cho phụ huynh: thực đơn hàng tuần, thông báo, lời yêu thương, góc tư
+    vấn và khuyến mãi nhập học tại Trường Mầm Non Thiên Ân.')
 @section('meta_keywords', 'phụ huynh, thực đơn mầm non, thông báo phụ huynh, góc tư vấn, trường mầm non Thiên Ân')
 @section('og_title', 'Phụ huynh - Trường Mầm Non Thiên Ân')
-@section('og_description', 'Thông tin hữu ích cho phụ huynh: thực đơn, thông báo, lời yêu thương và khuyến mãi nhập học sớm.')
-@section('og_image', $carausel->image ?? $promotion->image ?? asset('images/share-image.jpg'))
+@section('og_description', 'Thông tin hữu ích cho phụ huynh: thực đơn, thông báo, lời yêu thương và khuyến mãi nhập học
+    sớm.')
+@section('og_image', $carausel->image ?? ($promotion->image ?? asset('images/share-image.jpg')))
 @section('canonical', url()->current())
 
 
@@ -113,7 +115,7 @@
     .banner-btn {
         display: inline-block;
         padding: 0.75rem 1.5rem;
-    background: var(--primary-color);
+        background: var(--primary-color);
         color: #fff;
         font-weight: bold;
         border-radius: 5px;
@@ -393,6 +395,70 @@
     .notice-item:hover .notice-description {
         display: block;
     }
+
+    #toast-container {
+        position: fixed;
+        bottom: calc(20px + env(safe-area-inset-bottom));
+        right: 70px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        pointer-events: none;
+        /* tránh toast che nút bấm khác */
+    }
+
+    .toast-custom {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 10px;
+        padding: 6px 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 300px;
+        margin-top: 10px;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.5s ease;
+        pointer-events: auto;
+        /* cho phép hover */
+    }
+
+    .toast-custom.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .toast-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid #eee;
+    }
+
+    .toast-body {
+        margin-left: 12px;
+        font-size: 0.9rem;
+        line-height: 1.3;
+    }
+
+    .toast-body strong {
+        display: block;
+        font-size: 1rem;
+    }
+
+    .toast-body small {
+        color: #888;
+        font-style: italic;
+        display: block;
+    }
+
+    .toast-body p {
+        margin: 4px 0 0;
+    }
 </style>
 
 @section('content')
@@ -545,78 +611,14 @@
             </div>
         @endif
     </section>
+        {{-- Toast container --}}
+    <div id="toast-container"></div>
     {{-- Include modal --}}
     @include('client.partials.registration_modal')
     @include('client.partials.contact_icon')
-    {{-- Toast container --}}
-    <div id="toast-container"></div>
 
 
-    <style>
-        #toast-container {
-            position: fixed;
-            bottom: calc(20px + env(safe-area-inset-bottom));
-            right: 70px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            pointer-events: none;
-            /* tránh toast che nút bấm khác */
-        }
 
-        .toast-custom {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 10px;
-            padding: 6px 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 300px;
-            margin-top: 10px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.5s ease;
-            pointer-events: auto;
-            /* cho phép hover */
-        }
-
-        .toast-custom.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .toast-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 2px solid #eee;
-        }
-
-        .toast-body {
-            margin-left: 12px;
-            font-size: 0.9rem;
-            line-height: 1.3;
-        }
-
-        .toast-body strong {
-            display: block;
-            font-size: 1rem;
-        }
-
-        .toast-body small {
-            color: #888;
-            font-style: italic;
-            display: block;
-        }
-
-        .toast-body p {
-            margin: 4px 0 0;
-        }
-    </style>
 
     {{-- <script>
         document.addEventListener("DOMContentLoaded", function() {
