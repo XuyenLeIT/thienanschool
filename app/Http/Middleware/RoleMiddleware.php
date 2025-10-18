@@ -18,18 +18,19 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        // Kiểm tra thời gian hoạt động cuối
         $lastActivity = session('last_activity');
-        $timeout = 20 * 60; // 30 phút (đơn vị: giây)
+        $timeout = 20 * 60;
 
-        if ($lastActivity && (time() - $lastActivity > $timeout)) {
+        if (!$lastActivity) {
+            // Nếu chưa có last_activity => khởi tạo lần đầu
+            session(['last_activity' => time()]);
+        } elseif (time() - $lastActivity > $timeout) {
             session()->forget(['auth_user', 'last_activity']);
             return redirect()->route('login')->with('warning', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        } else {
+            // Cập nhật hoạt động
+            session(['last_activity' => time()]);
         }
-
-        // Cập nhật lại thời gian hoạt động
-        session(['last_activity' => time()]);
-
         // Kiểm tra user có tồn tại trong DB
         $user = Account::find($userLogin->id);
         if (!$user) {

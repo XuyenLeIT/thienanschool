@@ -123,7 +123,11 @@ class AdminController extends Controller
             return back()->withErrors(['email' => 'Tài khoản bị khóa hoặc chưa kích hoạt']);
         }
 
-        session(['auth_user' => $user]);
+            // ✅ Lưu user và thời gian hoạt động
+    session([
+        'auth_user' => $user,
+        'last_activity' => time()
+    ]);
 
         // Điều hướng theo role
         if ($user->isAdmin()) return redirect()->route('admin.dashboard');
@@ -134,6 +138,7 @@ class AdminController extends Controller
     public function logout(Request $request)
     {
         $request->session()->forget('auth_user');
+        $request->session()->forget('last_activity');
         return redirect()->route('login');
     }
 
