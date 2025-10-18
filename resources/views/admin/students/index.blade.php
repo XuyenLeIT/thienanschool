@@ -12,47 +12,46 @@
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-  <form method="GET" action="{{ route($authUser->role . '.students.index') }}" class="row mb-3 g-2">
-    <div class="col-md-3">
-        <input type="text" name="search" class="form-control"
-               placeholder="Tìm theo tên học sinh / phụ huynh"
-               value="{{ request('search') }}">
-    </div>
+    <form method="GET" action="{{ route($authUser->role . '.students.index') }}" class="row mb-3 g-2">
+        <div class="col-md-3">
+            <input type="text" name="search" class="form-control" placeholder="Tìm theo tên học sinh / phụ huynh"
+                value="{{ request('search') }}">
+        </div>
 
-    <div class="col-md-2">
-        <select name="classname" class="form-select">
-            <option value="">-- Tất cả lớp --</option>
-            @foreach ($classGrades as $code => $label)
-                <option value="{{ $code }}" {{ request('classname') == $code ? 'selected' : '' }}>
-                    {{ $label.'-'.$code }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        <div class="col-md-2">
+            <select name="classname" class="form-select">
+                <option value="">-- Tất cả lớp --</option>
+                @foreach ($classGrades as $code => $label)
+                    <option value="{{ $code }}" {{ request('classname') == $code ? 'selected' : '' }}>
+                        {{ $label . '-' . $code }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    <div class="col-md-2">
-        <select name="status" class="form-select">
-            <option value="">-- Tất cả trạng thái --</option>
-            @foreach ($statusList as $key => $label)
-                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
-                    {{ $label }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">-- Tất cả trạng thái --</option>
+                @foreach ($statusList as $key => $label)
+                    <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
+                        {{ $label }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    <div class="col-md-2">
-        <select name="s_delete" class="form-select">
-            <option value="0" {{ request('s_delete', '0') == '0' ? 'selected' : '' }}>Đang hoạt động</option>
-            <option value="1" {{ request('s_delete') == '1' ? 'selected' : '' }}>Đã xóa</option>
-        </select>
-    </div>
+        <div class="col-md-2">
+            <select name="s_delete" class="form-select">
+                <option value="0" {{ request('s_delete', '0') == '0' ? 'selected' : '' }}>Đang hoạt động</option>
+                <option value="1" {{ request('s_delete') == '1' ? 'selected' : '' }}>Đã xóa</option>
+            </select>
+        </div>
 
-    <div class="col-md-2 d-flex gap-2">
-        <button type="submit" class="btn btn-primary w-100">Lọc</button>
-        <a href="{{ route($authUser->role . '.students.index') }}" class="btn btn-secondary w-100">Reset</a>
-    </div>
-</form>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">Lọc</button>
+            <a href="{{ route($authUser->role . '.students.index') }}" class="btn btn-secondary w-100">Reset</a>
+        </div>
+    </form>
 
 
     <table class="table table-bordered table-striped">
@@ -130,45 +129,75 @@
                 <div class="modal fade" id="studentModal{{ $student->id }}" tabindex="-1"
                     aria-labelledby="studentModalLabel{{ $student->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="studentModalLabel{{ $student->id }}">
-                                    Thông tin học sinh: {{ $student->fullname }}
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+
+                            {{-- Header --}}
+                            <div class="modal-header"
+                                style="background-color: #ffd89b; color: #5c3c00; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                                <h5 class="modal-title fw-bold d-flex align-items-center gap-2"
+                                    id="studentModalLabel{{ $student->id }}">
+                                    🧒 Thông tin học sinh: <span class="text-primary">{{ $student->fullname }}</span>
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="Đóng"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                             </div>
-                            <div class="modal-body">
+
+                            {{-- Body --}}
+                            <div class="modal-body" style="background-color: #fffaf5;">
                                 <div class="row">
-                                    <div class="col-md-4 text-center">
-                                        @if ($student->image && file_exists(public_path($student->image)))
-                                            <img src="{{ asset($student->image) }}" class="img-fluid rounded mb-3"
-                                                width="200">
-                                        @else
-                                            <img src="https://via.placeholder.com/200" class="img-fluid rounded mb-3">
-                                        @endif
+                                    <div class="col-md-4 text-center mb-3">
+                                        <div class="position-relative d-inline-block">
+                                            @if ($student->image && file_exists(public_path($student->image)))
+                                                <img src="{{ asset($student->image) }}"
+                                                    class="img-fluid rounded-circle shadow-sm border border-3 border-warning"
+                                                    width="180" height="180" alt="{{ $student->fullname }}">
+                                            @else
+                                                <img src="https://cdn-icons-png.flaticon.com/512/921/921071.png"
+                                                    class="img-fluid rounded-circle shadow-sm border border-3 border-warning"
+                                                    width="180" height="180" alt="student avatar">
+                                            @endif
+                                            {{-- Icon hoạt hình nhỏ góc ảnh --}}
+                                            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"
+                                                alt="cute icon" width="50"
+                                                style="position:absolute; bottom:-10px; right:-10px; opacity:0.9;">
+                                        </div>
+                                        <p class="mt-3 fw-semibold text-secondary">
+                                            {{ $student->gender ? '👦 Bé trai' : '👧 Bé gái' }}
+                                        </p>
                                     </div>
+
                                     <div class="col-md-8">
-                                        <p><strong>Họ tên:</strong> {{ $student->fullname }}</p>
-                                        <p><strong>Phụ huynh:</strong> {{ $student->parent }}</p>
-                                        <p><strong>Số điện thoại:</strong> {{ $student->phone }}</p>
-                                        <p><strong>Lớp:</strong> {{ $student->classname }} - {{ $student->grade }}</p>
-                                        <p><strong>Ngày bắt đầu học:</strong> {{ $student->startdate }}</p>
-                                        <p><strong>Ngày sinh:</strong> {{ $student->birthday ?? '-' }}</p>
-                                        <p><strong>Tuổi:</strong> {{ $student->age }}</p>
-                                        <p><strong>Địa chỉ:</strong> {{ $student->address }}</p>
-                                        <p><strong>Giới tính:</strong> {{ $student->gender ? 'Nam' : 'Nữ' }}</p>
-                                        <p><strong>Tình trạng:</strong> {{ $student->status ? 'Đang học' : 'Đã nghỉ' }}</p>
-                                        <p><strong>Ghi chú:</strong> {{ $student->note ?? '---' }}</p>
+                                        <div class="p-3 rounded" style="background-color:#fff3cd;">
+                                            <p><strong>👨‍👩‍👧 Phụ huynh:</strong> {{ $student->parent }}</p>
+                                            <p><strong>📞 Số điện thoại:</strong> {{ $student->phone }}</p>
+                                            <p><strong>🏫 Lớp:</strong> {{ $student->classname }} - {{ $student->grade }}
+                                            </p>
+                                            <p><strong>🎂 Ngày sinh:</strong> {{ $student->birthday ?? '-' }}</p>
+                                            <p><strong>🧮 Tuổi:</strong> {{ $student->age }}</p>
+                                            <p><strong>📅 Bắt đầu học:</strong> {{ $student->startdate }}</p>
+                                            <p><strong>📍 Địa chỉ:</strong> {{ $student->address }}</p>
+                                            <p><strong>📚 Tình trạng:</strong>
+                                                <span
+                                                    class="badge {{ $student->status ? 'bg-success' : 'bg-secondary' }}">
+                                                    {{ $student->status ? 'Đang học' : 'Đã nghỉ' }}
+                                                </span>
+                                            </p>
+                                            <p><strong>📝 Ghi chú:</strong> {{ $student->note ?? '---' }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+
+                            {{-- Footer --}}
+                            <div class="modal-footer"
+                                style="background-color:#fffaf0; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;">
+                                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                                    ✨ Đóng
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
             @empty
                 <tr>
                     <td colspan="8" class="text-center">Không có học sinh nào.</td>
