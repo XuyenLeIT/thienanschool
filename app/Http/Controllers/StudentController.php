@@ -160,11 +160,11 @@ class StudentController extends Controller
             ->with('success', 'Student has been moved to trash successfully.');
     }
     public function restore($id)
-    {
-        $student = Student::findOrFail($id);
-        $student->update(['s_delete' => false]);
-        $authUser = session('auth_user');
-        return redirect()->route($authUser->role . '.students.index')
-            ->with('success', 'Student restored successfully.');
-    }
+{
+    $student = Student::findOrFail($id);
+    $student->update(['s_delete' => false]);
+
+    return back()->with('success', 'Student restored successfully.');
+}
+
 }

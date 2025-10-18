@@ -7,6 +7,7 @@ use App\Mail\RegisterMail;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
@@ -100,7 +101,7 @@ class AccountController extends Controller
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            \Log::error('Lỗi tạo account: ' . $e->getMessage());
+            Log::error('Lỗi tạo account: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Có lỗi: ' . $e->getMessage());
         }
     }
@@ -145,7 +146,7 @@ class AccountController extends Controller
             return back()->with('success', 'Account tạo thành công và email đã gửi.');
 
         } catch (\Throwable $e) {
-            \Log::error('Lỗi cập nhật account: ' . $e->getMessage());
+            Log::error('Lỗi cập nhật account: ' . $e->getMessage());
             return back()->withInput()->with('error', 'Có lỗi: ' . $e->getMessage());
         }
     }
@@ -177,7 +178,7 @@ class AccountController extends Controller
 
             return back()->with('success', 'Account tạo thành công và email đã gửi.');
         } catch (\Throwable $e) {
-            \Log::error('Lỗi khi thay đổi trạng thái account: ' . $e->getMessage());
+            Log::error('Lỗi khi thay đổi trạng thái account: ' . $e->getMessage());
             return back()->with('error', 'Có lỗi: ' . $e->getMessage());
         }
     }

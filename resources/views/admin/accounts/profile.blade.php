@@ -50,6 +50,7 @@
             <h5 class="mb-3"><i class="fa-solid fa-user me-2"></i> Cập nhật hồ sơ</h5>
             <form method="POST" action="{{ route($authUser->role.'.accounts.update-profile') }}" enctype="multipart/form-data">
                 @csrf
+                 @method('PUT')
                 <input type="hidden" name="active_tab" value="profile">
 
                 <div class="mb-3">
