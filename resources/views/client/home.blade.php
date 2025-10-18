@@ -202,5 +202,25 @@
     {{-- Include modal & icons --}}
     @include('client.partials.registration_modal')
     @include('client.partials.contact_icon')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Nếu URL có chứa #news → scroll mượt tới đó
+            if (window.location.hash === '#news') {
+                const section = document.querySelector('#news');
+                if (section) {
+                    section.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            // Gắn #news vào tất cả link phân trang
+            document.querySelectorAll('.pagination a').forEach(link => {
+                if (!link.href.includes('#news')) {
+                    link.href += '#news';
+                }
+            });
+        });
+    </script>
 
 @endsection
