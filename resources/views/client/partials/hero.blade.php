@@ -1,14 +1,13 @@
-<div class="hero-carousel p-3">
+<div class="hero-carousel p-2 p-md-3">
     <div class="carousel"
         data-flickity='{
-      "cellAlign": "center",
-      "contain": true,
-      "wrapAround": true,
-      "autoPlay": 2000,
-      "pageDots": true,
-      "prevNextButtons": true,
-      "groupCells": true
-    }'>
+            "cellAlign": "center",
+            "wrapAround": true,
+            "autoPlay": 2000,
+            "pageDots": true,
+            "prevNextButtons": true,
+            "groupCells": true
+        }'>
         @foreach ($carausels as $item)
             <div class="carousel-cell">
                 <div class="art-card">
@@ -30,7 +29,7 @@
 <style>
     .hero-carousel {
         background: linear-gradient(135deg, #f0f2f5 0%, #d9e2f0 100%);
-        padding: 20px 0;
+     
     }
 
     .carousel-cell {
@@ -64,7 +63,6 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* overlay nhẹ hơn */
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.35) 100%);
         display: flex;
         align-items: flex-end;
@@ -86,18 +84,25 @@
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 
+    /* Tablet */
     @media (max-width: 991px) {
         .carousel-cell {
-            width: 70%;
+            width: 80%;
         }
     }
 
+    /* Mobile - full width */
     @media (max-width: 767px) {
         .carousel-cell {
-            width: 90%;
+            width: 100% !important;
+            margin-right: 0 !important;
         }
 
-        /* Ẩn description */
+        .art-card-image {
+            height: 220px;
+        }
+
+        /* Ẩn mô tả để gọn hơn */
         .text-content p {
             display: none;
         }
