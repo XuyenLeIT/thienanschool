@@ -38,9 +38,6 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#password" role="tab">Đổi mật khẩu</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#reset" role="tab">Reset mật khẩu</a>
-        </li>
     </ul>
 
     <div class="tab-content border border-top-0 p-3 rounded-bottom shadow-sm bg-white">
@@ -106,24 +103,6 @@
 
                 <button type="submit" class="btn btn-warning">
                     <i class="fa-solid fa-rotate me-1"></i> Đổi mật khẩu
-                </button>
-            </form>
-        </div>
-
-        {{-- Tab 3 --}}
-        <div class="tab-pane fade" id="reset" role="tabpanel">
-            <h5 class="mb-3"><i class="fa-solid fa-envelope me-2"></i> Reset mật khẩu</h5>
-            <form method="POST" action="{{ route('password.send-otp') }}">
-                @csrf
-                <input type="hidden" name="active_tab" value="reset">
-
-                <div class="mb-3">
-                    <label class="form-label">Email tài khoản</label>
-                    <input type="email" name="email" class="form-control" value="{{ old('email') }}">
-                </div>
-
-                <button type="submit" class="btn btn-danger">
-                    <i class="fa-solid fa-paper-plane me-1"></i> Gửi mã OTP
                 </button>
             </form>
         </div>
