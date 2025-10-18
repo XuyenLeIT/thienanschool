@@ -12,35 +12,42 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Lấy user từ session
         $userLogin = session('auth_user');
 
         if (!$userLogin) {
             return redirect()->route('login');
         }
 
-        // Lấy user từ DB
+        // Kiểm tra thời gian hoạt động cuối
+        $lastActivity = session('last_activity');
+        $timeout = 20 * 60; // 30 phút (đơn vị: giây)
+
+        if ($lastActivity && (time() - $lastActivity > $timeout)) {
+            session()->forget(['auth_user', 'last_activity']);
+            return redirect()->route('login')->with('warning', 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        }
+
+        // Cập nhật lại thời gian hoạt động
+        session(['last_activity' => time()]);
+
+        // Kiểm tra user có tồn tại trong DB
         $user = Account::find($userLogin->id);
         if (!$user) {
-            // Xoá đúng key session
             session()->forget('auth_user');
-
             return redirect()->route('login');
         }
 
-        // Ghi log để debug
         Log::info('RoleMiddleware - Auth User', [
             'id' => $user->id,
             'role' => $user->role,
             'roles_required' => $roles
         ]);
 
-        // Kiểm tra role
+        // Kiểm tra quyền (role)
         if (!empty($roles) && !in_array($user->role, $roles)) {
             abort(403, 'Bạn không có quyền truy cập');
         }
 
-        // Đưa user vào request
         $request->attributes->set('auth_user', $user);
 
         return $next($request);
