@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
       <link rel="icon" type="image/png" href="{{ asset('icon/logo.jpg') }}">
     <title>@yield('title', 'Trường Mầm Non Thiên Ân')</title>  
     <meta name="description" content="@yield('meta_description', 'Trường Mầm Non Thiên Ân - môi trường giáo dục mầm non an toàn, thân thiện, sáng tạo cho trẻ nhỏ.')">

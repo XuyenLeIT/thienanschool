@@ -45,7 +45,7 @@ Route::post('/login', [AdminController::class, 'checkLogin'])->name('login.post'
 Route::get('/logout', [AdminController::class, 'logout'])->name('logout');
 
 Route::get('/api/feedbacks', [FeedbackController::class, 'apiFeedbacks']);
-Route::post('/register', [RegistrationController::class, 'store'])->name('registration.store');
+Route::post('api/register', [RegistrationController::class, 'store'])->name('registration.store');
 
 // Quên mật khẩu
 Route::get('/forgot-password', [AdminController::class, 'showForgotForm'])->name('password.forgot-form');

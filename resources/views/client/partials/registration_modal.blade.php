@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="{{ asset('css/root.css') }}">
+
 <style>
     /* Mobile scroll & input focus style */
     @media (max-width: 767px) {
@@ -120,3 +121,83 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.getElementById("registrationForm");
+        const btn = document.getElementById("submitBtn");
+        const btnText = document.getElementById("btnText");
+        const btnSpinner = document.getElementById("btnSpinner");
+
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const data = {
+                parent_name: document.getElementById("parentName").value.trim(),
+                phone: document.getElementById("phone").value.trim(),
+                child_name: document.getElementById("childName").value.trim(),
+                age_group: document.getElementById("ageGroup").value,
+                note: document.getElementById("note").value.trim(),
+            };
+
+            // Loading state
+            btn.disabled = true;
+            btnText.textContent = "Đang gửi...";
+            btnSpinner.classList.remove("d-none");
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute(
+                    'content');
+
+                const response = await fetch("/api/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": token,
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || "Gửi thất bại!");
+                }
+
+                // 🎉 Thông báo SweetAlert khi thành công
+                await Swal.fire({
+                    icon: "success",
+                    title: "Thành công!",
+                    text: result.message || "Đăng ký thành công!",
+                    confirmButtonColor: "#fcb69f",
+                    confirmButtonText: "Đóng",
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+
+                // Reset form & đóng modal
+                form.reset();
+                const modal = bootstrap.Modal.getInstance(document.getElementById(
+                    "registrationModal"));
+                if (modal) modal.hide();
+
+            } catch (error) {
+                console.error(error);
+                // ❌ Thông báo lỗi
+                Swal.fire({
+                    icon: "error",
+                    title: "Lỗi!",
+                    text: error.message || "Đã có lỗi xảy ra, vui lòng thử lại.",
+                    confirmButtonColor: "#f87171",
+                    confirmButtonText: "Đóng"
+                });
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Gửi đăng ký";
+                btnSpinner.classList.add("d-none");
+            }
+        });
+    });
+</script>
