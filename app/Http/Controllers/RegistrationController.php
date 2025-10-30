@@ -74,7 +74,7 @@ class RegistrationController extends Controller
 
         Registration::create($validated);
 
-        return response()->json(['message' => 'Đăng ký thành công!']);
+        return response()->json(['message' => 'Cảm ơn ba/mẹ! Bộ phận tuyển sinh sẽ liên hệ trong thời gian sớm nhất.']);
     }
     public function show($id)
     {

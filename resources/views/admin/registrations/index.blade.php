@@ -63,7 +63,7 @@
                             </button>
                         </div>
                         <div class="col-6 col-md-1 d-grid">
-                            <a href="{{ route($authUser->role.'.registrations.index') }}" class="btn btn-secondary">
+                            <a href="{{ route($authUser->role . '.registrations.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-undo"></i>
                             </a>
                         </div>
@@ -123,7 +123,7 @@
 
             {{-- Phân trang --}}
             <div class="card-footer d-flex justify-content-center">
-                {{ $registrations->links() }}
+                {{ $registrations->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

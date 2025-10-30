@@ -170,10 +170,10 @@
                 await Swal.fire({
                     icon: "success",
                     title: "Thành công!",
-                    text: result.message || "Đăng ký thành công!",
+                    text: result.message,
                     confirmButtonColor: "#fcb69f",
                     confirmButtonText: "Đóng",
-                    timer: 2500,
+                    timer: 4500,
                     timerProgressBar: true
                 });
 
