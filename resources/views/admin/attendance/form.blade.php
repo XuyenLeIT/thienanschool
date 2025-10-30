@@ -104,11 +104,11 @@
     </form>
     @endif
 
-    {{-- 📅 Ngày đã điểm danh --}}
-    @if(!empty($attendanceDates) && count($attendanceDates))
+{{-- 📅 Ngày đã điểm danh --}}
+@if(!empty($classname) && !empty($attendanceDates) && count($attendanceDates))
     <hr>
     <div>
-        <h5>📅 Ngày đã điểm danh:</h5>
+        <h5>📅 Ngày đã điểm danh của lớp {{ $gradeLabel }}:</h5>
         @foreach ($attendanceDates as $d)
             <a href="{{ route($authUser->role . '.attendances.form', [$classname, $d]) }}"
                class="btn btn-outline-secondary btn-sm m-1 {{ $d == $date ? 'active' : '' }}">
@@ -116,6 +116,10 @@
             </a>
         @endforeach
     </div>
-    @endif
+@elseif(!empty($classname))
+    <hr>
+    <div class="text-muted fst-italic">Chưa có ngày điểm danh nào cho lớp này.</div>
+@endif
+
 </div>
 @endsection

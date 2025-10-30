@@ -94,6 +94,7 @@
                 ['route' => 'manager.dashboard', 'icon' => 'fa-home', 'label' => 'Dashboard'],
                 ['route' => 'manager.registrations.index', 'icon' => 'fa-address-book', 'label' => 'Danh Sách Liên hệ'],
                 ['route' => 'manager.menus.index', 'icon' => 'fa-utensils', 'label' => 'Menus'],
+                ['route' => 'manager.students.index', 'icon' => 'fa-users', 'label' => 'Student'],
             ];
         } elseif ($role === 'admin') {
             $menus = [

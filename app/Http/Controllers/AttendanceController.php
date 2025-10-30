@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
+
     public function form(Request $request, $classname = null, $date = null)
     {
         $authUser = session('auth_user');
@@ -33,20 +34,33 @@ class AttendanceController extends Controller
         $attendances = collect();
 
         if (!empty($classname)) {
+            // Lấy danh sách học sinh chưa bị xóa
             $students = Student::where('classname', $classname)
                 ->where('status', 2)
+                ->where('s_delete', 0)
                 ->orderBy('fullname')
                 ->get();
 
+            // Lấy danh sách điểm danh
             $attendances = Attendance::where('classname', $classname)
                 ->where('date', $date)
                 ->get();
+
+            // Thêm học sinh có điểm danh nhưng đã bị xóa (s_delete = 1)
+            $attendanceStudentIds = $attendances->pluck('student_id')->unique();
+            $deletedStudents = Student::whereIn('id', $attendanceStudentIds)
+                ->where('s_delete', 1)
+                ->get();
+
+            // Gộp hai danh sách lại
+            $students = $students->merge($deletedStudents)->sortBy('fullname')->values();
         }
+
 
         // Danh sách ngày đã điểm danh (chỉ trong tháng hiện tại và không vượt hôm nay)
         $attendanceDates = Attendance::when($classname, function ($q) use ($classname) {
-                $q->where('classname', $classname);
-            })
+            $q->where('classname', $classname);
+        })
             ->whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->where('date', '<=', now()->toDateString())
