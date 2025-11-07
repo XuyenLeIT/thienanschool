@@ -104,6 +104,7 @@
                 ['route' => 'admin.galleries.index', 'icon' => 'fa-photo-video', 'label' => 'Galleries'],
                 ['route' => 'admin.activities.index', 'icon' => 'fa-running', 'label' => 'Activities'],
                 ['route' => 'admin.programs.index', 'icon' => 'fa-book', 'label' => 'Program'],
+                ['route' => 'admin.tuitions.index', 'icon' => 'fa-solid fa-money-bill', 'label' => 'Tuitions'],
                 ['route' => 'admin.education.index', 'icon' => 'fa-graduation-cap', 'label' => 'Education'],
                 ['route' => 'admin.promotions.index', 'icon' => 'fa-bullhorn', 'label' => 'Promotions'],
                 ['route' => 'admin.accounts.index', 'icon' => 'fa-users', 'label' => 'Nhân Sự'],

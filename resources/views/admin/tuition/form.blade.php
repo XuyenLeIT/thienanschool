@@ -4,7 +4,7 @@
     <h2>Form Tuition</h2>
     @php $isEdit = isset($tuition); @endphp
 
-    <form action="{{ $isEdit ? route($authUser->role.'.tuition.update', $tuition->id) : route('admin.tuition.store') }}" method="POST">
+    <form action="{{ $isEdit ? route($authUser->role.'.tuitions.update', $tuition->id) : route('admin.tuition.store') }}" method="POST">
         @csrf
         @if ($isEdit)
             @method('PUT')
@@ -38,6 +38,6 @@
         </div>
 
         <button type="submit" class="btn btn-primary">{{ $isEdit ? 'Cập nhật' : 'Thêm mới' }}</button>
-        <a href="{{ route($authUser->role.'.tuition.index') }}" class="btn btn-secondary">Hủy</a>
+        <a href="{{ route($authUser->role.'.tuitions.index') }}" class="btn btn-secondary">Hủy</a>
     </form>
 @endsection
