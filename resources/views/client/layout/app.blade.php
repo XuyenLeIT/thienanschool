@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-      <link rel="icon" type="image/png" href="{{ asset('icon/logo.jpg') }}">
-    <title>@yield('title', 'Trường Mầm Non Thiên Ân')</title>  
+    <link rel="icon" type="image/png" href="{{ asset('icon/logo.jpg') }}">
+    <title>@yield('title', 'Trường Mầm Non Thiên Ân')</title>
     <meta name="description" content="@yield('meta_description', 'Trường Mầm Non Thiên Ân - môi trường giáo dục mầm non an toàn, thân thiện, sáng tạo cho trẻ nhỏ.')">
     <meta name="keywords" content="@yield('meta_keywords', 'mầm non, trường mầm non, giáo dục trẻ em, Thiên Ân School')">
     <meta name="author" content="Trường Mầm Non Thiên Ân">
     <meta name="robots" content="index, follow">
-    
+
     <link rel="canonical" href="{{ url()->current() }}">
 
     <!-- Open Graph / Twitter -->
@@ -22,14 +22,14 @@
     <meta name="twitter:card" content="summary_large_image">
     <!-- Bootstrap 5 -->
     <!-- Font Awesome -->
-<link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
     <!-- AOS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
-    
+
     <!-- Flickity CSS -->
     <link rel="stylesheet" href="{{ asset('css/flickity.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/root.css') }}">
@@ -139,6 +139,18 @@
     <script src="{{ asset('js/flickity.pkgd.min.js') }}"></script>
     {{-- Scripts riêng từng trang --}}
     @yield('scripts')
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17721683359"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'AW-17721683359');
+    </script>
 </body>
 
 </html>
