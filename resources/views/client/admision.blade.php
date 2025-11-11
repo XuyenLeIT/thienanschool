@@ -198,9 +198,8 @@
                     <ul class="list-group shadow">
                         <li class="list-group-item">📌 Đơn xin nhập học (theo mẫu)</li>
                         <li class="list-group-item">📌 Bản sao giấy khai sinh</li>
-                        <li class="list-group-item">📌 Sổ hộ khẩu (bản photo)</li>
                         <li class="list-group-item">📌 Giấy khám sức khỏe</li>
-                        <li class="list-group-item">📌 Ảnh 3x4 (04 tấm)</li>
+                        <li class="list-group-item">📌 Sổ tiêm chủng</li>
                     </ul>
                 </section>
 
