@@ -151,6 +151,11 @@
 
         gtag('config', 'AW-17721683359');
     </script>
+    <!-- Event snippet for Người liên hệ conversion page -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-17721683359/I53aCL3ckL8bEJ_brYJC'});
+</script>
+
 </body>
 
 </html>
