@@ -169,9 +169,9 @@
 
 <div class="contact-floating">
     <!-- 📞 Gọi ngay -->
-    <a href="tel:0982563652" class="contact-btn phone-btn" title="Gọi ngay">
+    <a href="tel:0382907702" class="contact-btn phone-btn" title="Gọi ngay">
         <i class="fa-solid fa-phone phone-icon"></i>
-        <span class="phone-text">0982 563 652</span>
+        <span class="phone-text">0382 907 702</span>
     </a>
 
     <!-- 💬 Zalo -->
